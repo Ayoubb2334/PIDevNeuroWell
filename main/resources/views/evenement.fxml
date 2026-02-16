@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.EvenementController"
+      spacing="20"
+      alignment="TOP_CENTER"
+      styleClass="form-container">
+
+    <padding>
+        <Insets top="20" right="30" bottom="20" left="30"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Gestion des Événements" styleClass="form-title"/>
+    </HBox>
+
+    <VBox styleClass="form-card" spacing="15">
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="450"
+                    styleClass="transparent-scroll">
+            <VBox spacing="12">
+
+                <GridPane hgap="15" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="70"/>
+                    </columnConstraints>
+
+                    <!-- Titre -->
+                    <Label text="Titre" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="titreField" promptText="Titre de l'événement"/>
+                        <Label fx:id="titreError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Image -->
+                    <Label text="Image" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="3">
+                        <HBox spacing="10">
+                            <TextField fx:id="imageField" editable="false"/>
+                            <Button fx:id="btnChooseImage" text="📁" styleClass="form-btn-alt"/>
+                        </HBox>
+                        <ImageView fx:id="imagePreview" fitWidth="120" fitHeight="120" preserveRatio="true"
+                                   styleClass="image-preview"/>
+                        <Label fx:id="imageError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Description -->
+                    <Label text="Description" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="3">
+                        <TextArea fx:id="descriptionField" prefRowCount="3"/>
+                        <Label fx:id="descriptionError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Date -->
+                    <Label text="Date" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="3" GridPane.columnIndex="1" spacing="3">
+                        <DatePicker fx:id="dateField"/>
+                        <Label fx:id="dateError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Localisation -->
+                    <Label text="Localisation" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="4" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="localisationField"/>
+                        <Label fx:id="localisationError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Type -->
+                    <Label text="Type" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="typeField"/>
+                        <Label fx:id="typeError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Capacité -->
+                    <Label text="Capacité max" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="6" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="capaciteField"/>
+                        <Label fx:id="capaciteError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Statut -->
+                    <Label text="Statut" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="7" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="statutField"/>
+                        <Label fx:id="statutError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                    <!-- Prix -->
+                    <Label text="Prix" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                    <VBox GridPane.rowIndex="8" GridPane.columnIndex="1" spacing="3">
+                        <TextField fx:id="prixField"/>
+                        <Label fx:id="prixError" visible="false" styleClass="form-error"/>
+                    </VBox>
+
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+
+        <HBox alignment="CENTER_RIGHT">
+            <Button text="➕ Ajouter l’événement" fx:id="btnAjouter" styleClass="form-btn"/>
+        </HBox>
+
+    </VBox>
+</VBox>

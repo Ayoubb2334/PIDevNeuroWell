@@ -1,0 +1,95 @@
+/* ================= BASE ================= */
+
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-family: "Segoe UI", "Arial";
+}
+
+/* ================= HEADER ================= */
+
+.dialog-pane .header-panel {
+    -fx-padding: 18;
+    -fx-background-radius: 15 15 0 0;
+}
+
+/* TEXTE HEADER */
+.dialog-pane .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+/* ================= CONTENU ================= */
+
+.dialog-pane .content.label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-padding: 15;
+}
+
+/* ================= BOUTON ================= */
+
+.dialog-pane .button {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 7 20 7 20;
+    -fx-cursor: hand;
+}
+
+/* ================= SUCCES ================= */
+
+.success {
+    -fx-border-color: #22c55e;
+}
+
+.success .header-panel {
+    -fx-background-color: linear-gradient(to right, #22c55e, #4ade80);
+}
+
+.success .button {
+    -fx-background-color: #22c55e;
+}
+
+.success .button:hover {
+    -fx-background-color: #16a34a;
+}
+
+/* ================= ERREUR ================= */
+
+.error {
+    -fx-border-color: #ef4444;
+}
+
+.error .header-panel {
+    -fx-background-color: linear-gradient(to right, #ef4444, #f87171);
+}
+
+.error .button {
+    -fx-background-color: #ef4444;
+}
+
+.error .button:hover {
+    -fx-background-color: #dc2626;
+}
+
+/* ================= WARNING ================= */
+
+.warning {
+    -fx-border-color: #f97316;
+}
+
+.warning .header-panel {
+    -fx-background-color: linear-gradient(to right, #f97316, #fb923c);
+}
+
+.warning .button {
+    -fx-background-color: #f97316;
+}
+
+.warning .button:hover {
+    -fx-background-color: #ea580c;
+}
