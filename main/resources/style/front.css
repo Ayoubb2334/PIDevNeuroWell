@@ -1,0 +1,673 @@
+/* ================================================================
+   PSYCHÉ - Modern Psychology App CSS
+   Design System: Futuristic, Gradient-based, Animated
+   ================================================================ */
+
+/* ================== COLOR VARIABLES ================== */
+* {
+    -fx-primary-color: #00F0FF;
+    -fx-secondary-color: #00c853;
+    -fx-accent-color: #FF6B6B;
+    -fx-lime-color: #84CC16;
+    -fx-dark-bg: #0A0A0F;
+    -fx-card-bg: #1A1A24;
+    -fx-light-text: #F8F9FA;
+    -fx-gray-text: #CCCCCC;
+}
+
+/* ================== MAIN CONTAINER ================== */
+.main-container {
+    -fx-background-color: -fx-dark-bg;
+    -fx-spacing: 0;
+}
+
+/* ================== SCROLLBAR STYLING ================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: -fx-dark-bg;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: rgba(26, 26, 36, 0.3);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #00F0FF, #00c853);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #00F0FF;
+}
+
+.scroll-bar:horizontal {
+    -fx-opacity: 0;
+}
+
+/* ================== ANIMATED BACKGROUND ================== */
+.background-layer {
+    -fx-background-color: -fx-dark-bg;
+}
+
+.orb {
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.3), 80, 0.7, 0, 0);
+}
+
+.orb-1 {
+    -fx-fill: rgba(0, 240, 255, 0.15);  /* Bleu ciel */
+    -fx-translate-x: 100;
+    -fx-translate-y: 100;
+}
+
+
+.orb-2 {
+    -fx-fill: rgba(0, 240, 255, 0.15);
+    -fx-translate-x: 800;
+    -fx-translate-y: 400;
+}
+
+.orb-3 {
+    -fx-fill: rgba(255, 107, 107, 0.15);
+    -fx-translate-x: 400;
+    -fx-translate-y: 600;
+}
+
+/* ================== NAVBAR ================== */
+.navbar {
+    -fx-background-color: rgba(10, 10, 15, 0.95);
+    -fx-padding: 20 50 20 50;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.5, 0, 2);
+}
+
+.logo-container {
+    -fx-spacing: 12;
+}
+
+.logo-text {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF, #00c853);
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.5), 10, 0.7, 0, 0);
+}
+
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-light-text;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.nav-btn:hover {
+    -fx-text-fill: -fx-primary-color;
+    -fx-border-color: -fx-primary-color;
+    -fx-scale-y: 1.05;
+}
+
+.nav-cta-btn {
+    -fx-background-color: linear-gradient(to right, #00F0FF, #00c853);
+    -fx-text-fill: -fx-dark-bg;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-padding: 12 30;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.5), 20, 0.6, 0, 0);
+}
+
+.nav-cta-btn:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.8), 30, 0.7, 0, 0);
+}
+
+/* ================== HERO SECTION ================== */
+.hero-section {
+    -fx-background-color: -fx-dark-bg;
+    -fx-padding: 0;
+}
+
+.hero-overlay {
+    -fx-fill: linear-gradient(to bottom, rgba(10, 10, 15, 0.7), rgba(10, 10, 15, 0.9));
+}
+
+.hero-content {
+    -fx-padding: 80 50;
+}
+
+.hero-title {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 64px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF,#00c853, #FF6B6B);
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.6), 20, 0.8, 0, 0);
+}
+
+.hero-subtitle {
+    -fx-font-size: 18px;
+    -fx-text-fill: rgba(248, 249, 250, 0.8);
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 700px;
+}
+
+.hero-btn-primary {
+    -fx-background-color: linear-gradient(to right, #00F0FF, #00c853);
+    -fx-text-fill: -fx-dark-bg;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-padding: 15 40;
+    -fx-background-radius: 30px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.5), 25, 0.7, 0, 5);
+}
+
+.hero-btn-primary:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.8), 35, 0.8, 0, 8);
+}
+
+.hero-btn-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30px;
+    -fx-background-radius: 30px;
+    -fx-text-fill: -fx-light-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-padding: 15 40;
+    -fx-cursor: hand;
+}
+
+.hero-btn-secondary:hover {
+    -fx-background-color: rgba(0, 240, 255, 0.1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ================== FLOATING CARDS ================== */
+.floating-cards-container {
+    -fx-padding: 40 0 0 0;
+}
+
+.floating-card {
+    -fx-background-color: linear-gradient(
+            to bottom right,
+            rgba(0, 240, 255, 0.2),  /* Bleu ciel */
+            rgba(0, 200, 83, 0.2)    /* Vert */
+    );
+    -fx-background-radius: 20px;
+    -fx-padding: 25;
+    -fx-pref-width: 250;
+    -fx-pref-height: 160;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.3), 20, 0.6, 0, 5);
+}
+
+.floating-card:hover {
+    -fx-translate-y: -10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 200, 83, 0.5), 30, 0.7, 0, 10);
+}
+
+.card-emoji {
+    -fx-font-size: 40px;
+}
+
+.card-title {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.card-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+}
+
+/* ================== ABOUT SECTION ================== */
+.about-section {
+    -fx-background-color: -fx-dark-bg;
+    -fx-padding: 100 80;
+}
+
+.about-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.4), 30, 0.6, 0, 0);
+    -fx-background-radius: 15px;
+}
+
+.about-content {
+    -fx-spacing: 20;
+}
+
+.section-tag {
+    -fx-background-color: rgba(0, 240, 255, 0.1);
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 8 20;
+    -fx-background-radius: 20px;
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+}
+
+.section-title {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 42px;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+}
+
+.section-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+    -fx-wrap-text: true;
+}
+
+/* ================== TABS STYLING ================== */
+.about-tabs {
+    -fx-background-color: transparent;
+}
+
+.about-tabs .tab-pane {
+    -fx-background-color: transparent;
+}
+
+.about-tabs .tab-header-area {
+    -fx-background-color: transparent;
+}
+
+.custom-tab {
+    -fx-background-color: rgba(26, 26, 36, 0.4);
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+    -fx-font-weight: 600;
+    -fx-padding: 12 20;
+}
+
+.custom-tab:selected {
+    -fx-background-color: linear-gradient(
+            to right,
+            rgba(0, 240, 255, 0.2),   /* Bleu ciel */
+            rgba(0, 200, 83, 0.2)     /* Vert */
+    );
+    -fx-text-fill: -fx-primary-color;
+}
+
+.tab-content {
+    -fx-padding: 20;
+    -fx-background-color: rgba(26, 26, 36, 0.3);
+    -fx-background-radius: 0 0 10px 10px;
+}
+
+
+.tab-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(248, 249, 250, 0.7);
+    -fx-line-spacing: 5px;
+}
+
+/* ================== STATS CONTAINER ================== */
+.stats-container {
+    -fx-padding: 20 0 0 0;
+}
+
+.stat-item {
+    -fx-background-color: rgba(26, 26, 36, 0.4);
+    -fx-background-radius: 15px;
+    -fx-padding: 20 30;
+}
+
+.stat-number {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF, #00c853);
+}
+
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: rgba(248, 249, 250, 0.5);
+    -fx-letter-spacing: 1px;
+}
+
+/* ================== SERVICES SECTION ================== */
+.services-section {
+    -fx-background-color: linear-gradient(to bottom, #0A0A0F, #1A1A24);
+    -fx-padding: 100 80;
+}
+
+.section-header {
+    -fx-spacing: 15;
+    -fx-padding: 0 0 30 0;
+}
+
+.services-grid {
+    -fx-hgap: 25;
+    -fx-vgap: 25;
+    -fx-padding: 20;
+}
+
+.service-card {
+    -fx-background-color: linear-gradient(to bottom right, rgba(26, 26, 36, 0.6), rgba(26, 26, 36, 0.3));
+    -fx-background-radius: 25px;
+    -fx-padding: 35;
+    -fx-pref-width: 380;
+    -fx-min-height: 280;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1px;
+    -fx-border-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.5, 0, 5);
+}
+
+.service-card:hover {
+    -fx-translate-y: -10;
+    -fx-border-color: -fx-primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.4), 30, 0.7, 0, 10);
+}
+
+.service-number {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 48px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF, #00c853);
+}
+
+.service-icon {
+    -fx-font-size: 32px;
+}
+
+.service-title {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.service-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+    -fx-line-spacing: 3px;
+}
+
+.service-link {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-primary-color;
+    -fx-cursor: hand;
+}
+
+.service-link:hover {
+    -fx-text-fill: -fx-secondary-color;
+    -fx-translate-x: 5;
+}
+
+/* ================== TEAM SECTION ================== */
+.team-section {
+    -fx-background-color: -fx-dark-bg;
+    -fx-padding: 100 80;
+}
+
+.team-container {
+    -fx-padding: 30 0;
+}
+
+.team-card {
+    -fx-background-color: rgba(26, 26, 36, 0.4);
+    -fx-background-radius: 20px;
+    -fx-padding: 30;
+    -fx-pref-width: 250;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+}
+
+.team-card:hover {
+    -fx-background-color: rgba(26, 26, 36, 0.7);
+    -fx-translate-y: -10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.3), 25, 0.6, 0, 8);
+}
+
+.team-image-container {
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.4), 15, 0.6, 0, 0);
+}
+
+.team-image-border {
+    -fx-fill: transparent;
+    -fx-stroke: linear-gradient(to bottom, #00F0FF, #00c853);
+    -fx-stroke-width: 3;
+}
+
+.team-name {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.team-role {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-primary-color;
+}
+
+.team-experience {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(248, 249, 250, 0.5);
+}
+
+/* ================== GLOBAL STATS SECTION ================== */
+.global-stats-section {
+    -fx-background-color: -fx-dark-bg;
+    -fx-padding: 80 100;
+}
+
+.global-stat-card {
+    -fx-background-color: linear-gradient(to bottom right, rgba(0, 200, 83, 0.1), rgba(0, 240, 255, 0.1)); /* vert + bleu */
+    -fx-background-radius: 25px;
+    -fx-padding: 40 60;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1px;
+    -fx-border-radius: 25px;
+}
+
+
+.global-stat-card:hover {
+    -fx-translate-y: -10;
+    -fx-border-color: -fx-primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.3), 20, 0.6, 0, 5);
+}
+
+.global-stat-number {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 52px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF, #00c853);
+}
+
+.global-stat-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+    -fx-letter-spacing: 1px;
+}
+
+/* ================== FOOTER SECTION ================== */
+.footer-section {
+    -fx-background-color: -fx-card-bg;
+    -fx-padding: 60 80;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-column {
+    -fx-spacing: 15;
+    -fx-pref-width: 220;
+}
+
+.footer-brand {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #00F0FF, #00c853);
+}
+
+.footer-heading {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.footer-description {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(248, 249, 250, 0.5);
+    -fx-line-spacing: 3px;
+}
+
+.footer-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+}
+
+.footer-link {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(248, 249, 250, 0.6);
+    -fx-cursor: hand;
+}
+
+.footer-link:hover {
+    -fx-text-fill: -fx-primary-color;
+    -fx-translate-x: 5;
+}
+
+.newsletter-input {
+    -fx-background-color: rgba(26, 26, 36, 0.6);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(248, 249, 250, 0.4);
+    -fx-font-size: 13px;
+    -fx-padding: 12;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+
+.newsletter-input:focused {
+    -fx-background-color: rgba(26, 26, 36, 0.8);
+    -fx-border-color: -fx-primary-color;
+}
+
+.newsletter-btn {
+    -fx-background-color: linear-gradient(to right, #00F0FF, #00c853);
+    -fx-text-fill: -fx-dark-bg;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 12 25;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+}
+
+.newsletter-btn:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.5), 15, 0.6, 0, 0);
+}
+
+/* ================== COPYRIGHT BAR ================== */
+.copyright-bar {
+    -fx-background-color: -fx-card-bg;
+    -fx-padding: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1 0 0 0;
+}
+
+.copyright-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(248, 249, 250, 0.4);
+}
+
+/* ================== GENERAL TEXT FIELD STYLING ================== */
+.text-field {
+    -fx-text-fill: white;
+}
+
+.text-field:focused {
+    -fx-background-insets: 0;
+}
+
+/* ================== BUTTON GENERAL ================== */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.95;
+}
+/* ================= PAYMENT SECTION ================= */
+
+.payment-section {
+    -fx-background-color: linear-gradient(to bottom, #0f172a, #111827);
+    -fx-padding: 100 50;
+}
+
+.payment-card {
+    -fx-background-color: rgba(0,255,255,0.06);
+    -fx-background-radius: 25;
+    -fx-padding: 40;
+    -fx-pref-width: 400;
+    -fx-effect: dropshadow(gaussian, #00f7ff, 25, 0.2, 0, 0);
+}
+
+.payment-icon {
+    -fx-font-size: 40px;
+}
+
+.payment-title {
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.payment-status {
+    -fx-text-fill: #00ffc8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.payment-input {
+    -fx-background-color: #1f2937;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #94a3b8;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+}
+
+.payment-btn {
+    -fx-background-color: linear-gradient(to right, #00f7ff, #00ff9d);
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-padding: 12 25;
+}
+
+.payment-btn:hover {
+    -fx-effect: dropshadow(gaussian, #00ffcc, 30, 0.7, 0, 0);
+}
+

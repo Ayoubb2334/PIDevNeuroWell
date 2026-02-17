@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox spacing="15"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.PaiementController"
+      alignment="TOP_CENTER"
+      prefWidth="800">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Gestion Paiement"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <TextField fx:id="montantField" promptText="Montant"/>
+    <TextField fx:id="modeField" promptText="Mode paiement (CARTE, PAYPAL...)"/>
+    <TextField fx:id="statutField" promptText="Statut (VALIDE, ECHEC...)"/>
+    <TextField fx:id="userField" promptText="ID User"/>
+    <DatePicker fx:id="datePicker" promptText="Date Paiement"/>
+
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#ajouterPaiement"/>
+        <Button text="Modifier" onAction="#modifierPaiement"/>
+        <Button text="Supprimer" onAction="#supprimerPaiement"/>
+        <Button text="Actualiser" onAction="#loadPaiements"/>
+    </HBox>
+
+    <TableView fx:id="tablePaiement" prefHeight="300">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="colMontant" text="Montant" prefWidth="100"/>
+            <TableColumn fx:id="colMode" text="Mode" prefWidth="120"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+            <TableColumn fx:id="colUser" text="User ID" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>

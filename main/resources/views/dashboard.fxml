@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.DashboardController"
+            stylesheets="@../style/style.css"
+            prefWidth="1200" prefHeight="700">
+
+
+
+    <HBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+        <!-- Sidebar élargie -->
+        <VBox fx:id="sidebar" spacing="20" styleClass="sidebar" prefWidth="250"
+              alignment="TOP_CENTER" minHeight="700" VBox.vgrow="ALWAYS">
+            <Label text="neurowell" styleClass="logo"/>
+            <Button text="🏠 Tableau de bord" styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button fx:id="btnEvenements" text="📅 Evénements" styleClass="menu-btn" maxWidth="Infinity"/>
+
+            <!-- Sous-menu événements -->
+            <VBox fx:id="evenementSubMenu" spacing="5" visible="false" managed="false">
+                <padding>
+                    <Insets top="0" right="0" bottom="0" left="20"/>
+                </padding>
+                <Button fx:id="btnAjouterEvenement" text="➕ Ajouter" maxWidth="Infinity" styleClass="menu-btn" />
+                <Button fx:id="btnAfficherEvenements" text="📋 Afficher" maxWidth="Infinity" styleClass="menu-btn" />
+            </VBox>
+
+            <Button fx:id="btnConges" text=" consultation" styleClass="menu-btn" maxWidth="Infinity"/>
+
+            <VBox fx:id="congeSubMenu" spacing="5" visible="false" managed="false">
+                <padding>
+                    <Insets top="0" right="0" bottom="0" left="20"/>
+                </padding>
+                <Button fx:id="btnAjouterConge" text="➕ Ajouter" maxWidth="Infinity" styleClass="menu-btn" />
+                <Button fx:id="btnAfficherConge" text="📋 Afficher" maxWidth="Infinity" styleClass="menu-btn" />
+            </VBox>
+
+            <Button text="🧑 Consultation" styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button text=" developpement" styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button text=" psychologue " styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button fx:id="btnPaiement"
+                    text="💳 Paiement"
+                    styleClass="menu-btn"
+                    maxWidth="Infinity"
+                    onAction="#openPaiement"/>
+            <Button fx:id="btnFront" text="🌐 Front" styleClass="menu-btn" maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Zone principale à côté de la sidebar -->
+        <VBox spacing="20" HBox.hgrow="ALWAYS">
+
+            <!-- Top horizontal : bienvenue + recherche + notifications -->
+            <HBox spacing="15" styleClass="topbar" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <Label text="Bienvenue dans neurowell !" styleClass="welcome-msg"/>
+                <TextField promptText="🔍 Rechercher..." styleClass="search-bar" prefWidth="200"/>
+                <Button text="🔔" styleClass="notif-btn" prefWidth="50"/>
+            </HBox>
+
+            <!-- Contenu dynamique -->
+            <StackPane fx:id="contentPane" styleClass="content-pane" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </StackPane>
+        </VBox>
+    </HBox>
+</AnchorPane>
