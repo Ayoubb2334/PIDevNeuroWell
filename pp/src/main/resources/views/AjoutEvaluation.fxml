@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.AjoutEvaluationController"
+            prefWidth="800" prefHeight="520"
+            stylesheets="@/style/style.css"
+            style="-fx-background-color: #f8f9fa;">
+
+    <Label text="Ajouter une Évaluation" layoutX="30" layoutY="20" styleClass="logo-sidebar"/>
+
+    <VBox spacing="12" layoutX="30" layoutY="70" prefWidth="740">
+        <padding>
+            <Insets top="10" left="20" right="20" bottom="10"/>
+        </padding>
+
+        <!-- TYPE DE TEST -->
+        <VBox spacing="2">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Type de test :" prefWidth="160" styleClass="form-label"/>
+                <ComboBox fx:id="typeTestField" promptText="Choisissez le type" prefWidth="400" styleClass="form-input"/>
+            </HBox>
+            <Label fx:id="typeTestError" textFill="RED" style="-fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- SCORE -->
+        <VBox spacing="2">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Score (0-100) :" prefWidth="160" styleClass="form-label"/>
+                <TextField fx:id="scoreField" promptText="Ex: 75" styleClass="form-input" prefWidth="400"/>
+            </HBox>
+            <Label fx:id="scoreError" textFill="RED" style="-fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- NIVEAU (auto-calculé) -->
+        <VBox spacing="2">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Niveau :" prefWidth="160" styleClass="form-label"/>
+                <ComboBox fx:id="niveauField" promptText="Calculé automatiquement" prefWidth="400" styleClass="form-input"/>
+            </HBox>
+            <Label fx:id="niveauError" textFill="RED" style="-fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- DATE D'ÉVALUATION -->
+        <VBox spacing="2">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date d'évaluation :" prefWidth="160" styleClass="form-label"/>
+                <DatePicker fx:id="dateField" styleClass="form-input" prefWidth="400"/>
+            </HBox>
+            <Label fx:id="dateError" textFill="RED" style="-fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- BOUTONS -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 10 0 0 0;">
+            <Button fx:id="cancelBtn" text="Annuler" styleClass="cancel-btn"/>
+            <Button fx:id="submitBtn" text="Ajouter" styleClass="submit-btn"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

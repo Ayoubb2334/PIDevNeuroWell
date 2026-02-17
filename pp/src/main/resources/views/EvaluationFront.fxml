@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.EvaluationFrontController"
+           stylesheets="@../style/showEvents.css"
+           styleClass="root-container">
+
+    <!-- Animated Background -->
+    <Pane styleClass="background-layer">
+        <Circle fx:id="orb1" radius="250" styleClass="orb, orb-1"/>
+        <Circle fx:id="orb2" radius="200" styleClass="orb, orb-2"/>
+        <Circle fx:id="orb3" radius="220" styleClass="orb, orb-3"/>
+    </Pane>
+
+    <VBox spacing="0" styleClass="main-container">
+
+        <!-- Navbar -->
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30">
+            <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
+                <Label text="🧠" styleClass="logo-icon"/>
+                <Label text="PSYCHÉ" styleClass="logo-text"/>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="25" alignment="CENTER">
+                <Button text="Accueil"      styleClass="nav-btn" fx:id="btnAccueil"    onAction="#handleAccueil"/>
+                <Button text="Services"     styleClass="nav-btn"/>
+                <Button text="Événements"   styleClass="nav-btn" fx:id="btnEvents"     onAction="#handleEvents"/>
+                <Button text="Évaluations"  styleClass="nav-btn, nav-btn-active"/>
+                <Button text="Blog"         styleClass="nav-btn"/>
+            </HBox>
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Passer un test" styleClass="nav-cta-btn-secondary" fx:id="btnPasserTest" onAction="#handlePasserTest"/>
+                <Button text="Contact"        styleClass="nav-cta-btn"/>
+            </HBox>
+        </HBox>
+
+        <!-- Contenu scrollable -->
+        <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+            <VBox spacing="40" styleClass="page-content">
+
+                <!-- Hero -->
+                <VBox spacing="20" styleClass="hero-section" alignment="CENTER">
+                    <Label text="🧪" styleClass="hero-icon"/>
+                    <Label text="Évaluations Psychologiques" styleClass="hero-title"/>
+                    <Label text="Évaluez votre état mental et suivez votre progression dans le temps"
+                           styleClass="hero-subtitle" wrapText="true"/>
+
+                    <!-- Stats dynamiques -->
+                    <HBox spacing="50" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
+                        <VBox alignment="CENTER" spacing="5" styleClass="global-stat-card">
+                            <Label fx:id="statTotal" text="0" styleClass="global-stat-number"/>
+                            <Label text="ÉVALUATIONS" styleClass="global-stat-label"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5" styleClass="global-stat-card">
+                            <Label fx:id="statMoyenne" text="0" styleClass="global-stat-number"/>
+                            <Label text="SCORE MOYEN" styleClass="global-stat-label"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5" styleClass="global-stat-card">
+                            <Label fx:id="statNiveauFrequent" text="-" styleClass="global-stat-number"/>
+                            <Label text="NIVEAU FRÉQUENT" styleClass="global-stat-label"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Recherche + Filtres -->
+                <VBox spacing="25" styleClass="filters-section">
+                    <HBox spacing="15" alignment="CENTER" styleClass="search-container">
+                        <TextField fx:id="searchField"
+                                   promptText="🔍 Rechercher par type de test..."
+                                   styleClass="search-input"
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button text="Rechercher"   styleClass="btn-search" onAction="#handleSearch"/>
+                        <Button text="Réinitialiser" styleClass="btn-reset"  onAction="#resetFilters"/>
+                    </HBox>
+
+                    <GridPane styleClass="filters-grid" hgap="30" vgap="20">
+                        <!-- Type -->
+                        <VBox spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="filter-column">
+                            <Label text="🎯 Type de test" styleClass="filter-title"/>
+                            <VBox spacing="8" styleClass="filter-options">
+                                <CheckBox fx:id="filterStress"     text="Stress"      styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterAnxiete"    text="Anxiété"     styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterDepression" text="Dépression"  styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterBienEtre"   text="Bien-être"   styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterBurnout"    text="Burnout"     styleClass="filter-checkbox"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Niveau -->
+                        <VBox spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="filter-column">
+                            <Label text="📊 Niveau" styleClass="filter-title"/>
+                            <VBox spacing="8" styleClass="filter-options">
+                                <CheckBox fx:id="filterFaible" text="Faible" styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterMoyen"  text="Moyen"  styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterEleve"  text="Élevé"  styleClass="filter-checkbox"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Date -->
+                        <VBox spacing="12" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="filter-column">
+                            <Label text="📅 Filtrer par date" styleClass="filter-title"/>
+                            <DatePicker fx:id="dateFilter"
+                                        promptText="Sélectionner une date"
+                                        styleClass="date-picker-custom"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Liste évaluations -->
+                <VBox spacing="20" styleClass="events-section">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-header">
+                        <Label text="📋 Évaluations disponibles" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="resultsCount" text="" styleClass="results-count"/>
+                    </HBox>
+                    <VBox fx:id="evaluationsContainer" spacing="20" styleClass="events-container"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Footer -->
+        <HBox styleClass="footer-bar" alignment="CENTER" spacing="20">
+            <Label text="© 2026 PSYCHÉ"                  styleClass="footer-text"/>
+            <Label text="•"                               styleClass="footer-separator"/>
+            <Label text="Évaluations Psychologiques"      styleClass="footer-text"/>
+            <Label text="•"                               styleClass="footer-separator"/>
+            <Label text="Suivi du Bien-être Mental"       styleClass="footer-text"/>
+        </HBox>
+
+    </VBox>
+</StackPane>

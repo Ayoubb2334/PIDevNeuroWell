@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.ParticipationController"
+           stylesheets="@../style/participation.css"
+           styleClass="root-container">
+
+    <!-- Animated Background Layer -->
+    <Pane styleClass="background-layer">
+        <Circle fx:id="orb1" radius="250" styleClass="orb, orb-1"/>
+        <Circle fx:id="orb2" radius="200" styleClass="orb, orb-2"/>
+        <Circle fx:id="orb3" radius="220" styleClass="orb, orb-3"/>
+    </Pane>
+
+    <!-- Main Content -->
+    <VBox spacing="0" styleClass="main-container">
+
+        <!-- Modern Navbar -->
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30">
+            <!-- Logo Section -->
+            <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
+                <Label text="🧠" styleClass="logo-icon"/>
+                <Label text="PSYCHÉ" styleClass="logo-text"/>
+            </HBox>
+
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Navigation Buttons -->
+            <HBox spacing="25" alignment="CENTER">
+                <Button text="Accueil" styleClass="nav-btn" onAction="#handleBackToFront"/>
+                <Button text="Services" styleClass="nav-btn"/>
+                <Button text="Événements" styleClass="nav-btn" onAction="#handleEvenement"/>
+                <Button text="Participations" styleClass="nav-btn, nav-btn-active"/>
+            </HBox>
+
+            <!-- CTA Buttons -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Retour" styleClass="nav-cta-btn-secondary" onAction="#handleBackToFront"/>
+                <Button text="Contact" styleClass="nav-cta-btn"/>
+            </HBox>
+        </HBox>
+
+        <!-- Page Content with Scroll -->
+        <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+            <VBox spacing="40" styleClass="page-content">
+
+                <!-- Hero Section -->
+                <VBox spacing="20" styleClass="hero-section" alignment="CENTER">
+                    <Label text="📋" styleClass="hero-icon"/>
+                    <Label text="Mes Participations" styleClass="hero-title"/>
+                    <Label text="Gérez vos inscriptions aux événements et suivez vos participations"
+                           styleClass="hero-subtitle" wrapText="true"/>
+                </VBox>
+
+                <!-- Search and Filters Section -->
+                <VBox spacing="25" styleClass="filters-section">
+
+                    <!-- Search Bar -->
+                    <HBox spacing="15" alignment="CENTER" styleClass="search-container">
+                        <TextField fx:id="searchField"
+                                   promptText="🔍 Rechercher une participation par titre d'événement..."
+                                   styleClass="search-input"
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button text="Rechercher" styleClass="btn-search" onAction="#handleSearch"/>
+                        <Button text="Réinitialiser" styleClass="btn-reset" onAction="#resetFilters"/>
+                    </HBox>
+
+                    <!-- Filters Section -->
+                    <HBox spacing="30" alignment="CENTER_LEFT" styleClass="filters-row">
+
+                        <!-- Mode Filter -->
+                        <VBox spacing="12" styleClass="filter-column-inline">
+                            <Label text="🎯 Mode de participation" styleClass="filter-title"/>
+                            <HBox spacing="20" styleClass="filter-options-horizontal">
+                                <RadioButton fx:id="filterPresentiel" text="🏢 Présentiel" styleClass="filter-radio"/>
+                                <RadioButton fx:id="filterEnLigne" text="💻 En ligne" styleClass="filter-radio"/>
+                                <RadioButton fx:id="filterTous" text="Tous" styleClass="filter-radio" selected="true"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Separator -->
+                        <Separator orientation="VERTICAL" styleClass="vertical-separator"/>
+
+                        <!-- Stats Display -->
+                        <VBox spacing="8" styleClass="stats-display" alignment="CENTER">
+                            <Label fx:id="totalParticipations" text="0" styleClass="stat-number"/>
+                            <Label text="Participations totales" styleClass="stat-label"/>
+                        </VBox>
+
+                    </HBox>
+                </VBox>
+
+                <!-- Participations Container -->
+                <VBox spacing="20" styleClass="participations-section">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-header">
+                        <Label text="📌 Mes participations" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="resultsCount" text="" styleClass="results-count"/>
+                    </HBox>
+
+                    <!-- Participations List -->
+                    <VBox fx:id="participationContainer" spacing="20" styleClass="participations-container">
+                        <!-- Participation cards will be dynamically added here -->
+                    </VBox>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Footer Bar -->
+        <HBox styleClass="footer-bar" alignment="CENTER" spacing="20">
+            <Label text="© 2026 PSYCHÉ" styleClass="footer-text"/>
+            <Label text="•" styleClass="footer-separator"/>
+            <Label text="Développement Personnel" styleClass="footer-text"/>
+            <Label text="•" styleClass="footer-separator"/>
+            <Label text="Transformation Mentale" styleClass="footer-text"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

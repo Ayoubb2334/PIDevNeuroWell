@@ -1,0 +1,284 @@
+/* ===== DIALOG MODERNE ===== */
+.dialog-pane {
+    -fx-background-color: linear-gradient(to bottom right, #e6f7ff, #dffcf1);
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0.2, 0, 4);
+    -fx-min-width: 650px;      /* largeur minimale plus grande */
+    -fx-min-height: 550px;     /* hauteur minimale plus confortable */
+    -fx-max-width: 800px;      /* largeur maximale pour ne pas dépasser l'écran */
+    -fx-max-height: 700px;
+}
+
+/* Header du dialog */
+.dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #00bfff, #00c853);
+    -fx-background-radius: 18 18 0 0;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 10 15;
+}
+
+/* Labels à l'intérieur du dialog */
+.dialog-pane .label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+}
+
+/* TextField et TextArea */
+.dialog-pane .text-field,
+.dialog-pane .text-area,
+.dialog-pane .combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #b3e5ff;
+    -fx-border-width: 1.4;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 6, 0.2, 0, 2);
+    -fx-transition: all 0.25s ease-in-out;
+}
+
+/* Focus élégant */
+.dialog-pane .text-field:focused,
+.dialog-pane .text-area:focused,
+.dialog-pane .combo-box:focused {
+    -fx-border-color: #00c853;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,200,83,0.25), 8, 0.2, 0, 2);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+/* Boutons OK / CANCEL */
+.dialog-pane .button {
+    -fx-background-color: linear-gradient(to right, #00bfff, #00c853);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-padding: 8 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 0, 3);
+    -fx-transition: all 0.25s ease-in-out;
+}
+.dialog-pane .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #00bfff;
+    -fx-background-radius: 8;
+}
+
+.dialog-pane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+
+.dialog-pane .button:hover {
+    -fx-background-color: linear-gradient(to right, #00c853, #00bfff);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+/* ===== CONTENEUR MODERNE ===== */
+.form-container {
+    -fx-background-color: linear-gradient(to bottom right, #e6f7ff, #dffcf1);
+    -fx-font-family: "Inter", "Segoe UI", "Roboto";
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 20 24;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0.2, 0, 4);
+}
+
+/* ===== TITRE ===== */
+.form-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00bfff;
+}
+
+/* ===== TABLEVIEW MODERNE ===== */
+.modern-table {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 12;
+    -fx-padding: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-table-cell-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0.2, 0, 2);
+}
+
+/* Header moderne : dégradé bleu → vert et coins arrondis */
+.modern-table .column-header-background {
+    -fx-background-color: linear-gradient(to right, #00bfff, #00c853);
+    -fx-border-radius: 12 12 0 0;
+    -fx-background-radius: 12 12 0 0;
+}
+
+/* Texte header blanc et gras */
+.modern-table .column-header,
+.modern-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+}
+
+/* Hover sur header */
+.modern-table .column-header:hover {
+    -fx-background-color: linear-gradient(to right, #00c853, #00bfff);
+    -fx-cursor: hand;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5,0,0,1);
+}
+
+/* Ligne sélectionnée */
+.modern-table .table-row-cell:filled:selected,
+.modern-table .table-row-cell:focused:selected {
+    -fx-background-color: #00c853;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Lignes paires / impaires */
+.modern-table .table-row-cell:odd {
+    -fx-background-color: #f9fafb;
+}
+.modern-table .table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+
+/* Cellules clean */
+.modern-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 6 12;
+}
+
+/* Scroll moderne */
+.modern-table .scroll-pane {
+    -fx-background-color: transparent;
+}
+.modern-table .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+.modern-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #00bfff;
+    -fx-background-radius: 8;
+}
+.modern-table .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/* ===== BOUTONS DANS TABLE ===== */
+.table-button {
+    -fx-background-color: linear-gradient(to right, #00bfff, #00c853);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5,0,0,1);
+    -fx-font-size: 12px;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.table-button:hover {
+    -fx-background-color: linear-gradient(to right, #00c853, #00bfff);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== FORM GRID ===== */
+.form-grid {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0.1, 0, 2);
+}
+
+/* Labels */
+.form-label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+}
+
+/* Inputs (TextField, TextArea, ComboBox) */
+.form-combobox, .form-textarea, .form-textfield {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #b3e5ff;
+    -fx-border-width: 1.4;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 6, 0.2, 0, 2);
+    -fx-transition: all 0.25s ease-in-out;
+}
+
+/* Focus élégant */
+.form-combobox:focused, .form-textarea:focused, .form-textfield:focused {
+    -fx-border-color: #00c853;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,200,83,0.25), 8, 0.2, 0, 2);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+/* ===== BOUTONS ===== */
+.form-btn {
+    -fx-background-color: linear-gradient(to right, #00bfff, #00c853);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-padding: 10 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 0, 3);
+    -fx-transition: all 0.25s ease-in-out;
+}
+
+.form-btn:hover {
+    -fx-background-color: linear-gradient(to right, #00c853, #00bfff);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== MESSAGE D'ERREUR ===== */
+.form-error {
+    -fx-text-fill: #ef4444;
+    -fx-font-size: 11px;
+    -fx-padding: 2 0 0 4;
+}
+
+/* ===== BARRE DE RECHERCHE ===== */
+.search-bar {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #b3e5ff;
+    -fx-border-width: 1.5;
+    -fx-padding: 6 15;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5,0,0,1);
+}
+
+.search-bar:focused {
+    -fx-border-color: #00c853;
+    -fx-effect: dropshadow(gaussian, rgba(0,200,83,0.25), 8,0,0,2);
+}

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.RessourcesFrontController"
+           stylesheets="@../style/showEvents.css"
+           styleClass="root-container">
+
+    <!-- Animated Background Layer -->
+    <Pane styleClass="background-layer">
+        <Circle fx:id="orb1" radius="250" styleClass="orb, orb-1"/>
+        <Circle fx:id="orb2" radius="200" styleClass="orb, orb-2"/>
+        <Circle fx:id="orb3" radius="220" styleClass="orb, orb-3"/>
+    </Pane>
+
+    <!-- Main Content -->
+    <VBox spacing="0" styleClass="main-container">
+
+        <!-- Modern Navbar -->
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30">
+            <!-- Logo Section -->
+            <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
+                <Label text="🧠" styleClass="logo-icon"/>
+                <Label text="PSYCHÉ" styleClass="logo-text"/>
+            </HBox>
+
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Navigation Buttons -->
+            <HBox spacing="25" alignment="CENTER">
+                <Button text="Accueil" styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
+                <Button text="Services" styleClass="nav-btn"/>
+                <Button text="Ressources" styleClass="nav-btn, nav-btn-active"/>
+                <Button text="Blog" styleClass="nav-btn"/>
+            </HBox>
+
+            <!-- CTA Buttons -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Contact" styleClass="nav-cta-btn"/>
+            </HBox>
+        </HBox>
+
+        <!-- Page Content with Scroll -->
+        <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+            <VBox spacing="40" styleClass="page-content">
+
+                <!-- Hero Section -->
+                <VBox spacing="20" styleClass="hero-section" alignment="CENTER">
+                    <Label text="📚" styleClass="hero-icon"/>
+                    <Label text="Bibliothèque de Ressources" styleClass="hero-title"/>
+                    <Label text="Accédez à notre collection de documents, vidéos, et supports pour votre développement personnel"
+                           styleClass="hero-subtitle" wrapText="true"/>
+                </VBox>
+
+                <!-- Search and Filters Section -->
+                <VBox spacing="25" styleClass="filters-section">
+
+                    <!-- Search Bar -->
+                    <HBox spacing="15" alignment="CENTER" styleClass="search-container">
+                        <TextField fx:id="searchField"
+                                   promptText="🔍 Rechercher une ressource par titre ou description..."
+                                   styleClass="search-input"
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button text="Rechercher" styleClass="btn-search" fx:id="btnSearch" onAction="#handleSearch"/>
+                        <Button text="Réinitialiser" styleClass="btn-reset" fx:id="btnReset" onAction="#resetFilters"/>
+                    </HBox>
+
+                    <!-- Filters Grid -->
+                    <GridPane styleClass="filters-grid" hgap="30" vgap="20">
+
+                        <!-- Type Filter Column -->
+                        <VBox spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="filter-column">
+                            <Label text="📁 Type de ressource" styleClass="filter-title"/>
+                            <VBox spacing="8" styleClass="filter-options">
+                                <CheckBox fx:id="filterPDF" text="📕 PDF" styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterVideo" text="🎥 Vidéo" styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterImage" text="🖼️ Image" styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterAudio" text="🎵 Audio" styleClass="filter-checkbox"/>
+                                <CheckBox fx:id="filterArticle" text="📝 Article" styleClass="filter-checkbox"/>
+                            </VBox>
+                        </VBox>
+
+                    </GridPane>
+                </VBox>
+
+                <!-- Resources Container -->
+                <VBox spacing="20" styleClass="events-section">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-header">
+                        <Label text="📚 Ressources disponibles" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="resultsCount" text="" styleClass="results-count"/>
+                    </HBox>
+
+                    <!-- Resources List -->
+                    <VBox fx:id="ressourcesContainer" spacing="20" styleClass="events-container">
+                        <!-- Resource cards will be dynamically added here -->
+                    </VBox>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Footer Bar -->
+        <HBox styleClass="footer-bar" alignment="CENTER" spacing="20">
+            <Label text="© 2026 PSYCHÉ" styleClass="footer-text"/>
+            <Label text="•" styleClass="footer-separator"/>
+            <Label text="Développement Personnel" styleClass="footer-text"/>
+            <Label text="•" styleClass="footer-separator"/>
+            <Label text="Transformation Mentale" styleClass="footer-text"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ModifierEvaluationController"
+      spacing="20" style="-fx-background-color: white; -fx-padding: 30;">
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER">
+        <Label text="Modifier une Évaluation" style="-fx-text-fill: #2C3E50; -fx-font-weight: bold;">
+            <font>
+                <Font size="24"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <Separator style="-fx-background-color: #BDC3C7;"/>
+
+    <!-- FORMULAIRE -->
+    <VBox spacing="15" style="-fx-padding: 10;">
+
+        <!-- TYPE TEST -->
+        <VBox spacing="5">
+            <Label text="Type de test *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <ComboBox fx:id="typeTestField" promptText="Choisissez le type" maxWidth="Infinity"
+                      style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+            <Label fx:id="typeTestError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+        </VBox>
+
+        <!-- SCORE -->
+        <VBox spacing="5">
+            <Label text="Score (0-100) *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <TextField fx:id="scoreField" promptText="Ex: 75"
+                       style="-fx-background-color: white; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+            <Label fx:id="scoreError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+        </VBox>
+
+        <!-- NIVEAU -->
+        <VBox spacing="5">
+            <Label text="Niveau *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <ComboBox fx:id="niveauField" promptText="Calculé automatiquement" maxWidth="Infinity"
+                      style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+            <Label fx:id="niveauError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+        </VBox>
+
+        <!-- DATE -->
+        <VBox spacing="5">
+            <Label text="Date d'évaluation *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <DatePicker fx:id="dateField" maxWidth="Infinity"
+                        style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+            <Label fx:id="dateError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+        </VBox>
+
+    </VBox>
+
+    <!-- BOUTONS -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="submitBtn" text="✅ Enregistrer"
+                style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Button>
+
+        <Button fx:id="cancelBtn" text="❌ Annuler"
+                style="-fx-background-color: #95A5A6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Button>
+    </HBox>
+
+</VBox>

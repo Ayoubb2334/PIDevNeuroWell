@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AjoutRessourceController"
+      spacing="20" style="-fx-background-color: white; -fx-padding: 30;">
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER">
+        <Label text="Ajouter une Ressource" style="-fx-text-fill: #2C3E50; -fx-font-weight: bold;">
+            <font>
+                <Font size="24"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <Separator style="-fx-background-color: #BDC3C7;"/>
+
+    <!-- FORMULAIRE -->
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox spacing="15" style="-fx-padding: 10;">
+
+            <!-- TITRE -->
+            <VBox spacing="5">
+                <Label text="Titre *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <TextField fx:id="titreField" promptText="Ex: Introduction à la psychologie"
+                           style="-fx-background-color: white; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+                <Label fx:id="titreError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- DESCRIPTION -->
+            <VBox spacing="5">
+                <Label text="Description" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <TextArea fx:id="descriptionField" promptText="Description de la ressource..."
+                          prefRowCount="3" wrapText="true"
+                          style="-fx-background-color: white; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+                <Label fx:id="descriptionError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- TYPE -->
+            <VBox spacing="5">
+                <Label text="Type *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="typeField" promptText="Sélectionnez un type" maxWidth="Infinity"
+                          style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+                <Label fx:id="typeError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- FICHIER -->
+            <VBox spacing="5">
+                <Label text="Fichier *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <HBox spacing="10">
+                    <TextField fx:id="cheminField" promptText="Chemin du fichier..." editable="false" HBox.hgrow="ALWAYS"
+                               style="-fx-background-color: #ECF0F1; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+                    <Button fx:id="btnChooseFile" text="📂 Parcourir"
+                            style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                </HBox>
+                <Label fx:id="cheminError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- TAILLE & FORMAT -->
+            <HBox spacing="15">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Taille (Ko)" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="tailleField" editable="false"
+                               style="-fx-background-color: #ECF0F1; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+                    <Label fx:id="tailleError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Format" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="formatField" editable="false"
+                               style="-fx-background-color: #ECF0F1; -fx-border-color: #BDC3C7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;"/>
+                    <Label fx:id="formatError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
+
+            <!-- DATE & STATUT -->
+            <HBox spacing="15">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Date de publication *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <DatePicker fx:id="dateField" maxWidth="Infinity"
+                                style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+                    <Label fx:id="dateError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Statut *" style="-fx-text-fill: #34495E; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="statutField" promptText="Statut" maxWidth="Infinity"
+                              style="-fx-background-color: white; -fx-border-color: #BDC3C7;"/>
+                    <Label fx:id="statutError" style="-fx-text-fill: #E74C3C; -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- BOUTONS -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="submitBtn" text="Ajouter"
+                style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Button>
+
+        <Button fx:id="cancelBtn" text="Annuler"
+                style="-fx-background-color: #95A5A6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Button>
+    </HBox>
+
+</VBox>

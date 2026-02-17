@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.EvenementsTableController"
+      spacing="20"
+      alignment="TOP_CENTER"
+      styleClass="form-container"
+      stylesheets="@../style/table.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="Liste des événements" styleClass="form-title"/>
+
+    <!-- Barre de recherche -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-bar" HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnSearch" text="🔍" styleClass="form-btn"/>
+    </HBox>
+
+    <!-- Table des événements -->
+    <TableView fx:id="tableEvenements" prefHeight="400" styleClass="modern-table">
+        <columns>
+            <TableColumn fx:id="colTitre" text="Titre" prefWidth="120"/>
+            <TableColumn fx:id="colImage" text="Image" prefWidth="80"/>
+            <TableColumn fx:id="colDescription" text="Description" prefWidth="150"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="120"/>
+            <TableColumn fx:id="colLocalisation" text="Lieu" prefWidth="100"/>
+            <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
+            <TableColumn fx:id="colCapacite" text="Capacité" prefWidth="80"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="80"/>
+            <TableColumn fx:id="colPrix_e" text="Prix" prefWidth="80"/>
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Boutons principaux -->
+    <HBox spacing="10">
+        <Button fx:id="btnRefresh" text="Actualiser" styleClass="form-btn"/>
+        <Button fx:id="btnClose" text="Fermer" styleClass="form-btn"/>
+    </HBox>
+
+</VBox>
