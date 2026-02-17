@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.FrontController"
+            fitToWidth="true"
+            stylesheets="@/style/front.css">
+
+    <VBox spacing="0" styleClass="main-container">
+
+        <!-- ================= NAVBAR ================= -->
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30">
+
+            <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
+                <ImageView fitWidth="50" fitHeight="50" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
+                </ImageView>
+                <Label text="neurowell" styleClass="logo-text"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="25" alignment="CENTER">
+                <Button text="Accueil" styleClass="nav-btn" fx:id="btnHome"/>
+                <Button text="Services" styleClass="nav-btn" fx:id="btnServices"/>
+                <Button text="Méthode" styleClass="nav-btn" fx:id="btnMethode"/>
+                <Button text="Événements" styleClass="nav-btn" fx:id="btnEvents" onAction="#handleEvents"/>
+                <Button text="Blog" styleClass="nav-btn" fx:id="btnBlog"/>
+
+                <Button text="Consultation"
+                        styleClass="nav-btn"
+                        onAction="#handleConsultation"/>
+            </HBox>
+
+            <Button text="Contact"
+                    styleClass="nav-cta-btn"
+                    fx:id="btnContact"
+                    onAction="#handleContact"/>
+        </HBox>
+
+        <!-- ================= CONTENU DYNAMIQUE ================= -->
+        <!-- 🔥 C’EST ICI QUE userConsultation.fxml VA SE CHARGER -->
+        <VBox fx:id="mainContainer"
+              spacing="0"
+              alignment="TOP_CENTER">
+
+            <!-- ================= HERO SECTION ================= -->
+            <StackPane styleClass="hero-section" prefHeight="600">
+                <ImageView fitWidth="1400" fitHeight="600" preserveRatio="false">
+                    <image>
+                        <Image url="@/images/1.jpg"/>
+                    </image>
+                </ImageView>
+
+                <Rectangle width="1400" height="600" styleClass="hero-overlay"/>
+
+                <VBox alignment="CENTER" spacing="25" styleClass="hero-content">
+                    <Label styleClass="hero-title"
+                           text="Transformez votre mental en superpouvoir"/>
+
+                    <Label styleClass="hero-subtitle"
+                           text="Une approche innovante qui fusionne neurosciences, psychologie positive&#10;et technologies pour débloquer votre plein potentiel mental"
+                           wrapText="true"/>
+
+                    <HBox spacing="20" alignment="CENTER">
+                        <Button text="Commencer maintenant" styleClass="hero-btn-primary"/>
+                        <Button text="Explorer" styleClass="hero-btn-secondary"/>
+                    </HBox>
+                </VBox>
+            </StackPane>
+
+        </VBox>
+
+        <!-- ================= FOOTER ================= -->
+        <HBox styleClass="copyright-bar" alignment="CENTER">
+            <Label text="© 2026 neurowell. Tous droits réservés."
+                   styleClass="copyright-text"/>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

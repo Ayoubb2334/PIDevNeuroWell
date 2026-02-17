@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ConsultationTableController"
+            prefWidth="900" prefHeight="500">
+
+    <VBox spacing="15"
+          AnchorPane.topAnchor="20"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20"
+          AnchorPane.bottomAnchor="20">
+
+        <Label text="Liste des Consultations"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+        <TableView fx:id="tableConsultation"
+                   prefHeight="400">
+
+            <columns>
+
+                <TableColumn fx:id="colId"
+                             text="ID"
+                             prefWidth="80" />
+
+                <TableColumn fx:id="colIdUser"
+                             text="ID User"
+                             prefWidth="100" />
+
+                <TableColumn fx:id="colIdPsychologue"
+                             text="ID Psychologue"
+                             prefWidth="120" />
+
+                <TableColumn fx:id="colDate"
+                             text="Date"
+                             prefWidth="120" />
+
+                <TableColumn fx:id="colHeure"
+                             text="Heure"
+                             prefWidth="100" />
+
+                <TableColumn fx:id="colType"
+                             text="Type"
+                             prefWidth="120" />
+
+                <TableColumn fx:id="colStatut"
+                             text="Statut"
+                             prefWidth="120" />
+
+            </columns>
+
+        </TableView>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnModifier" text="Modifier" prefWidth="120"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="120"/>
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

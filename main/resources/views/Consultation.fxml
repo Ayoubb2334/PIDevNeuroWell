@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ConsultationController"
+            prefWidth="600" prefHeight="550">
+
+    <VBox spacing="12" alignment="CENTER"
+          AnchorPane.topAnchor="20"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20">
+
+        <Label text="Ajouter Consultation"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+        <!-- ID USER -->
+        <Label text="ID User" />
+        <TextField fx:id="idUserField" prefWidth="250" />
+
+        <!-- ID PSYCHOLOGUE -->
+        <Label text="ID Psychologue" />
+        <TextField fx:id="idPsychologueField" prefWidth="250" />
+
+        <!-- DATE -->
+        <Label text="Date Consultation" />
+        <DatePicker fx:id="datePicker" prefWidth="250" />
+
+        <!-- HEURE -->
+        <Label text="Heure (HH:mm)" />
+        <TextField fx:id="heureField" prefWidth="250" />
+
+        <!-- TYPE -->
+        <Label text="Type Consultation" />
+        <ComboBox fx:id="typeComboBox" prefWidth="250" />
+
+        <!-- STATUT -->
+        <Label text="Statut" />
+        <ComboBox fx:id="statutComboBox" prefWidth="250" />
+
+        <Button fx:id="btnAjouter"
+                text="Ajouter"
+                prefWidth="150"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+
+    </VBox>
+
+</AnchorPane>

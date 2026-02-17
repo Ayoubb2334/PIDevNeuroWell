@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.UserConsultationController"
+      spacing="20"
+      alignment="TOP_CENTER"
+      style="-fx-padding: 30;"
+      prefWidth="900"
+      prefHeight="600">
+
+    <Label text="Mes Consultations"
+           style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+    <!-- ================= FORMULAIRE ================= -->
+    <GridPane hgap="20" vgap="15">
+
+        <Label text="Date :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker"
+                    GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Heure (HH:mm) :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtHeure"
+                   promptText="14:00"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <!-- 🔥 Psychologue maintenant manuel -->
+        <Label text="ID Psychologue :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtPsychologue"
+                   promptText="ex: 10"
+                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Type :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboType"
+                  prefWidth="200"
+                  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+    <Button text="Prendre Rendez-vous"
+            prefWidth="200"
+            onAction="#ajouterConsultation"/>
+
+    <Separator prefWidth="800"/>
+
+    <!-- ================= TABLE ================= -->
+    <TableView fx:id="tableConsultations"
+               prefWidth="800"
+               prefHeight="300">
+
+        <columns>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="130"/>
+            <TableColumn fx:id="colHeure" text="Heure" prefWidth="100"/>
+            <TableColumn fx:id="colPsychologue" text="ID Psychologue" prefWidth="150"/>
+            <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="120"/>
+        </columns>
+
+    </TableView>
+
+</VBox>
