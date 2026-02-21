@@ -26,7 +26,7 @@
             <!-- Logo Section -->
             <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
                 <Label text="🧠" styleClass="logo-icon"/>
-                <Label text="PSYCHÉ" styleClass="logo-text"/>
+                <Label text="NeuroWell" styleClass="logo-text"/>
             </HBox>
 
             <!-- Spacer -->
@@ -126,7 +126,7 @@
 
         <!-- Footer Bar -->
         <HBox styleClass="footer-bar" alignment="CENTER" spacing="20">
-            <Label text="© 2026 PSYCHÉ" styleClass="footer-text"/>
+            <Label text="© 2026 NeuroWell" styleClass="footer-text"/>
             <Label text="•" styleClass="footer-separator"/>
             <Label text="Développement Personnel" styleClass="footer-text"/>
             <Label text="•" styleClass="footer-separator"/>

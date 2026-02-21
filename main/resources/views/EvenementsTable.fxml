@@ -29,16 +29,16 @@
 
         <TableView fx:id="tableEvenements" prefHeight="350" styleClass="modern-table">
             <columns>
-                <TableColumn fx:id="colTitre" text="Titre" prefWidth="120"/>
-                <TableColumn fx:id="colImage" text="Image" prefWidth="80"/>
+                <TableColumn fx:id="colTitre"       text="Titre"       prefWidth="120"/>
+                <TableColumn fx:id="colImage"       text="Image"       prefWidth="80"/>
                 <TableColumn fx:id="colDescription" text="Description" prefWidth="150"/>
-                <TableColumn fx:id="colDate" text="Date" prefWidth="120"/>
-                <TableColumn fx:id="colLocalisation" text="Lieu" prefWidth="100"/>
-                <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
-                <TableColumn fx:id="colCapacite" text="Capacité" prefWidth="80"/>
-                <TableColumn fx:id="colStatut" text="Statut" prefWidth="80"/>
-                <TableColumn fx:id="colPrix_e" text="Prix" prefWidth="80"/>
-                <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+                <TableColumn fx:id="colDate"        text="Date"        prefWidth="120"/>
+                <TableColumn fx:id="colLocalisation" text="Lieu"       prefWidth="100"/>
+                <TableColumn fx:id="colType"        text="Type"        prefWidth="100"/>
+                <TableColumn fx:id="colCapacite"    text="Capacité"    prefWidth="80"/>
+                <TableColumn fx:id="colStatut"      text="Statut"      prefWidth="100"/>
+                <TableColumn fx:id="colPrix_e"      text="Prix"        prefWidth="80"/>
+                <TableColumn fx:id="colActions"     text="Actions"     prefWidth="150"/>
             </columns>
         </TableView>
     </VBox>
@@ -52,10 +52,8 @@
 
         <TableView fx:id="tableParticipations" prefHeight="350" styleClass="modern-table">
             <columns>
-
-                <TableColumn fx:id="colModeParticipationt" text="ModeParticipant" prefWidth="120"/>
-                <TableColumn fx:id="colObjectif" text="Objectif" prefWidth="250"/>
-
+                <TableColumn fx:id="colModeParticipation" text="Mode" prefWidth="120"/>
+                <TableColumn fx:id="colObjectif"          text="Objectif" prefWidth="250"/>
                 <TableColumn fx:id="colActionsParticipation" text="Actions" prefWidth="150"/>
             </columns>
         </TableView>
@@ -63,9 +61,9 @@
 
     <!-- Boutons principaux -->
     <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="btnRefresh" text="Actualiser" styleClass="form-btn"/>
+        <Button fx:id="btnRefresh"               text="Actualiser"              styleClass="form-btn"/>
         <Button fx:id="btnRefreshParticipations" text="Actualiser Participations" styleClass="form-btn"/>
-        <Button fx:id="btnClose" text="Fermer" styleClass="form-btn"/>
+        <Button fx:id="btnClose"                 text="Fermer"                  styleClass="form-btn"/>
     </HBox>
 
 </VBox>
