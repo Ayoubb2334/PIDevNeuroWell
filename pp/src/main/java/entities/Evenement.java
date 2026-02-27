@@ -12,8 +12,8 @@ public class Evenement {
     private String type_e;
     private int capacitemax_e;
     private String statut_e;
-    private String prix_e;   // مطابق للـ SQL
-    private String image;    // مطابق للـ SQL
+    private String prix_e;
+    private String image;
 
     public Evenement() {
     }

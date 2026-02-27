@@ -2,37 +2,80 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.AfficherEvaluationController"
-            prefWidth="900" prefHeight="650"
-            stylesheets="@/style/table.css"
-            style="-fx-background-color: #f8f9fa;">
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AfficherEvaluationController"
+      spacing="20"
+      alignment="TOP_CENTER"
+      styleClass="form-container"
+      stylesheets="@../style/table.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
 
-    <Label text="Liste des Évaluations" layoutX="30" layoutY="20" styleClass="logo-sidebar"/>
-
-    <VBox layoutX="30" layoutY="70" prefWidth="840" spacing="15">
-        <padding>
-            <Insets top="10" left="10" right="10" bottom="10"/>
-        </padding>
-
-        <TableView fx:id="tableEvaluations" prefHeight="450" styleClass="custom-table">
-            <columns>
-                <TableColumn fx:id="typeTestCol" text="Type Test" prefWidth="200"/>
-                <TableColumn fx:id="scoreCol"    text="Score"     prefWidth="120"/>
-                <TableColumn fx:id="niveauCol"   text="Niveau"    prefWidth="150"/>
-                <TableColumn fx:id="dateCol"     text="Date"      prefWidth="160"/>
-                <TableColumn fx:id="actionCol"   text="Actions"   prefWidth="210"/>
-            </columns>
-        </TableView>
-
-        <!-- INSTRUCTIONS -->
-        <VBox spacing="8" style="-fx-background-color: #E8F8F5; -fx-border-color: #1ABC9C; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 15;">
-            <Label text="💡 Instructions" style="-fx-text-fill: #16A085; -fx-font-weight: bold; -fx-font-size: 14px;"/>
-            <Label text="• Cliquez sur ✏️ Modifier pour ouvrir le formulaire de modification" style="-fx-text-fill: #2C3E50; -fx-font-size: 12px;"/>
-            <Label text="• Cliquez sur 🗑️ Supprimer pour supprimer une évaluation" style="-fx-text-fill: #2C3E50; -fx-font-size: 12px;"/>
+    <!-- ═══ PAGE HEADER — même structure que EvenementsTable ═══ -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label text="📊  Gestion des Évaluations" styleClass="form-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Badge TOTAL (même style que dans le dashboard) -->
+        <VBox alignment="CENTER" spacing="2"
+              style="-fx-background-color: rgba(0,217,255,0.08);
+                     -fx-border-color: rgba(0,217,255,0.25);
+                     -fx-border-width: 1;
+                     -fx-border-radius: 14;
+                     -fx-background-radius: 14;
+                     -fx-padding: 8 18;">
+            <Label text="TOTAL"
+                   style="-fx-text-fill: rgba(0,217,255,0.55); -fx-font-size: 10px; -fx-font-weight: bold; -fx-letter-spacing: 1.5px;"/>
+            <Label fx:id="totalLabel" text="—"
+                   style="-fx-text-fill: #00D9FF; -fx-font-size: 22px; -fx-font-weight: bold;"/>
         </VBox>
+    </HBox>
+
+    <!-- ═══ BARRE DE RECHERCHE — même que EvenementsTable ═══ -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField"
+                   promptText="🔍  Rechercher une évaluation…"
+                   styleClass="search-bar"
+                   HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnSearch" text="⌕  Rechercher" styleClass="form-btn"/>
+        <Button fx:id="btnRefresh" text="↻  Actualiser"  styleClass="form-btn"/>
+        <Button fx:id="btnStats" text="📊  Statistiques"
+                style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
+                       -fx-text-fill: #050C07;
+                       -fx-font-weight: bold;
+                       -fx-font-size: 13px;
+                       -fx-padding: 9 20;
+                       -fx-background-radius: 20;
+                       -fx-cursor: hand;
+                       -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.40), 12, 0.3, 0, 3);"/>
+    </HBox>
+
+    <!-- ═══ TABLE SECTION — même structure que EvenementsTable ═══ -->
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+        <Label text="📋 Liste des évaluations" styleClass="section-title"/>
+
+        <TableView fx:id="tableEvaluations"
+                   VBox.vgrow="ALWAYS"
+                   prefHeight="500"
+                   styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="typeTestCol" text="Type de test" prefWidth="180"/>
+                <TableColumn fx:id="scoreCol"    text="Score"        prefWidth="120"/>
+                <TableColumn fx:id="niveauCol"   text="Niveau"       prefWidth="150"/>
+                <TableColumn fx:id="dateCol"     text="Date"         prefWidth="160"/>
+                <TableColumn fx:id="actionCol"   text="Actions"      prefWidth="180"/>
+            </columns>
+
+            <placeholder>
+                <VBox alignment="CENTER" spacing="12">
+                    <Label text="📭" style="-fx-font-size: 40px;"/>
+                    <Label text="Aucune évaluation enregistrée"
+                           style="-fx-text-fill: rgba(0,217,255,0.40); -fx-font-size: 14px;"/>
+                </VBox>
+            </placeholder>
+        </TableView>
     </VBox>
 
-</AnchorPane>
+</VBox>

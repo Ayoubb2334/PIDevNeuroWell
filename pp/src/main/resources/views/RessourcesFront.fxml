@@ -33,10 +33,12 @@
 
             <!-- Navigation Buttons -->
             <HBox spacing="25" alignment="CENTER">
-                <Button text="Accueil" styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
-                <Button text="Services" styleClass="nav-btn"/>
-                <Button text="Ressources" styleClass="nav-btn, nav-btn-active"/>
-                <Button text="Blog" styleClass="nav-btn"/>
+                <Button text="Accueil"      styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
+                <Button text="Services"     styleClass="nav-btn"/>
+                <Button text="Événements"   styleClass="nav-btn" onAction="#handleEvents"/>
+                <Button text="Évaluations"  styleClass="nav-btn" onAction="#handleEvaluations"/>
+                <Button text="Ressources"   styleClass="nav-btn, nav-btn-active"/>
+                <Button text="Blog"         styleClass="nav-btn"/>
             </HBox>
 
             <!-- CTA Buttons -->
@@ -100,6 +102,226 @@
                     <VBox fx:id="ressourcesContainer" spacing="20" styleClass="events-container">
                         <!-- Resource cards will be dynamically added here -->
                     </VBox>
+                </VBox>
+
+                <!-- ══════════════════════════════════════════════════
+                     SECTION ÉVALUATIONS
+                ══════════════════════════════════════════════════ -->
+                <VBox spacing="25" styleClass="events-section">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-header">
+                        <Label text="🧪 Évaluations Psychologiques" styleClass="section-title"/>
+                    </HBox>
+
+                    <HBox spacing="20" alignment="CENTER">
+
+                        <!-- Carte Stress -->
+                        <VBox spacing="15" alignment="CENTER"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="🧘" style="-fx-font-size: 36px;"/>
+                            <Label text="Stress"
+                                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Mesurez votre niveau de stress et obtenez des recommandations personnalisées."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <Button text="Faire le test →" onAction="#handleEvaluations"
+                                    style="-fx-background-color: rgba(124,58,237,0.3);
+                                           -fx-text-fill: #A78BFA;
+                                           -fx-border-color: rgba(124,58,237,0.5); -fx-border-width: 1;
+                                           -fx-border-radius: 20; -fx-background-radius: 20;
+                                           -fx-padding: 8 22; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        </VBox>
+
+                        <!-- Carte Anxiété -->
+                        <VBox spacing="15" alignment="CENTER"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="😰" style="-fx-font-size: 36px;"/>
+                            <Label text="Anxiété"
+                                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Évaluez votre niveau d'anxiété et découvrez des stratégies adaptées."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <Button text="Faire le test →" onAction="#handleEvaluations"
+                                    style="-fx-background-color: rgba(124,58,237,0.3);
+                                           -fx-text-fill: #A78BFA;
+                                           -fx-border-color: rgba(124,58,237,0.5); -fx-border-width: 1;
+                                           -fx-border-radius: 20; -fx-background-radius: 20;
+                                           -fx-padding: 8 22; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        </VBox>
+
+                        <!-- Carte Burnout -->
+                        <VBox spacing="15" alignment="CENTER"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="⚡" style="-fx-font-size: 36px;"/>
+                            <Label text="Burnout"
+                                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Détectez les signes d'épuisement professionnel avant qu'il ne soit trop tard."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <Button text="Faire le test →" onAction="#handleEvaluations"
+                                    style="-fx-background-color: rgba(124,58,237,0.3);
+                                           -fx-text-fill: #A78BFA;
+                                           -fx-border-color: rgba(124,58,237,0.5); -fx-border-width: 1;
+                                           -fx-border-radius: 20; -fx-background-radius: 20;
+                                           -fx-padding: 8 22; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        </VBox>
+
+                        <!-- Carte Bien-être -->
+                        <VBox spacing="15" alignment="CENTER"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="🌿" style="-fx-font-size: 36px;"/>
+                            <Label text="Bien-être"
+                                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label text="Mesurez votre bien-être global et identifiez les axes d'amélioration."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <Button text="Faire le test →" onAction="#handleEvaluations"
+                                    style="-fx-background-color: rgba(124,58,237,0.3);
+                                           -fx-text-fill: #A78BFA;
+                                           -fx-border-color: rgba(124,58,237,0.5); -fx-border-width: 1;
+                                           -fx-border-radius: 20; -fx-background-radius: 20;
+                                           -fx-padding: 8 22; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- Bouton voir toutes les évaluations -->
+                    <HBox alignment="CENTER">
+                        <Button text="Voir toutes les évaluations →" onAction="#handleEvaluations"
+                                styleClass="btn-search"
+                                style="-fx-background-color: linear-gradient(to right, #7C3AED, #A78BFA);
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 25;
+                                       -fx-padding: 12 32;
+                                       -fx-font-size: 14px;
+                                       -fx-font-weight: bold;
+                                       -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- ══════════════════════════════════════════════════
+                     SECTION ÉVÉNEMENTS
+                ══════════════════════════════════════════════════ -->
+                <VBox spacing="25" styleClass="events-section">
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="section-header">
+                        <Label text="📅 Événements &amp; Ateliers" styleClass="section-title"/>
+                    </HBox>
+
+                    <HBox spacing="20" alignment="CENTER">
+
+                        <!-- Carte Atelier -->
+                        <VBox spacing="15" alignment="CENTER_LEFT"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="🎯" style="-fx-font-size: 32px;"/>
+                            <Label text="Ateliers pratiques"
+                                   style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Des sessions interactives pour développer vos compétences mentales en groupe."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="📅" style="-fx-font-size: 12px;"/>
+                                <Label text="Sessions régulières"
+                                       style="-fx-text-fill: #A78BFA; -fx-font-size: 12px;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Carte Séminaire -->
+                        <VBox spacing="15" alignment="CENTER_LEFT"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="🧠" style="-fx-font-size: 32px;"/>
+                            <Label text="Séminaires experts"
+                                   style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Des conférences animées par des spécialistes en psychologie et bien-être."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="🎤" style="-fx-font-size: 12px;"/>
+                                <Label text="Experts certifiés"
+                                       style="-fx-text-fill: #A78BFA; -fx-font-size: 12px;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Carte Groupe -->
+                        <VBox spacing="15" alignment="CENTER_LEFT"
+                              style="-fx-background-color: rgba(37,37,54,0.9);
+                                     -fx-background-radius: 16;
+                                     -fx-padding: 28 24;
+                                     -fx-border-color: rgba(124,58,237,0.25);
+                                     -fx-border-width: 1;
+                                     -fx-border-radius: 16;
+                                     -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 10, 0, 0, 0);"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="👥" style="-fx-font-size: 32px;"/>
+                            <Label text="Groupes de soutien"
+                                   style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Rejoignez une communauté bienveillante pour progresser ensemble."
+                                   style="-fx-text-fill: #B8B8D1; -fx-font-size: 13px;"
+                                   wrapText="true"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="🤝" style="-fx-font-size: 12px;"/>
+                                <Label text="Communauté active"
+                                       style="-fx-text-fill: #A78BFA; -fx-font-size: 12px;"/>
+                            </HBox>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- Bouton voir tous les événements -->
+                    <HBox alignment="CENTER">
+                        <Button text="Voir tous les événements →" onAction="#handleEvents"
+                                style="-fx-background-color: linear-gradient(to right, #7C3AED, #A78BFA);
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 25;
+                                       -fx-padding: 12 32;
+                                       -fx-font-size: 14px;
+                                       -fx-font-weight: bold;
+                                       -fx-cursor: hand;"/>
+                    </HBox>
                 </VBox>
 
             </VBox>

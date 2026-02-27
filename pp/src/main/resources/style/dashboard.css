@@ -1,0 +1,372 @@
+/* ╔══════════════════════════════════════════════════════════╗
+   ║  NEUROWELL — Dashboard CSS                               ║
+   ║  Dark Futuristic · Cyan #00D9FF · Neon Green #00FF88     ║
+   ╚══════════════════════════════════════════════════════════╝ */
+
+/* ═══════════════════════════════════════════════════════════
+   ROOT
+   ═══════════════════════════════════════════════════════════ */
+.root {
+    -fx-background-color: #050C07;
+    -fx-font-family: "Consolas", "JetBrains Mono", "Segoe UI", monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════════════ */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #071A10, #050C07, #071A10);
+    -fx-border-color: transparent rgba(0,217,255,0.16) transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 0 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.10), 30, 0.1, 8, 0);
+}
+
+/* Nav section labels */
+.nav-section-label {
+    -fx-text-fill: rgba(0,217,255,0.30);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+    -fx-padding: 0 0 0 20;
+}
+
+/* Sidebar divider line */
+.sidebar-divider {
+    -fx-stroke: rgba(0,217,255,0.12);
+    -fx-stroke-width: 1;
+    -fx-padding: 0 0 0 20;
+    -fx-translate-x: 20;
+}
+
+/* ── Primary nav buttons ─────────────────────────────────── */
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(200,255,220,0.65);
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 13 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-graphic-text-gap: 10;
+}
+
+.menu-btn:hover {
+    -fx-background-color: rgba(0,217,255,0.08);
+    -fx-text-fill: #00D9FF;
+    -fx-border-color: transparent transparent transparent #00D9FF;
+    -fx-border-width: 0 0 0 3;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.12), 10, 0.2, 4, 0);
+}
+
+.menu-btn:pressed {
+    -fx-background-color: rgba(0,217,255,0.13);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ── Sub-menu container ──────────────────────────────────── */
+.submenu-box {
+    -fx-background-color: rgba(0,217,255,0.03);
+    -fx-border-color: transparent transparent transparent rgba(0,217,255,0.18);
+    -fx-border-width: 0 0 0 1;
+    -fx-padding: 4 0 4 28;
+}
+
+/* ── Sub-menu buttons ────────────────────────────────────── */
+.sub-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(200,255,220,0.45);
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 9 16;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+}
+
+.sub-btn:hover {
+    -fx-background-color: rgba(0,255,136,0.07);
+    -fx-text-fill: #00FF88;
+    -fx-border-color: transparent transparent transparent #00FF88;
+    -fx-border-width: 0 0 0 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,255,136,0.15), 8, 0.2, 3, 0);
+}
+
+/* ── Front Office special button ────────────────────────── */
+.menu-btn-front {
+    -fx-background-color: rgba(0,217,255,0.07);
+    -fx-text-fill: #00D9FF;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-padding: 12 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(0,217,255,0.30);
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+}
+
+.menu-btn-front:hover {
+    -fx-background-color: #00D9FF;
+    -fx-text-fill: #050C07;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.55), 20, 0.35, 0, 0);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.menu-btn-front:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOP BAR
+   ═══════════════════════════════════════════════════════════ */
+.topbar {
+    -fx-background-color: linear-gradient(to right, #060F09, #050C07);
+    -fx-border-color: transparent transparent rgba(0,217,255,0.12) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 60;
+    -fx-max-height: 60;
+    -fx-pref-height: 60;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.40), 12, 0.2, 0, 4);
+}
+
+/* Breadcrumb active segment */
+.breadcrumb-active {
+    -fx-text-fill: rgba(200,255,220,0.70);
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+/* ── Search box ──────────────────────────────────────────── */
+.search-box {
+    -fx-background-color: #112016;
+    -fx-background-radius: 22;
+    -fx-border-color: rgba(0,217,255,0.18);
+    -fx-border-width: 1;
+    -fx-border-radius: 22;
+    -fx-padding: 0 14;
+    -fx-pref-height: 36;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 6, 0.1, 0, 2);
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E8FFF0;
+    -fx-prompt-text-fill: rgba(200,255,220,0.30);
+    -fx-font-size: 12px;
+    -fx-pref-width: 190;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.search-field:focused {
+    -fx-border-color: transparent;
+}
+
+/* ── Notification button ─────────────────────────────────── */
+.notif-btn {
+    -fx-background-color: #112016;
+    -fx-background-radius: 50;
+    -fx-border-color: rgba(0,217,255,0.18);
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+    -fx-min-width: 38;
+    -fx-min-height: 38;
+}
+
+.notif-btn:hover {
+    -fx-background-color: rgba(0,217,255,0.10);
+    -fx-border-color: #00D9FF;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.35), 12, 0.25, 0, 0);
+}
+
+/* ── Avatar ──────────────────────────────────────────────── */
+.avatar-circle {
+    -fx-background-color: linear-gradient(to bottom right, #00D9FF, #00FF88);
+    -fx-background-radius: 50;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-max-width: 36;
+    -fx-max-height: 36;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.45), 10, 0.3, 0, 0);
+}
+
+.avatar-label {
+    -fx-text-fill: #050C07;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT PANE
+   ═══════════════════════════════════════════════════════════ */
+.content-pane {
+    -fx-background-color: #050C07;
+    -fx-padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLL PANE (global override)
+   ═══════════════════════════════════════════════════════════ */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-pref-width: 7;
+    -fx-pref-height: 7;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,217,255,0.28);
+    -fx-background-radius: 6;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0,217,255,0.60);
+}
+
+.scroll-bar .track,
+.scroll-bar .track-background,
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button,
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-pref-width: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WELCOME DASHBOARD ELEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* KPI card base */
+.kpi-card {
+    -fx-background-color: #0D1F12;
+    -fx-border-color: rgba(0,217,255,0.14);
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.08), 20, 0.1, 0, 4);
+}
+
+.kpi-card:hover {
+    -fx-border-color: #00D9FF;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.30), 28, 0.2, 0, 0);
+}
+
+/* Quick action card */
+.quick-card {
+    -fx-background-color: #112016;
+    -fx-border-color: rgba(0,217,255,0.12);
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-cursor: hand;
+}
+
+.quick-card:hover {
+    -fx-background-color: #0D1F12;
+    -fx-border-color: #00D9FF;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.28), 22, 0.2, 0, 0);
+}
+
+/* Activity feed container */
+.activity-feed {
+    -fx-background-color: #0D1F12;
+    -fx-border-color: rgba(0,217,255,0.13);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+/* Feed row */
+.feed-row {
+    -fx-border-color: transparent transparent rgba(0,217,255,0.07) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 20;
+}
+
+.feed-row:hover {
+    -fx-background-color: rgba(0,217,255,0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOOLTIPS
+   ═══════════════════════════════════════════════════════════ */
+.tooltip {
+    -fx-background-color: #0D1F12;
+    -fx-text-fill: #00D9FF;
+    -fx-font-size: 11px;
+    -fx-border-color: rgba(0,217,255,0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.18), 10, 0.2, 0, 2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTEXT MENU (right-click)
+   ═══════════════════════════════════════════════════════════ */
+.context-menu {
+    -fx-background-color: #0D1F12;
+    -fx-border-color: rgba(0,217,255,0.20);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.40), 16, 0.2, 0, 4);
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(200,255,220,0.75);
+    -fx-font-size: 12px;
+    -fx-padding: 8 16;
+}
+
+.menu-item:hover {
+    -fx-background-color: rgba(0,217,255,0.10);
+    -fx-text-fill: #00D9FF;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GENERAL LABELS
+   ═══════════════════════════════════════════════════════════ */
+.label {
+    -fx-text-fill: #E8FFF0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOCUS RING (remove default ugly blue)
+   ═══════════════════════════════════════════════════════════ */
+.button:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}

@@ -20,8 +20,10 @@ import javafx.util.Duration;
 import services.ServiceEvenement;
 import services.ServiceParticipation;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -201,7 +203,7 @@ public class ShowEventController {
     @FXML
     private void handleBackToFront() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Front.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) eventsContainer.getScene().getWindow();
@@ -211,7 +213,7 @@ public class ShowEventController {
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
             fadeOut.setOnFinished(e -> {
-                stage.setTitle("PSYCHÉ - Accueil");
+                stage.setTitle("NeuroWell - Accueil");
                 Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
                 stage.setScene(scene);
 
@@ -247,6 +249,70 @@ public class ShowEventController {
         }
     }
 
+    /**
+     * Navigate to Ressources front page
+     */
+    @FXML
+    private void handleGoToRessources() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/RessourcesFront.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) eventsContainer.getScene().getWindow();
+
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), eventsContainer.getScene().getRoot());
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(e -> {
+                stage.setTitle("NeuroWell - Ressources");
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                stage.setScene(scene);
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
+                fadeIn.setFromValue(0.0);
+                fadeIn.setToValue(1.0);
+                fadeIn.play();
+            });
+            fadeOut.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showModernAlert("Erreur", "Impossible d'ouvrir la bibliothèque", Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Navigate to Evaluations front page
+     */
+    @FXML
+    private void handleGoToEvaluations() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/showEvaluation.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) eventsContainer.getScene().getWindow();
+
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), eventsContainer.getScene().getRoot());
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(e -> {
+                stage.setTitle("NeuroWell - Évaluations");
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                stage.setScene(scene);
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
+                fadeIn.setFromValue(0.0);
+                fadeIn.setToValue(1.0);
+                fadeIn.play();
+            });
+            fadeOut.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showModernAlert("Erreur", "Impossible d'ouvrir les évaluations", Alert.AlertType.ERROR);
+        }
+    }
+
     // ==================== EVENT LOADING ====================
 
     /**
@@ -258,8 +324,13 @@ public class ShowEventController {
         try {
             List<Evenement> events = serviceEvenement.recuperer();
 
-            if (events.isEmpty()) {
-                Label noEvents = new Label("Aucun événement disponible pour le moment.");
+            // Filtrer uniquement les événements avec statut "Valide"
+            List<Evenement> validEvents = events.stream()
+                    .filter(ev -> "Validé".equalsIgnoreCase(ev.getStatut_e()))
+                    .toList();
+
+            if (validEvents.isEmpty()) {
+                Label noEvents = new Label("Aucun événement valide disponible pour le moment.");
                 noEvents.setStyle(
                         "-fx-font-size: 18px; " +
                                 "-fx-text-fill: rgba(248, 249, 250, 0.6); " +
@@ -276,12 +347,12 @@ public class ShowEventController {
 
             // Update results counter
             if (resultsCount != null) {
-                resultsCount.setText(events.size() + " événement" + (events.size() > 1 ? "s" : ""));
+                resultsCount.setText(validEvents.size() + " événement" + (validEvents.size() > 1 ? "s" : ""));
             }
 
             // Add events with staggered animation
-            for (int i = 0; i < events.size(); i++) {
-                Evenement event = events.get(i);
+            for (int i = 0; i < validEvents.size(); i++) {
+                Evenement event = validEvents.get(i);
                 VBox eventCard = createModernEventCard(event);
                 eventsContainer.getChildren().add(eventCard);
 
@@ -294,6 +365,7 @@ public class ShowEventController {
             showModernAlert("Erreur", "Impossible de charger les événements", Alert.AlertType.ERROR);
         }
     }
+
 
     /**
      * Animate card appearance with fade and slide
@@ -463,7 +535,7 @@ public class ShowEventController {
                         "-fx-cursor: hand;"
         );
 
-        // Button hover effect
+        // Participer hover effect
         btnParticiper.setOnMouseEntered(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(200), btnParticiper);
             st.setToX(1.1);
@@ -480,7 +552,63 @@ public class ShowEventController {
 
         btnParticiper.setOnAction(e -> openModernParticipationForm(event));
 
-        rightBox.getChildren().addAll(prixLabel, btnParticiper);
+        // ── Maps button ──────────────────────────────────────────
+        Button btnMaps = new Button("📍 Voir sur Maps");
+        btnMaps.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-color: " + PRIMARY_COLOR + "; " +
+                        "-fx-border-width: 2; " +
+                        "-fx-border-radius: 25; " +
+                        "-fx-background-radius: 25; " +
+                        "-fx-text-fill: " + PRIMARY_COLOR + "; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 10 18; " +
+                        "-fx-cursor: hand;"
+        );
+
+        btnMaps.setOnMouseEntered(e -> {
+            btnMaps.setStyle(
+                    "-fx-background-color: " + PRIMARY_COLOR + "; " +
+                            "-fx-border-color: " + PRIMARY_COLOR + "; " +
+                            "-fx-border-width: 2; " +
+                            "-fx-border-radius: 25; " +
+                            "-fx-background-radius: 25; " +
+                            "-fx-text-fill: " + DARK_BG + "; " +
+                            "-fx-font-size: 13px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-padding: 10 18; " +
+                            "-fx-cursor: hand;"
+            );
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), btnMaps);
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
+        });
+
+        btnMaps.setOnMouseExited(e -> {
+            btnMaps.setStyle(
+                    "-fx-background-color: transparent; " +
+                            "-fx-border-color: " + PRIMARY_COLOR + "; " +
+                            "-fx-border-width: 2; " +
+                            "-fx-border-radius: 25; " +
+                            "-fx-background-radius: 25; " +
+                            "-fx-text-fill: " + PRIMARY_COLOR + "; " +
+                            "-fx-font-size: 13px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-padding: 10 18; " +
+                            "-fx-cursor: hand;"
+            );
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), btnMaps);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+        });
+
+        btnMaps.setOnAction(e -> openInGoogleMaps(event.getLocalisation_e()));
+        // ─────────────────────────────────────────────────────────
+
+        rightBox.getChildren().addAll(prixLabel, btnParticiper, btnMaps);
 
         mainContent.getChildren().addAll(imageView, contentBox, rightBox);
         card.getChildren().add(mainContent);
@@ -632,6 +760,43 @@ public class ShowEventController {
                 }
             }
         });
+    }
+
+    // ==================== GOOGLE MAPS ====================
+
+    /**
+     * Open Google Maps in the default browser for the given location.
+     * Uses the Google Maps Places Search API URL – no API key required for basic search.
+     */
+    private void openInGoogleMaps(String localisation) {
+        if (localisation == null || localisation.isBlank()) {
+            showModernAlert("Localisation manquante", "Aucune adresse disponible pour cet événement.", Alert.AlertType.WARNING);
+            return;
+        }
+        try {
+            // Encode the address for a URL query parameter
+            String encoded = java.net.URLEncoder.encode(localisation, java.nio.charset.StandardCharsets.UTF_8);
+            // Google Maps search URL – opens directly in the browser and pins the location
+            String url = "https://www.google.com/maps/search/?api=1&query=" + encoded;
+            URI uri = new URI(url);
+
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(uri);
+            } else {
+                // Fallback: try xdg-open (Linux) or open (macOS)
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("linux")) {
+                    new ProcessBuilder("xdg-open", url).start();
+                } else if (os.contains("mac")) {
+                    new ProcessBuilder("open", url).start();
+                } else {
+                    showModernAlert("Non supporté", "Impossible d'ouvrir le navigateur automatiquement.", Alert.AlertType.WARNING);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showModernAlert("Erreur Maps", "Impossible d'ouvrir Google Maps : " + ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     // ==================== SEARCH AND FILTERS ====================

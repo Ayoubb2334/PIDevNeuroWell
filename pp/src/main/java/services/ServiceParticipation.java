@@ -43,8 +43,8 @@ public class ServiceParticipation implements IService<Participation> {
         try (Connection conn = MyDatabase.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(req)) {
 
-            ps.setInt(1, p.getId_u()); // colonne correcte
-            ps.setInt(2, p.getId_e());
+            ps.setInt(1, p.getIdUtilisateur());
+            ps.setInt(2, p.getIdEvenement());
 
             // Vérification de l'enum pour éviter les erreurs SQL
             String mode = p.getModeparticipation().toLowerCase();
@@ -61,18 +61,18 @@ public class ServiceParticipation implements IService<Participation> {
 
     @Override
     public void modifier(Participation p) throws SQLException {
-        if (!evenementExiste(p.getId_e())) {
-            throw new SQLException("L'événement avec id = " + p.getId_e() + " n'existe pas");
+        if (!evenementExiste(p.getIdEvenement())) {
+            throw new SQLException("L'événement avec id = " + p.getIdEvenement() + " n'existe pas");
         }
 
-        if (!utilisateurExiste(p.getId_u())) {
-            throw new SQLException("L'utilisateur avec id = " + p.getId_u() + " n'existe pas");
+        if (!utilisateurExiste(p.getIdUtilisateur())) {
+            throw new SQLException("L'utilisateur avec id = " + p.getIdUtilisateur() + " n'existe pas");
         }
 
         String sql = "UPDATE participation SET id_e = ?, id_user = ?, modeparticipation = ?, objectif = ? WHERE id_p = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, p.getId_e());
-            ps.setInt(2, p.getId_u());
+            ps.setInt(1, p.getIdEvenement());
+            ps.setInt(2, p.getIdUtilisateur());
             ps.setString(3, p.getModeparticipation());
             ps.setString(4, p.getObjectif());
             ps.setInt(5, p.getId_p());

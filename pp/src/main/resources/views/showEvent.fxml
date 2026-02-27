@@ -26,7 +26,7 @@
             <!-- Logo Section -->
             <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
                 <Label text="🧠" styleClass="logo-icon"/>
-                <Label text="PSYCHÉ" styleClass="logo-text"/>
+                <Label text="NeuroWell" styleClass="logo-text"/>
             </HBox>
 
             <!-- Spacer -->
@@ -34,10 +34,12 @@
 
             <!-- Navigation Buttons -->
             <HBox spacing="25" alignment="CENTER">
-                <Button text="Accueil" styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
-                <Button text="Services" styleClass="nav-btn"/>
-                <Button text="Événements" styleClass="nav-btn, nav-btn-active"/>
-                <Button text="Blog" styleClass="nav-btn"/>
+                <Button text="Accueil"     styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
+                <Button text="Services"    styleClass="nav-btn"/>
+                <Button text="Événements"  styleClass="nav-btn, nav-btn-active"/>
+                <Button text="Évaluations" styleClass="nav-btn" onAction="#handleGoToEvaluations"/>
+                <Button text="Ressources"  styleClass="nav-btn" onAction="#handleGoToRessources"/>
+                <Button text="Blog"        styleClass="nav-btn"/>
             </HBox>
 
             <!-- CTA Buttons -->
@@ -121,12 +123,72 @@
                     </VBox>
                 </VBox>
 
+                <!-- ── Section Ressources ── -->
+                <VBox spacing="22"
+                      style="-fx-background-color: rgba(19,36,24,0.6);
+                             -fx-border-color: rgba(0,217,255,0.18);
+                             -fx-border-width: 1; -fx-border-radius: 22; -fx-background-radius: 22;
+                             -fx-padding: 35 35;">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label text="📚" style="-fx-font-size: 22px;"/>
+                        <Label text="Bibliothèque de Ressources"
+                               style="-fx-text-fill: #00D9FF; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <Label text="Préparez-vous à nos événements avec nos ressources : PDF, vidéos, articles et supports audio."
+                           style="-fx-text-fill: rgba(160,224,192,0.70); -fx-font-size: 13px;"
+                           wrapText="true"/>
+                    <HBox spacing="18" alignment="CENTER">
+                        <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: rgba(0,217,255,0.06);
+                                     -fx-border-color: rgba(0,217,255,0.20); -fx-border-width: 1;
+                                     -fx-border-radius: 14; -fx-background-radius: 14; -fx-padding: 22 18;">
+                            <Label text="📕" style="-fx-font-size: 28px;"/>
+                            <Label text="PDF" style="-fx-text-fill: #00D9FF; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <Label text="Guides &amp; fiches" style="-fx-text-fill: rgba(160,224,192,0.55); -fx-font-size: 11px;" wrapText="true"/>
+                        </VBox>
+                        <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: rgba(0,255,136,0.06);
+                                     -fx-border-color: rgba(0,255,136,0.20); -fx-border-width: 1;
+                                     -fx-border-radius: 14; -fx-background-radius: 14; -fx-padding: 22 18;">
+                            <Label text="🎥" style="-fx-font-size: 28px;"/>
+                            <Label text="Vidéos" style="-fx-text-fill: #00FF88; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <Label text="Séances guidées" style="-fx-text-fill: rgba(160,224,192,0.55); -fx-font-size: 11px;" wrapText="true"/>
+                        </VBox>
+                        <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: rgba(167,139,250,0.06);
+                                     -fx-border-color: rgba(167,139,250,0.20); -fx-border-width: 1;
+                                     -fx-border-radius: 14; -fx-background-radius: 14; -fx-padding: 22 18;">
+                            <Label text="📝" style="-fx-font-size: 28px;"/>
+                            <Label text="Articles" style="-fx-text-fill: #A78BFA; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <Label text="Lectures &amp; conseils" style="-fx-text-fill: rgba(160,224,192,0.55); -fx-font-size: 11px;" wrapText="true"/>
+                        </VBox>
+                        <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: rgba(255,215,0,0.06);
+                                     -fx-border-color: rgba(255,215,0,0.20); -fx-border-width: 1;
+                                     -fx-border-radius: 14; -fx-background-radius: 14; -fx-padding: 22 18;">
+                            <Label text="🎵" style="-fx-font-size: 28px;"/>
+                            <Label text="Audio" style="-fx-text-fill: #FFD700; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <Label text="Méditations sonores" style="-fx-text-fill: rgba(160,224,192,0.55); -fx-font-size: 11px;" wrapText="true"/>
+                        </VBox>
+                    </HBox>
+                    <HBox alignment="CENTER">
+                        <Button text="Accéder à la bibliothèque →" onAction="#handleGoToRessources"
+                                style="-fx-background-color: rgba(0,217,255,0.15);
+                                       -fx-text-fill: #00D9FF;
+                                       -fx-border-color: rgba(0,217,255,0.45); -fx-border-width: 1;
+                                       -fx-border-radius: 22; -fx-background-radius: 22;
+                                       -fx-padding: 11 30; -fx-font-size: 14px; -fx-font-weight: bold;
+                                       -fx-cursor: hand;
+                                       -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.30), 12, 0.2, 0, 0);"/>
+                    </HBox>
+                </VBox>
+
             </VBox>
         </ScrollPane>
 
         <!-- Footer Bar -->
         <HBox styleClass="footer-bar" alignment="CENTER" spacing="20">
-            <Label text="© 2026 PSYCHÉ" styleClass="footer-text"/>
+            <Label text="© 2026 NeuroWell" styleClass="footer-text"/>
             <Label text="•" styleClass="footer-separator"/>
             <Label text="Développement Personnel" styleClass="footer-text"/>
             <Label text="•" styleClass="footer-separator"/>

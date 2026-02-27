@@ -19,7 +19,7 @@ public class MyDatabase {
     private MyDatabase() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("✅ Connexion à la base 'projet' établie avec succès !");
+            System.out.println("✅ Connexion à la base 'projet1' établie avec succès !");
         } catch (SQLException e) {
             System.out.println("❌ Erreur de connexion à la base de données : " + e.getMessage());
         }

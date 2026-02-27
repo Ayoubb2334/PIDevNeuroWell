@@ -19,9 +19,13 @@ import javafx.util.Duration;
 import services.ServiceEvenement;
 import services.ServiceParticipation;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
+import services.googlemeetservice;
 
 /**
  * Modern Controller for Participation Page
@@ -56,6 +60,7 @@ public class ParticipationController {
 
     private final ServiceParticipation serviceParticipation = new ServiceParticipation();
     private final ServiceEvenement serviceEvenement = new ServiceEvenement();
+    private final googlemeetservice googleMeetService = new googlemeetservice();
 
     // ==================== MODERN COLORS ====================
 
@@ -139,7 +144,7 @@ public class ParticipationController {
      */
     @FXML
     private void handleBackToFront() {
-        navigateTo("/Front.fxml", "PSYCHÉ - Accueil");
+        navigateTo("/views/dashboard.fxml", "NeuroWell - Accueil");
     }
 
     /**
@@ -237,7 +242,7 @@ public class ParticipationController {
     private VBox createModernParticipationCard(Participation p) throws SQLException {
         // Get associated event
         Evenement e = serviceEvenement.recuperer().stream()
-                .filter(ev -> ev.getId_e() == p.getId_e())
+                .filter(ev -> ev.getId_e() == p.getIdEvenement())
                 .findFirst()
                 .orElse(null);
 
@@ -362,6 +367,18 @@ public class ParticipationController {
         btnDelete.setOnAction(ev -> handleDelete(p));
 
         actionBox.getChildren().addAll(btnEdit, btnDelete);
+
+        // ── Google Meet API button (uniquement pour les participants en ligne) ──
+        if (p.getModeparticipation().equalsIgnoreCase("distanciel")) {
+            // On récupère le titre et la date de l'événement associé
+            final String titreFinal = titre;
+            final java.sql.Timestamp dateFinal = e != null ? e.getDate_e() : null;
+
+            Button btnMeet = createMeetButton();
+            btnMeet.setOnAction(ev -> creerEtOuvrirMeet(titreFinal, dateFinal));
+            actionBox.getChildren().add(btnMeet);
+        }
+        // ─────────────────────────────────────────────────────────────────────
 
         mainContent.getChildren().addAll(infoBox, actionBox);
         card.getChildren().add(mainContent);
@@ -532,7 +549,7 @@ public class ParticipationController {
 
             for (Participation p : participations) {
                 Evenement e = serviceEvenement.recuperer().stream()
-                        .filter(ev -> ev.getId_e() == p.getId_e())
+                        .filter(ev -> ev.getId_e() == p.getIdEvenement())
                         .findFirst()
                         .orElse(null);
 
@@ -713,6 +730,109 @@ public class ParticipationController {
                 }
             }
         });
+    }
+
+    // ==================== GOOGLE MEET API ====================
+
+    /**
+     * Crée un bouton "📹 Rejoindre Meet" stylisé en bleu Google
+     */
+    private Button createMeetButton() {
+        Button btn = new Button("📹 Rejoindre Meet");
+        btn.setStyle(
+                "-fx-background-color: #1a73e8; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: 600; " +
+                        "-fx-padding: 10 18; " +
+                        "-fx-background-radius: 15; " +
+                        "-fx-cursor: hand;"
+        );
+
+        btn.setOnMouseEntered(e -> {
+            btn.setStyle(
+                    "-fx-background-color: #1557b0; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-font-size: 13px; " +
+                            "-fx-font-weight: 600; " +
+                            "-fx-padding: 10 18; " +
+                            "-fx-background-radius: 15; " +
+                            "-fx-cursor: hand;"
+            );
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
+        });
+
+        btn.setOnMouseExited(e -> {
+            btn.setStyle(
+                    "-fx-background-color: #1a73e8; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-font-size: 13px; " +
+                            "-fx-font-weight: 600; " +
+                            "-fx-padding: 10 18; " +
+                            "-fx-background-radius: 15; " +
+                            "-fx-cursor: hand;"
+            );
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+        });
+
+        return btn;
+    }
+
+    /**
+     * Appelle la vraie Google Meet REST API pour créer une réunion,
+     * puis ouvre le lien Meet généré dans le navigateur par défaut.
+     *
+     * @param titreEvenement  Titre de l'événement (sera le nom de la réunion Meet)
+     * @param dateEvenement   Date/heure de début (utilisée pour planifier la réunion)
+     */
+    private void creerEtOuvrirMeet(String titreEvenement, java.sql.Timestamp dateEvenement) {
+        // Lancer dans un thread séparé pour ne pas bloquer l'UI JavaFX
+        // (l'auth OAuth peut prendre quelques secondes la première fois)
+        new Thread(() -> {
+            try {
+                // ── Appel réel à la Google Calendar/Meet API ──────────────────
+                String meetUrl = googleMeetService.creerReunionMeet(titreEvenement, dateEvenement);
+                // ─────────────────────────────────────────────────────────────
+
+                // Retour sur le thread JavaFX pour ouvrir le navigateur
+                javafx.application.Platform.runLater(() -> {
+                    try {
+                        URI uri = new URI(meetUrl);
+                        if (Desktop.isDesktopSupported()
+                                && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            Desktop.getDesktop().browse(uri);
+                        } else {
+                            String os = System.getProperty("os.name").toLowerCase();
+                            if (os.contains("linux")) {
+                                new ProcessBuilder("xdg-open", meetUrl).start();
+                            } else if (os.contains("mac")) {
+                                new ProcessBuilder("open", meetUrl).start();
+                            }
+                        }
+                        showModernAlert("✅ Réunion créée",
+                                "Lien Meet généré :\n" + meetUrl,
+                                Alert.AlertType.INFORMATION);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        showModernAlert("Erreur", "Impossible d'ouvrir le lien Meet : " + ex.getMessage(),
+                                Alert.AlertType.ERROR);
+                    }
+                });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                javafx.application.Platform.runLater(() ->
+                        showModernAlert("Erreur API Meet",
+                                "Impossible de créer la réunion Google Meet :\n" + ex.getMessage(),
+                                Alert.AlertType.ERROR));
+            }
+        }, "GoogleMeet-Thread").start();
     }
 
     // ==================== UTILITY METHODS ====================

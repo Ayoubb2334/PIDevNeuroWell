@@ -418,6 +418,34 @@ public class RessourcesFrontController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleEvents() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/showEvent.fxml"));
+            Stage stage = (Stage) btnBackToFront.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Événements");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger les événements", Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleEvaluations() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/showEvaluation.fxml"));
+            Stage stage = (Stage) btnBackToFront.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Évaluations");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger les évaluations", Alert.AlertType.ERROR);
+        }
+    }
+
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
