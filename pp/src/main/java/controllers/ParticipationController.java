@@ -3,869 +3,556 @@ package controllers;
 import entities.Evenement;
 import entities.Participation;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import services.googlemeetservice;
 import services.ServiceEvenement;
 import services.ServiceParticipation;
 
-import java.awt.Desktop;
 import java.io.IOException;
-import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
-import services.googlemeetservice;
 
-/**
- * Modern Controller for Participation Page
- * With green and sky blue palette, animations and modern effects
- */
 public class ParticipationController {
 
-    // ==================== FXML INJECTED ELEMENTS ====================
+    private static final String PRIMARY_COLOR   = "#00D9FF";
+    private static final String SECONDARY_COLOR = "#00FF88";
+    private static final String DARK_BG         = "#050C07";
+    private static final String CARD_BG         = "#0D1F12";
 
-    // Animated Background Orbs
-    @FXML private Circle orb1;
-    @FXML private Circle orb2;
-    @FXML private Circle orb3;
-
-    // Main Container
-    @FXML private VBox participationContainer;
-
-    // Search and Filters
-    @FXML private TextField searchField;
-    @FXML private RadioButton filterPresentiel;
-    @FXML private RadioButton filterEnLigne;
-    @FXML private RadioButton filterTous;
-
-    // Stats
-    @FXML private Label totalParticipations;
-    @FXML private Label resultsCount;
-
-    // Toggle Group
-    @FXML private ToggleGroup modeGroup;
-
-    // ==================== SERVICES ====================
+    @FXML private Circle    orb1, orb2, orb3;
+    @FXML private VBox      participationContainer;
+    @FXML private VBox      mainAnchorPane;
+    @FXML private TextField     searchField;
+    @FXML private RadioButton   filterPresentiel;
+    @FXML private RadioButton   filterEnLigne;
+    @FXML private RadioButton   filterTous;
+    @FXML private Label         totalParticipations;
+    @FXML private Label         resultsCount;
+    @FXML private ToggleGroup   modeGroup;
 
     private final ServiceParticipation serviceParticipation = new ServiceParticipation();
-    private final ServiceEvenement serviceEvenement = new ServiceEvenement();
-    private final googlemeetservice googleMeetService = new googlemeetservice();
-
-    // ==================== MODERN COLORS ====================
-
-    private static final String PRIMARY_COLOR = "#00D9FF";   // Sky Blue
-    private static final String SECONDARY_COLOR = "#00FF88"; // Green
-    private static final String ACCENT_COLOR = "#7FFF00";    // Lime Green
-    private static final String DARK_BG = "#0A0F0A";
-    private static final String CARD_BG = "#132418";
-
-    // ==================== INITIALIZATION ====================
+    private final ServiceEvenement     serviceEvenement     = new ServiceEvenement();
+    private final googlemeetservice    googleMeetService    = new googlemeetservice();
 
     @FXML
     public void initialize() {
-        System.out.println("ParticipationController initialized");
-
-        // Initialize toggle group
-        if (modeGroup == null) {
-            modeGroup = new ToggleGroup();
-        }
-
-        // Assign radio buttons to toggle group
+        if (modeGroup == null) modeGroup = new ToggleGroup();
         if (filterPresentiel != null) filterPresentiel.setToggleGroup(modeGroup);
-        if (filterEnLigne != null) filterEnLigne.setToggleGroup(modeGroup);
-        if (filterTous != null) {
-            filterTous.setToggleGroup(modeGroup);
-            filterTous.setSelected(true); // Select "Tous" by default
-        }
+        if (filterEnLigne    != null) filterEnLigne.setToggleGroup(modeGroup);
+        if (filterTous       != null) { filterTous.setToggleGroup(modeGroup); filterTous.setSelected(true); }
 
-        // Initialize animations
         initializeAnimations();
-
-        // Load participations
         loadParticipations();
-
-        // Setup filter listeners
         setupFilterListeners();
     }
 
-    /**
-     * Initialize background animations
-     */
     private void initializeAnimations() {
-        if (orb1 != null && orb2 != null && orb3 != null) {
-            animateOrb(orb1, 30, -20, Duration.seconds(15));
-            animateOrb(orb2, -35, 25, Duration.seconds(18));
-            animateOrb(orb3, 20, -15, Duration.seconds(20));
-        }
+        if (orb1 != null) animateOrb(orb1,  30, -20, Duration.seconds(15));
+        if (orb2 != null) animateOrb(orb2, -35,  25, Duration.seconds(18));
+        if (orb3 != null) animateOrb(orb3,  20, -15, Duration.seconds(20));
     }
 
-    /**
-     * Animate background orb
-     */
-    private void animateOrb(Circle orb, double deltaX, double deltaY, Duration duration) {
-        TranslateTransition transition = new TranslateTransition(duration, orb);
-        transition.setByX(deltaX);
-        transition.setByY(deltaY);
-        transition.setCycleCount(Animation.INDEFINITE);
-        transition.setAutoReverse(true);
-        transition.setInterpolator(Interpolator.EASE_BOTH);
-        transition.play();
+    private void animateOrb(Circle orb, double dx, double dy, Duration dur) {
+        TranslateTransition tt = new TranslateTransition(dur, orb);
+        tt.setByX(dx);
+        tt.setByY(dy);
+        tt.setCycleCount(Animation.INDEFINITE);
+        tt.setAutoReverse(true);
+        tt.setInterpolator(Interpolator.EASE_BOTH);
+        tt.play();
     }
 
-    /**
-     * Setup filter listeners for dynamic filtering
-     */
     private void setupFilterListeners() {
-        if (filterPresentiel != null)
-            filterPresentiel.selectedProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        if (filterEnLigne != null)
-            filterEnLigne.selectedProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        if (filterTous != null)
-            filterTous.selectedProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        if (searchField != null)
-            searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
+        if (filterPresentiel != null) filterPresentiel.selectedProperty().addListener((o, v, n) -> applyFilters());
+        if (filterEnLigne    != null) filterEnLigne.selectedProperty().addListener((o, v, n) -> applyFilters());
+        if (filterTous       != null) filterTous.selectedProperty().addListener((o, v, n) -> applyFilters());
+        if (searchField      != null) searchField.textProperty().addListener((o, v, n) -> applyFilters());
     }
 
-    // ==================== NAVIGATION ====================
-
-    /**
-     * Navigate back to front page
-     */
     @FXML
     private void handleBackToFront() {
         navigateTo("/views/dashboard.fxml", "NeuroWell - Accueil");
     }
 
-    /**
-     * Navigate to events page
-     */
-    @FXML
-    private VBox mainAnchorPane;
-
     @FXML
     private void handleEvenement() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/showEvent.fxml"));
-            Parent newRoot = loader.load();
-            mainAnchorPane.getChildren().setAll(newRoot);
+            Parent root = FXMLLoader.load(getClass().getResource("/views/showEvent.fxml"));
+            mainAnchorPane.getChildren().setAll(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    /**
-     * Navigate to a specific page
-     */
-    private void navigateTo(String fxmlPath, String title) {
+    private void navigateTo(String path, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
+            Parent root = FXMLLoader.load(getClass().getResource(path));
             Stage stage = (Stage) participationContainer.getScene().getWindow();
-
-            // Fade transition
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), participationContainer.getScene().getRoot());
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(e -> {
+            FadeTransition ft = new FadeTransition(Duration.millis(300),
+                    participationContainer.getScene().getRoot());
+            ft.setFromValue(1);
+            ft.setToValue(0);
+            ft.setOnFinished(e -> {
                 stage.setTitle(title);
                 stage.getScene().setRoot(root);
-
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-                fadeIn.setFromValue(0.0);
-                fadeIn.setToValue(1.0);
-                fadeIn.play();
+                FadeTransition fi = new FadeTransition(Duration.millis(300), root);
+                fi.setFromValue(0);
+                fi.setToValue(1);
+                fi.play();
             });
-            fadeOut.play();
-
+            ft.play();
         } catch (IOException e) {
             e.printStackTrace();
-            showModernAlert("Erreur", "Impossible de charger la page", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Impossible de charger la page", Alert.AlertType.ERROR);
         }
     }
 
-    // ==================== LOAD PARTICIPATIONS ====================
-
-    /**
-     * Load all participations with animation
-     */
     private void loadParticipations() {
         participationContainer.getChildren().clear();
-
         try {
-            List<Participation> participations = serviceParticipation.recuperer();
-
-            if (participations.isEmpty()) {
-                showEmptyState("Aucune participation disponible pour le moment.");
+            List<Participation> list = serviceParticipation.recuperer();
+            if (list.isEmpty()) {
+                showEmptyState("Aucune participation disponible.");
                 updateStats(0, 0);
                 return;
             }
+            if (totalParticipations != null) totalParticipations.setText(String.valueOf(list.size()));
+            if (resultsCount != null)
+                resultsCount.setText(list.size() + " participation" + (list.size() > 1 ? "s" : ""));
 
-            // Update total stats
-            if (totalParticipations != null) {
-                totalParticipations.setText(String.valueOf(participations.size()));
-            }
-
-            if (resultsCount != null) {
-                resultsCount.setText(participations.size() + " participation" + (participations.size() > 1 ? "s" : ""));
-            }
-
-            // Create cards with staggered animation
-            for (int i = 0; i < participations.size(); i++) {
-                Participation p = participations.get(i);
-                VBox card = createModernParticipationCard(p);
+            for (int i = 0; i < list.size(); i++) {
+                VBox card = createCard(list.get(i));
                 participationContainer.getChildren().add(card);
-                animateCardAppearance(card, i);
+                animateCard(card, i);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            showModernAlert("Erreur", "Impossible de charger les participations", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Impossible de charger les participations", Alert.AlertType.ERROR);
         }
     }
 
-    /**
-     * Create modern participation card
-     */
-    private VBox createModernParticipationCard(Participation p) throws SQLException {
-        // Get associated event
-        Evenement e = serviceEvenement.recuperer().stream()
-                .filter(ev -> ev.getId_e() == p.getIdEvenement())
-                .findFirst()
-                .orElse(null);
+    private VBox createCard(Participation p) throws SQLException {
+        Evenement ev = serviceEvenement.recuperer().stream()
+                .filter(e -> e.getId_e() == p.getIdEvenement())
+                .findFirst().orElse(null);
 
-        String titre = e != null ? e.getTitre_e() : "Événement supprimé";
-        String type = e != null ? e.getType_e() : "-";
-        String prix = e != null ? String.valueOf(e.getPrix_e()) : "-";
-        String localisation = e != null ? e.getLocalisation_e() : "-";
+        String titre = ev != null ? ev.getTitre_e()        : "Evenement supprime";
+        String type  = ev != null ? ev.getType_e()         : "-";
+        String prix  = ev != null ? ev.getPrix_e()         : "-";
+        String lieu  = ev != null ? ev.getLocalisation_e() : "-";
 
-        // Create card
         VBox card = new VBox(0);
-        card.setStyle(
-                "-fx-background-color: linear-gradient(to bottom right, rgba(19, 36, 24, 0.6), rgba(19, 36, 24, 0.3)); " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-border-color: rgba(0, 217, 255, 0.1); " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 20; " +
-                        "-fx-padding: 5;"
-        );
-
-        // Add shadow
-        DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.web(PRIMARY_COLOR, 0.2));
-        shadow.setRadius(15);
-        shadow.setSpread(0.2);
+        card.setStyle(cardStyle(false));
+        DropShadow shadow = cardShadow(false);
         card.setEffect(shadow);
 
-        // Hover effect
-        card.setOnMouseEntered(ev -> {
-            card.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom right, rgba(19, 36, 24, 0.8), rgba(19, 36, 24, 0.5)); " +
-                            "-fx-background-radius: 20; " +
-                            "-fx-border-color: " + PRIMARY_COLOR + "; " +
-                            "-fx-border-width: 1; " +
-                            "-fx-border-radius: 20; " +
-                            "-fx-padding: 5;"
-            );
-
-            TranslateTransition tt = new TranslateTransition(Duration.millis(200), card);
-            tt.setToY(-8);
-            tt.play();
-
-            DropShadow hoverShadow = new DropShadow();
-            hoverShadow.setColor(Color.web(PRIMARY_COLOR, 0.4));
-            hoverShadow.setRadius(25);
-            hoverShadow.setSpread(0.3);
-            card.setEffect(hoverShadow);
+        card.setOnMouseEntered(e -> {
+            card.setStyle(cardStyle(true));
+            TranslateTransition ttIn = new TranslateTransition(Duration.millis(200), card);
+            ttIn.setToY(-8);
+            ttIn.play();
+            card.setEffect(cardShadow(true));
+        });
+        card.setOnMouseExited(e -> {
+            card.setStyle(cardStyle(false));
+            TranslateTransition ttOut = new TranslateTransition(Duration.millis(200), card);
+            ttOut.setToY(0);
+            ttOut.play();
+            card.setEffect(shadow);
         });
 
-        card.setOnMouseExited(ev -> {
-            card.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom right, rgba(19, 36, 24, 0.6), rgba(19, 36, 24, 0.3)); " +
-                            "-fx-background-radius: 20; " +
-                            "-fx-border-color: rgba(0, 217, 255, 0.1); " +
-                            "-fx-border-width: 1; " +
-                            "-fx-border-radius: 20; " +
-                            "-fx-padding: 5;"
-            );
+        HBox row = new HBox(16);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(20));
 
-            TranslateTransition tt = new TranslateTransition(Duration.millis(200), card);
-            tt.setToY(0);
-            tt.play();
+        VBox info = new VBox(10);
+        info.setAlignment(Pos.TOP_LEFT);
+        HBox.setHgrow(info, Priority.ALWAYS);
 
-            DropShadow normalShadow = new DropShadow();
-            normalShadow.setColor(Color.web(PRIMARY_COLOR, 0.2));
-            normalShadow.setRadius(15);
-            normalShadow.setSpread(0.2);
-            card.setEffect(normalShadow);
-        });
-
-        // Main content
-        HBox mainContent = new HBox(15);
-        mainContent.setAlignment(Pos.CENTER_LEFT);
-        mainContent.setPadding(new Insets(20));
-
-        // Left: Event info
-        VBox infoBox = new VBox(10);
-        infoBox.setAlignment(Pos.TOP_LEFT);
-        HBox.setHgrow(infoBox, Priority.ALWAYS);
-
-        // Title
-        Label lblTitre = new Label("🎫 " + titre);
-        lblTitre.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-text-fill: white;"
-        );
+        Label lblTitre = new Label("🎫  " + titre);
+        lblTitre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;");
         lblTitre.setWrapText(true);
-        lblTitre.setMaxWidth(450);
+        lblTitre.setMaxWidth(460);
 
-        // Info badges
-        HBox badgesBox = new HBox(10);
-        badgesBox.getChildren().addAll(
-                createInfoBadge("🎯", type),
-                createInfoBadge("📍", localisation),
-                createInfoBadge("💰", prix + " DT")
+        HBox badges = new HBox(10);
+        badges.getChildren().addAll(
+                infoBadge("🎯", type),
+                infoBadge("📍", lieu),
+                infoBadge("💰", prix)
         );
 
-        // Mode badge
-        Label modeLabel = createModeBadge(p.getModeparticipation());
+        Label modeBadge = modeBadge(p.getModeparticipation());
 
-        // Objectif
-        Label lblObjectif = new Label("Objectif: " + p.getObjectif());
-        lblObjectif.setStyle(
-                "-fx-font-size: 13px; " +
-                        "-fx-text-fill: rgba(248, 249, 250, 0.7); " +
-                        "-fx-line-spacing: 2px;"
-        );
-        lblObjectif.setWrapText(true);
-        lblObjectif.setMaxWidth(450);
+        Label lblObj = new Label("Objectif : " + p.getObjectif());
+        lblObj.setStyle("-fx-font-size: 13px; -fx-text-fill: rgba(248,249,250,0.65);");
+        lblObj.setWrapText(true);
+        lblObj.setMaxWidth(460);
 
-        infoBox.getChildren().addAll(lblTitre, badgesBox, modeLabel, lblObjectif);
+        info.getChildren().addAll(lblTitre, badges, modeBadge, lblObj);
 
-        // Right: Action buttons
-        VBox actionBox = new VBox(12);
-        actionBox.setAlignment(Pos.CENTER);
-        actionBox.setPadding(new Insets(10));
+        VBox actions = new VBox(10);
+        actions.setAlignment(Pos.CENTER);
+        actions.setPadding(new Insets(8));
 
-        Button btnEdit = createActionButton("✎ Modifier", PRIMARY_COLOR);
-        btnEdit.setOnAction(ev -> openModernEditDialog(p));
+        Button btnEdit   = actionBtn("✎  Modifier",  PRIMARY_COLOR);
+        Button btnDelete = actionBtn("✖  Supprimer", "#FF6B6B");
+        btnEdit.setOnAction(e -> openEditDialog(p));
+        btnDelete.setOnAction(e -> handleDelete(p));
+        actions.getChildren().addAll(btnEdit, btnDelete);
 
-        Button btnDelete = createActionButton("✖ Supprimer", "#FF6B6B");
-        btnDelete.setOnAction(ev -> handleDelete(p));
+        if ("distanciel".equalsIgnoreCase(p.getModeparticipation())) {
+            final java.sql.Timestamp dateFinal  = ev != null ? ev.getDate_e() : null;
+            final String             titreFinal = titre;
 
-        actionBox.getChildren().addAll(btnEdit, btnDelete);
-
-        // ── Google Meet API button (uniquement pour les participants en ligne) ──
-        if (p.getModeparticipation().equalsIgnoreCase("distanciel")) {
-            // On récupère le titre et la date de l'événement associé
-            final String titreFinal = titre;
-            final java.sql.Timestamp dateFinal = e != null ? e.getDate_e() : null;
-
-            Button btnMeet = createMeetButton();
-            btnMeet.setOnAction(ev -> creerEtOuvrirMeet(titreFinal, dateFinal));
-            actionBox.getChildren().add(btnMeet);
+            Button btnMeet = meetBtn();
+            btnMeet.setOnAction(e -> ouvrirSalleMeet(titreFinal, dateFinal, p));
+            actions.getChildren().add(btnMeet);
         }
-        // ─────────────────────────────────────────────────────────────────────
 
-        mainContent.getChildren().addAll(infoBox, actionBox);
-        card.getChildren().add(mainContent);
-
+        row.getChildren().addAll(info, actions);
+        card.getChildren().add(row);
         return card;
     }
 
-    /**
-     * Create info badge
-     */
-    private Label createInfoBadge(String emoji, String text) {
-        Label badge = new Label(emoji + " " + text);
-        badge.setStyle(
-                "-fx-font-size: 12px; " +
-                        "-fx-text-fill: rgba(248, 249, 250, 0.7); " +
-                        "-fx-background-color: rgba(0, 217, 255, 0.1); " +
-                        "-fx-padding: 6 12; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-border-color: rgba(0, 217, 255, 0.3); " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 15;"
-        );
-        return badge;
-    }
+    private void ouvrirSalleMeet(String titre, java.sql.Timestamp date, Participation p) {
+        Stage meetStage = new Stage();
+        meetStage.initModality(Modality.APPLICATION_MODAL);
+        meetStage.initStyle(StageStyle.TRANSPARENT);
+        meetStage.setTitle("NeuroWell Meet — " + titre);
 
-    /**
-     * Create mode badge (Présentiel/En ligne)
-     */
-    private Label createModeBadge(String mode) {
-        String emoji = mode.equalsIgnoreCase("presentiel") ? "🏢" : "💻";
-        String text = mode.equalsIgnoreCase("presentiel") ? "Présentiel" : "En ligne";
-        String color = mode.equalsIgnoreCase("presentiel") ? SECONDARY_COLOR : PRIMARY_COLOR;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MeetRoom.fxml"));
+            Parent root = loader.load();
+            MeetRoomController ctrl = loader.getController();
 
-        Label badge = new Label(emoji + " " + text);
-        badge.setStyle(
-                "-fx-font-size: 13px; " +
-                        "-fx-font-weight: 600; " +
-                        "-fx-text-fill: " + color + "; " +
-                        "-fx-background-color: rgba(0, 255, 136, 0.15); " +
-                        "-fx-padding: 8 16; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-border-color: " + color + "; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 20;"
-        );
-        return badge;
-    }
+            ctrl.initMeet(titre, null, date, p.getModeparticipation());
 
-    /**
-     * Create action button
-     */
-    private Button createActionButton(String text, String color) {
-        Button btn = new Button(text);
-        btn.setStyle(
-                "-fx-background-color: " + color + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 13px; " +
-                        "-fx-font-weight: 600; " +
-                        "-fx-padding: 10 25; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-cursor: hand;"
-        );
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            meetStage.setScene(scene);
 
-        btn.setOnMouseEntered(e -> {
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
-            st.setToX(1.05);
-            st.setToY(1.05);
-            st.play();
-        });
+            root.setOpacity(0);
+            meetStage.show();
+            FadeTransition ft = new FadeTransition(Duration.millis(400), root);
+            ft.setToValue(1);
+            ft.play();
 
-        btn.setOnMouseExited(e -> {
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
-            st.setToX(1.0);
-            st.setToY(1.0);
-            st.play();
-        });
+            new Thread(() -> {
+                try {
+                    String meetUrl = googleMeetService.creerReunionMeet(titre, date);
+                    javafx.application.Platform.runLater(() ->
+                            ctrl.initMeet(titre, meetUrl, date, p.getModeparticipation())
+                    );
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    javafx.application.Platform.runLater(() -> {
+                        meetStage.close();
+                        showAlert("Erreur Google Meet",
+                                "Impossible de creer la reunion :\n" + ex.getMessage(),
+                                Alert.AlertType.ERROR);
+                    });
+                }
+            }, "MeetGen-Thread").start();
 
-        return btn;
-    }
-
-    /**
-     * Animate card appearance
-     */
-    private void animateCardAppearance(VBox card, int index) {
-        card.setOpacity(0);
-        card.setTranslateY(30);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(500), card);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        fade.setDelay(Duration.millis(index * 80));
-
-        TranslateTransition slide = new TranslateTransition(Duration.millis(500), card);
-        slide.setFromY(30);
-        slide.setToY(0);
-        slide.setDelay(Duration.millis(index * 80));
-
-        ParallelTransition parallel = new ParallelTransition(fade, slide);
-        parallel.play();
-    }
-
-    /**
-     * Show empty state
-     */
-    private void showEmptyState(String message) {
-        VBox emptyState = new VBox(20);
-        emptyState.setAlignment(Pos.CENTER);
-        emptyState.setPadding(new Insets(80));
-
-        Label icon = new Label("📋");
-        icon.setStyle("-fx-font-size: 72px;");
-
-        Label msg = new Label(message);
-        msg.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-text-fill: rgba(248, 249, 250, 0.6); " +
-                        "-fx-font-weight: 600;"
-        );
-
-        emptyState.getChildren().addAll(icon, msg);
-        participationContainer.getChildren().add(emptyState);
-    }
-
-    /**
-     * Update statistics
-     */
-    private void updateStats(int total, int filtered) {
-        if (totalParticipations != null) {
-            totalParticipations.setText(String.valueOf(total));
-        }
-        if (resultsCount != null) {
-            resultsCount.setText(filtered + " participation" + (filtered > 1 ? "s" : ""));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showAlert("Erreur", "Impossible de charger l'interface Meet", Alert.AlertType.ERROR);
         }
     }
 
-    // ==================== FILTERING ====================
+    @FXML private void handleSearch() { applyFilters(); }
 
-    @FXML
-    private void handleSearch() {
-        applyFilters();
-    }
-
-    @FXML
-    private void resetFilters() {
+    @FXML private void resetFilters() {
         if (searchField != null) searchField.clear();
-        if (filterTous != null) filterTous.setSelected(true);
+        if (filterTous  != null) filterTous.setSelected(true);
         loadParticipations();
     }
 
-    /**
-     * Apply filters to participations
-     */
     private void applyFilters() {
         participationContainer.getChildren().clear();
-
-        String searchText = searchField != null ? searchField.getText().toLowerCase() : "";
-        String selectedMode = "";
-
-        if (filterPresentiel != null && filterPresentiel.isSelected()) {
-            selectedMode = "presentiel";
-        } else if (filterEnLigne != null && filterEnLigne.isSelected()) {
-            selectedMode = "distanciel";
-        }
-
+        String search = searchField != null ? searchField.getText().toLowerCase() : "";
+        String mode   = filterPresentiel != null && filterPresentiel.isSelected() ? "presentiel"
+                : filterEnLigne != null && filterEnLigne.isSelected() ? "distanciel" : "";
         try {
-            List<Participation> participations = serviceParticipation.recuperer();
-            int displayedCount = 0;
+            List<Participation> list = serviceParticipation.recuperer();
+            int count = 0;
+            for (Participation p : list) {
+                Evenement ev = serviceEvenement.recuperer().stream()
+                        .filter(e -> e.getId_e() == p.getIdEvenement())
+                        .findFirst().orElse(null);
 
-            for (Participation p : participations) {
-                Evenement e = serviceEvenement.recuperer().stream()
-                        .filter(ev -> ev.getId_e() == p.getIdEvenement())
-                        .findFirst()
-                        .orElse(null);
+                String titre    = ev != null ? ev.getTitre_e() : "";
+                boolean okSearch = search.isEmpty()
+                        || p.getObjectif().toLowerCase().contains(search)
+                        || titre.toLowerCase().contains(search);
+                boolean okMode   = mode.isEmpty()
+                        || p.getModeparticipation().equalsIgnoreCase(mode);
 
-                String titre = e != null ? e.getTitre_e() : "";
-                String type = e != null ? e.getType_e() : "";
-                String prix = e != null ? String.valueOf(e.getPrix_e()) : "";
-
-                boolean matchesSearch = searchText.isEmpty() ||
-                        p.getObjectif().toLowerCase().contains(searchText) ||
-                        titre.toLowerCase().contains(searchText) ||
-                        type.toLowerCase().contains(searchText) ||
-                        prix.toLowerCase().contains(searchText);
-
-                boolean matchesMode = selectedMode.isEmpty() ||
-                        p.getModeparticipation().equalsIgnoreCase(selectedMode);
-
-                if (matchesSearch && matchesMode) {
-                    VBox card = createModernParticipationCard(p);
+                if (okSearch && okMode) {
+                    VBox card = createCard(p);
                     participationContainer.getChildren().add(card);
-                    animateCardAppearance(card, displayedCount);
-                    displayedCount++;
+                    animateCard(card, count++);
                 }
             }
-
-            // Update stats
-            updateStats(participations.size(), displayedCount);
-
-            if (displayedCount == 0) {
-                showEmptyState("Aucune participation ne correspond à vos critères.");
-            }
-
+            updateStats(list.size(), count);
+            if (count == 0) showEmptyState("Aucune participation ne correspond a vos criteres.");
         } catch (SQLException ex) {
             ex.printStackTrace();
-            showModernAlert("Erreur", "Impossible de filtrer les participations", Alert.AlertType.ERROR);
         }
     }
 
-    // ==================== ACTIONS ====================
-
-    /**
-     * Handle delete participation
-     */
     private void handleDelete(Participation p) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirmation");
-        confirmation.setHeaderText("Supprimer la participation");
-        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer cette participation ?");
-
-        styleDialog(confirmation.getDialogPane());
-
-        confirmation.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Supprimer");
+        confirm.setHeaderText("Supprimer la participation");
+        confirm.setContentText("Cette action est irreversible. Confirmer ?");
+        styleDialogPane(confirm.getDialogPane());
+        confirm.showAndWait().ifPresent(r -> {
+            if (r == ButtonType.OK) {
                 try {
                     serviceParticipation.supprimer(p);
                     loadParticipations();
-                    showModernAlert("Succès", "Participation supprimée avec succès", Alert.AlertType.INFORMATION);
+                    showAlert("Succes", "Participation supprimee", Alert.AlertType.INFORMATION);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
-                    showModernAlert("Erreur", "Impossible de supprimer la participation", Alert.AlertType.ERROR);
+                    showAlert("Erreur", "Impossible de supprimer.", Alert.AlertType.ERROR);
                 }
             }
         });
     }
 
-    /**
-     * Open modern edit dialog
-     */
-    private void openModernEditDialog(Participation p) {
+    private void openEditDialog(Participation p) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Modifier la participation");
-
         DialogPane pane = dialog.getDialogPane();
-        styleDialog(pane);
+        styleDialogPane(pane);
 
-        ButtonType btnSave = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        pane.getButtonTypes().addAll(btnSave, btnCancel);
+        ButtonType save   = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Annuler",     ButtonBar.ButtonData.CANCEL_CLOSE);
+        pane.getButtonTypes().addAll(save, cancel);
 
-        VBox form = new VBox(20);
-        form.setPadding(new Insets(30));
+        VBox form = new VBox(18);
+        form.setPadding(new Insets(28));
 
-        // Title
-        Label lblTitle = new Label("✎ Modifier la participation");
-        lblTitle.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-text-fill: white;"
+        Label titleLbl = new Label("Modifier la participation");
+        titleLbl.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        Label lblObj = new Label("Objectif");
+        lblObj.setStyle("-fx-text-fill: rgba(200,255,220,0.70); -fx-font-size: 13px; -fx-font-weight: 600;");
+
+        TextArea taObj = new TextArea(p.getObjectif());
+        taObj.setWrapText(true);
+        taObj.setPrefRowCount(4);
+        taObj.setStyle(
+                "-fx-control-inner-background: #112016; -fx-background-color: #112016; " +
+                        "-fx-text-fill: #E8FFF0; -fx-font-size: 13px; -fx-padding: 10; " +
+                        "-fx-background-radius: 12; -fx-border-color: rgba(0,217,255,0.25); " +
+                        "-fx-border-width: 1.5; -fx-border-radius: 12;"
         );
 
-        // Objectif field
-        Label lblObjectif = new Label("Objectif de participation");
-        lblObjectif.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: white;");
+        Label lblMode = new Label("Mode");
+        lblMode.setStyle("-fx-text-fill: rgba(200,255,220,0.70); -fx-font-size: 13px; -fx-font-weight: 600;");
 
-        TextArea objectifField = new TextArea(p.getObjectif());
-        objectifField.setWrapText(true);
-        objectifField.setPrefRowCount(4);
-        objectifField.setPromptText("Décrivez votre objectif (minimum 10 caractères)");
-        objectifField.setStyle(
-                "-fx-control-inner-background: rgba(19, 36, 24, 0.6); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-prompt-text-fill: rgba(160, 224, 192, 0.4); " +
-                        "-fx-font-size: 13px; " +
-                        "-fx-padding: 12; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-color: rgba(0, 217, 255, 0.3); " +
-                        "-fx-border-width: 2; " +
-                        "-fx-border-radius: 10;"
-        );
-
-        // Mode selection
-        Label lblMode = new Label("Mode de participation");
-        lblMode.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: white;");
-
-        RadioButton radioDistanciel = new RadioButton("💻 En ligne");
-        RadioButton radioPresentiel = new RadioButton("🏢 Présentiel");
-
-        radioDistanciel.setStyle("-fx-text-fill: rgba(248, 249, 250, 0.8); -fx-font-size: 13px;");
-        radioPresentiel.setStyle("-fx-text-fill: rgba(248, 249, 250, 0.8); -fx-font-size: 13px;");
-
-        ToggleGroup modeToggle = new ToggleGroup();
-        radioDistanciel.setToggleGroup(modeToggle);
-        radioPresentiel.setToggleGroup(modeToggle);
-
+        ToggleGroup tg = new ToggleGroup();
+        RadioButton rbDist = new RadioButton("En ligne (distanciel)");
+        RadioButton rbPres = new RadioButton("Presentiel");
+        rbDist.setToggleGroup(tg);
+        rbPres.setToggleGroup(tg);
+        rbDist.setStyle("-fx-text-fill: #E8FFF0; -fx-font-size: 13px;");
+        rbPres.setStyle("-fx-text-fill: #E8FFF0; -fx-font-size: 13px;");
         if (p.getModeparticipation().equalsIgnoreCase("presentiel")) {
-            radioPresentiel.setSelected(true);
+            rbPres.setSelected(true);
         } else {
-            radioDistanciel.setSelected(true);
+            rbDist.setSelected(true);
         }
 
-        HBox modeBox = new HBox(30, radioDistanciel, radioPresentiel);
-        modeBox.setPadding(new Insets(10, 0, 0, 0));
-
-        form.getChildren().addAll(lblTitle, lblObjectif, objectifField, lblMode, modeBox);
+        HBox modeRow = new HBox(24, rbDist, rbPres);
+        form.getChildren().addAll(titleLbl, lblObj, taObj, lblMode, modeRow);
         pane.setContent(form);
 
-        // Style buttons
-        dialog.getDialogPane().lookupButton(btnSave).setStyle(
-                "-fx-background-color: linear-gradient(to right, " + PRIMARY_COLOR + ", " + SECONDARY_COLOR + "); " +
-                        "-fx-text-fill: " + DARK_BG + "; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 10 25; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-cursor: hand;"
+        pane.lookupButton(save).setStyle(
+                "-fx-background-color: linear-gradient(to right," + PRIMARY_COLOR + "," + SECONDARY_COLOR + "); " +
+                        "-fx-text-fill: " + DARK_BG + "; -fx-font-weight: bold; " +
+                        "-fx-padding: 10 24; -fx-background-radius: 20; -fx-cursor: hand;"
+        );
+        pane.lookupButton(cancel).setStyle(
+                "-fx-background-color: transparent; -fx-border-color: #FF4D6D; " +
+                        "-fx-border-width: 1.5; -fx-border-radius: 20; -fx-background-radius: 20; " +
+                        "-fx-text-fill: #FF4D6D; -fx-font-weight: bold; -fx-padding: 10 24; -fx-cursor: hand;"
         );
 
-        dialog.getDialogPane().lookupButton(btnCancel).setStyle(
-                "-fx-background-color: transparent; " +
-                        "-fx-border-color: " + PRIMARY_COLOR + "; " +
-                        "-fx-border-width: 2; " +
-                        "-fx-border-radius: 20; " +
-                        "-fx-background-radius: 20; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 10 25; " +
-                        "-fx-cursor: hand;"
-        );
-
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == btnSave) {
-                String objectif = objectifField.getText().trim();
-                String mode = radioDistanciel.isSelected() ? "distanciel" : "presentiel";
-
-                if (objectif.length() < 10) {
-                    showModernAlert("Erreur", "L'objectif doit contenir au moins 10 caractères", Alert.AlertType.WARNING);
+        dialog.showAndWait().ifPresent(r -> {
+            if (r == save) {
+                String obj  = taObj.getText().trim();
+                String mode = rbDist.isSelected() ? "distanciel" : "presentiel";
+                if (obj.length() < 10) {
+                    showAlert("Validation", "L'objectif doit contenir au moins 10 caracteres.", Alert.AlertType.WARNING);
                     return;
                 }
-
-                p.setObjectif(objectif);
+                p.setObjectif(obj);
                 p.setModeparticipation(mode);
-
                 try {
                     serviceParticipation.modifier(p);
                     loadParticipations();
-                    showModernAlert("Succès", "Participation modifiée avec succès", Alert.AlertType.INFORMATION);
+                    showAlert("Succes", "Participation modifiee", Alert.AlertType.INFORMATION);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
-                    showModernAlert("Erreur", "Impossible de modifier la participation", Alert.AlertType.ERROR);
+                    showAlert("Erreur", "Impossible de modifier.", Alert.AlertType.ERROR);
                 }
             }
         });
     }
 
-    // ==================== GOOGLE MEET API ====================
+    // ── UI Helpers ────────────────────────────────────────────────────────────
 
-    /**
-     * Crée un bouton "📹 Rejoindre Meet" stylisé en bleu Google
-     */
-    private Button createMeetButton() {
-        Button btn = new Button("📹 Rejoindre Meet");
-        btn.setStyle(
-                "-fx-background-color: #1a73e8; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 13px; " +
-                        "-fx-font-weight: 600; " +
-                        "-fx-padding: 10 18; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-cursor: hand;"
+    private String cardStyle(boolean hover) {
+        return "-fx-background-color: linear-gradient(to bottom right," +
+                (hover ? "rgba(19,36,24,0.85),rgba(19,36,24,0.55)"
+                        : "rgba(19,36,24,0.60),rgba(19,36,24,0.30)") + "); " +
+                "-fx-background-radius: 20; " +
+                "-fx-border-color: " + (hover ? PRIMARY_COLOR : "rgba(0,217,255,0.10)") + "; " +
+                "-fx-border-width: 1; -fx-border-radius: 20; -fx-padding: 5;";
+    }
+
+    private DropShadow cardShadow(boolean hover) {
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.web(PRIMARY_COLOR, hover ? 0.40 : 0.20));
+        ds.setRadius(hover ? 25 : 15);
+        ds.setSpread(hover ? 0.30 : 0.20);
+        return ds;
+    }
+
+    private Label infoBadge(String emoji, String text) {
+        Label l = new Label(emoji + " " + text);
+        l.setStyle(
+                "-fx-font-size: 12px; -fx-text-fill: rgba(248,249,250,0.65); " +
+                        "-fx-background-color: rgba(0,217,255,0.08); -fx-padding: 5 12; " +
+                        "-fx-background-radius: 14; -fx-border-color: rgba(0,217,255,0.25); " +
+                        "-fx-border-width: 1; -fx-border-radius: 14;"
         );
+        return l;
+    }
 
+    private Label modeBadge(String mode) {
+        boolean pre = mode.equalsIgnoreCase("presentiel");
+        Label l = new Label(pre ? "Presentiel" : "En ligne");
+        String c = pre ? SECONDARY_COLOR : PRIMARY_COLOR;
+        l.setStyle(
+                "-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: " + c + "; " +
+                        "-fx-background-color: rgba(0,217,255,0.08); -fx-padding: 6 16; " +
+                        "-fx-background-radius: 18; -fx-border-color: " + c + "; " +
+                        "-fx-border-width: 1; -fx-border-radius: 18;"
+        );
+        return l;
+    }
+
+    private Button actionBtn(String text, String color) {
+        Button btn = new Button(text);
+        String base =
+                "-fx-background-color: " + color + "; -fx-text-fill: white; " +
+                        "-fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 9 22; " +
+                        "-fx-background-radius: 14; -fx-cursor: hand;";
+        btn.setStyle(base);
         btn.setOnMouseEntered(e -> {
-            btn.setStyle(
-                    "-fx-background-color: #1557b0; " +
-                            "-fx-text-fill: white; " +
-                            "-fx-font-size: 13px; " +
-                            "-fx-font-weight: 600; " +
-                            "-fx-padding: 10 18; " +
-                            "-fx-background-radius: 15; " +
-                            "-fx-cursor: hand;"
-            );
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
-            st.setToX(1.05);
-            st.setToY(1.05);
-            st.play();
+            ScaleTransition st = new ScaleTransition(Duration.millis(130), btn);
+            st.setToX(1.05); st.setToY(1.05); st.play();
         });
-
         btn.setOnMouseExited(e -> {
-            btn.setStyle(
-                    "-fx-background-color: #1a73e8; " +
-                            "-fx-text-fill: white; " +
-                            "-fx-font-size: 13px; " +
-                            "-fx-font-weight: 600; " +
-                            "-fx-padding: 10 18; " +
-                            "-fx-background-radius: 15; " +
-                            "-fx-cursor: hand;"
-            );
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
-            st.setToX(1.0);
-            st.setToY(1.0);
-            st.play();
+            ScaleTransition st = new ScaleTransition(Duration.millis(130), btn);
+            st.setToX(1.0); st.setToY(1.0); st.play();
         });
-
         return btn;
     }
 
-    /**
-     * Appelle la vraie Google Meet REST API pour créer une réunion,
-     * puis ouvre le lien Meet généré dans le navigateur par défaut.
-     *
-     * @param titreEvenement  Titre de l'événement (sera le nom de la réunion Meet)
-     * @param dateEvenement   Date/heure de début (utilisée pour planifier la réunion)
-     */
-    private void creerEtOuvrirMeet(String titreEvenement, java.sql.Timestamp dateEvenement) {
-        // Lancer dans un thread séparé pour ne pas bloquer l'UI JavaFX
-        // (l'auth OAuth peut prendre quelques secondes la première fois)
-        new Thread(() -> {
-            try {
-                // ── Appel réel à la Google Calendar/Meet API ──────────────────
-                String meetUrl = googleMeetService.creerReunionMeet(titreEvenement, dateEvenement);
-                // ─────────────────────────────────────────────────────────────
-
-                // Retour sur le thread JavaFX pour ouvrir le navigateur
-                javafx.application.Platform.runLater(() -> {
-                    try {
-                        URI uri = new URI(meetUrl);
-                        if (Desktop.isDesktopSupported()
-                                && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                            Desktop.getDesktop().browse(uri);
-                        } else {
-                            String os = System.getProperty("os.name").toLowerCase();
-                            if (os.contains("linux")) {
-                                new ProcessBuilder("xdg-open", meetUrl).start();
-                            } else if (os.contains("mac")) {
-                                new ProcessBuilder("open", meetUrl).start();
-                            }
-                        }
-                        showModernAlert("✅ Réunion créée",
-                                "Lien Meet généré :\n" + meetUrl,
-                                Alert.AlertType.INFORMATION);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        showModernAlert("Erreur", "Impossible d'ouvrir le lien Meet : " + ex.getMessage(),
-                                Alert.AlertType.ERROR);
-                    }
-                });
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                javafx.application.Platform.runLater(() ->
-                        showModernAlert("Erreur API Meet",
-                                "Impossible de créer la réunion Google Meet :\n" + ex.getMessage(),
-                                Alert.AlertType.ERROR));
-            }
-        }, "GoogleMeet-Thread").start();
+    private Button meetBtn() {
+        Button btn = new Button("Rejoindre Meet");
+        String base =
+                "-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88); " +
+                        "-fx-text-fill: #050C07; -fx-font-size: 12px; -fx-font-weight: bold; " +
+                        "-fx-padding: 9 18; -fx-background-radius: 14; -fx-cursor: hand;";
+        btn.setStyle(base);
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.web("#00D9FF", 0.40));
+        glow.setRadius(16);
+        btn.setEffect(glow);
+        btn.setOnMouseEntered(e -> {
+            btn.setStyle(base.replace("#00D9FF, #00FF88", "#00FF88, #00D9FF"));
+            ScaleTransition st = new ScaleTransition(Duration.millis(130), btn);
+            st.setToX(1.05); st.setToY(1.05); st.play();
+        });
+        btn.setOnMouseExited(e -> {
+            btn.setStyle(base);
+            ScaleTransition st = new ScaleTransition(Duration.millis(130), btn);
+            st.setToX(1.0); st.setToY(1.0); st.play();
+        });
+        return btn;
     }
 
-    // ==================== UTILITY METHODS ====================
+    private void animateCard(VBox card, int idx) {
+        card.setOpacity(0);
+        card.setTranslateY(28);
 
-    /**
-     * Style dialog pane with modern design
-     */
-    private void styleDialog(DialogPane pane) {
+        FadeTransition ft = new FadeTransition(Duration.millis(480), card);
+        ft.setToValue(1);
+        ft.setDelay(Duration.millis(idx * 75L));
+
+        TranslateTransition tt = new TranslateTransition(Duration.millis(480), card);
+        tt.setToY(0);
+        tt.setDelay(Duration.millis(idx * 75L));
+
+        new ParallelTransition(ft, tt).play();
+    }
+
+    private void showEmptyState(String msg) {
+        VBox box = new VBox(16);
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(80));
+        Label icon = new Label("📋");
+        icon.setStyle("-fx-font-size: 64px;");
+        Label lbl = new Label(msg);
+        lbl.setStyle("-fx-font-size: 16px; -fx-text-fill: rgba(200,255,220,0.55);");
+        box.getChildren().addAll(icon, lbl);
+        participationContainer.getChildren().add(box);
+    }
+
+    private void updateStats(int total, int filtered) {
+        if (totalParticipations != null) totalParticipations.setText(String.valueOf(total));
+        if (resultsCount != null)
+            resultsCount.setText(filtered + " participation" + (filtered > 1 ? "s" : ""));
+    }
+
+    private void styleDialogPane(DialogPane pane) {
         pane.setStyle(
                 "-fx-background-color: " + CARD_BG + "; " +
-                        "-fx-border-color: " + PRIMARY_COLOR + "; " +
-                        "-fx-border-width: 2; " +
-                        "-fx-border-radius: 20; " +
-                        "-fx-background-radius: 20;"
+                        "-fx-border-color: " + PRIMARY_COLOR + "; -fx-border-width: 2; " +
+                        "-fx-border-radius: 18; -fx-background-radius: 18;"
         );
-
-        pane.lookup(".content.label").setStyle(
-                "-fx-text-fill: white; " +
-                        "-fx-font-size: 14px;"
-        );
+        try {
+            pane.lookup(".content.label")
+                    .setStyle("-fx-text-fill: #E8FFF0; -fx-font-size: 13px;");
+        } catch (Exception ignored) {}
     }
 
-    /**
-     * Show modern alert
-     */
-    private void showModernAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        styleDialog(alert.getDialogPane());
-
-        alert.showAndWait();
+    private void showAlert(String title, String msg, Alert.AlertType type) {
+        Alert a = new Alert(type);
+        a.setTitle(title);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        styleDialogPane(a.getDialogPane());
+        a.showAndWait();
     }
 }

@@ -1,8 +1,10 @@
 package controllers;
 
 import entities.Ressource;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.ServiceRessource;
@@ -67,6 +69,19 @@ public class ModifierRessourceController {
         btnChooseFile.setOnAction(event -> handleChooseFile());
         submitBtn.setOnAction(event -> handleSubmit());
         cancelBtn.setOnAction(event -> handleCancel());
+
+        // ★ Fix fond blanc du TextArea interne
+        Platform.runLater(this::fixTextAreaStyle);
+    }
+
+    private void fixTextAreaStyle() {
+        Region content = (Region) descriptionField.lookup(".content");
+        if (content != null) {
+            content.setStyle(
+                "-fx-background-color: rgba(0,217,255,0.04);" +
+                "-fx-background-radius: 8;"
+            );
+        }
     }
 
     public void setRessource(Ressource r) {

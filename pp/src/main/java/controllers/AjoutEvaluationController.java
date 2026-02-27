@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import services.ServiceEvaluation;
+import services.GamificationService;
+import services.GamificationService.Badge;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -24,7 +26,7 @@ public class AjoutEvaluationController {
     @FXML private Label typeTestError;
     @FXML private TextField scoreField;
     @FXML private Label scoreError;
-    @FXML private ComboBox<String> niveauField;
+    @FXML private Label niveauDisplay;
     @FXML private Label niveauError;
     @FXML private DatePicker dateField;
     @FXML private Label dateError;
@@ -32,24 +34,35 @@ public class AjoutEvaluationController {
     @FXML private Button cancelBtn;
 
     private ServiceEvaluation serviceEvaluation;
+    private GamificationService gamificationService;
 
     @FXML
     public void initialize() {
         serviceEvaluation = new ServiceEvaluation();
+        gamificationService = new GamificationService();
         typeTestField.getItems().addAll("Stress", "Anxiété", "Dépression", "Bien-être", "Burnout");
-        niveauField.getItems().addAll("Faible", "Moyen", "Élevé");
         clearErrors();
         submitBtn.setOnAction(event -> handleSubmit());
         cancelBtn.setOnAction(event -> handleCancel());
 
-        // Auto-calcul niveau selon nouveaux seuils
+        // Auto-calcul niveau selon le score — affiché en lecture seule
         scoreField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
                 int s = Integer.parseInt(newVal.trim());
-                if (s <= 20)      niveauField.setValue("Faible");
-                else if (s <= 50) niveauField.setValue("Moyen");
-                else              niveauField.setValue("Élevé");
-            } catch (NumberFormatException ignored) {}
+                if (s <= 20) {
+                    niveauDisplay.setText("✅  Faible");
+                    niveauDisplay.setStyle("-fx-text-fill: #00FF88; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 14;");
+                } else if (s <= 50) {
+                    niveauDisplay.setText("⚠️  Moyen");
+                    niveauDisplay.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 14;");
+                } else {
+                    niveauDisplay.setText("🔴  Élevé");
+                    niveauDisplay.setStyle("-fx-text-fill: #FF4D6D; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 14;");
+                }
+            } catch (NumberFormatException ignored) {
+                niveauDisplay.setText("— Saisissez un score —");
+                niveauDisplay.setStyle("-fx-text-fill: rgba(200,255,220,0.35); -fx-font-size: 13px; -fx-padding: 10 14;");
+            }
         });
     }
 
@@ -59,7 +72,7 @@ public class AjoutEvaluationController {
 
         String typeTest  = typeTestField.getValue();
         String scoreText = scoreField.getText().trim();
-        String niveau    = niveauField.getValue();
+        String niveau    = niveauDisplay.getText().replaceAll("[^A-Za-zÀ-ÿ]", "").trim();
         LocalDate date   = dateField.getValue();
 
         if (typeTest == null || typeTest.isEmpty()) {
@@ -84,9 +97,12 @@ public class AjoutEvaluationController {
             }
         }
 
+        // Niveau auto-calculé — pas de validation manuelle nécessaire
         if (niveau == null || niveau.isEmpty()) {
-            niveauError.setText("Le niveau est obligatoire.");
-            valid = false;
+            // Cas très rare : score non encore saisi, on force Faible
+            niveau = "Faible";
+            niveauDisplay.setText("✅  Faible");
+            niveauDisplay.setStyle("-fx-text-fill: #00FF88; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 14;");
         }
 
         if (date == null) {
@@ -126,6 +142,16 @@ public class AjoutEvaluationController {
 
             // Vérifier alerte niveau élevé consécutif
             verifierAlerteConsecutive(typeTest);
+
+            // 🎮 Gamification — XP, Niveau, Badges
+            try {
+                List<Evaluation> toutesApres = serviceEvaluation.recuperer();
+                GamificationService.ResultatGamification res =
+                    gamificationService.calculer(toutesApres, evaluation);
+                showGamificationDialog(res);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -462,12 +488,222 @@ public class AjoutEvaluationController {
         };
     }
 
+
+    // ═══════════════════════════════════════════════════════
+    //  🎮 DIALOG GAMIFICATION — XP + NIVEAU + BADGES
+    // ═══════════════════════════════════════════════════════
+    private void showGamificationDialog(GamificationService.ResultatGamification res) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("🎮  Votre progression");
+
+        DialogPane pane = dialog.getDialogPane();
+        pane.setPrefWidth(520);
+        pane.setStyle(
+            "-fx-background-color: #071A10;" +
+            "-fx-border-color: #00D9FF; -fx-border-width: 2;" +
+            "-fx-border-radius: 20; -fx-background-radius: 20;"
+        );
+        pane.getButtonTypes().add(new ButtonType("🚀  Continuer", ButtonBar.ButtonData.OK_DONE));
+
+        VBox content = new VBox(16);
+        content.setPadding(new Insets(24));
+
+        // ── Titre ─────────────────────────────────────────────
+        Label titleLbl = new Label("🎮  Votre progression");
+        titleLbl.setStyle("-fx-text-fill: #00D9FF; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        // ── XP gagné cette évaluation ─────────────────────────
+        HBox xpGagneBox = new HBox(10);
+        xpGagneBox.setAlignment(Pos.CENTER_LEFT);
+        xpGagneBox.setPadding(new Insets(10, 14, 10, 14));
+        xpGagneBox.setStyle(
+            "-fx-background-color: rgba(0,217,255,0.08);" +
+            "-fx-border-color: rgba(0,217,255,0.25); -fx-border-width: 1;" +
+            "-fx-border-radius: 14; -fx-background-radius: 14;"
+        );
+        Label xpIcon = new Label("⚡");
+        xpIcon.setStyle("-fx-font-size: 22px;");
+        VBox xpTexts = new VBox(2);
+        Label xpVal = new Label("+" + res.xpGagne + " XP gagnés");
+        xpVal.setStyle("-fx-text-fill: #00D9FF; -fx-font-size: 17px; -fx-font-weight: bold;");
+        HBox bonusBox = new HBox(8);
+        if (res.xpBonus_faible)       bonusBox.getChildren().add(makePill("+5 Faible",       "#00FF88"));
+        if (res.xpBonus_amelioration) bonusBox.getChildren().add(makePill("+15 Amélioration", "#00D9FF"));
+        if (res.xpBonus_streak)       bonusBox.getChildren().add(makePill("+20 Streak",       "#FFD700"));
+        if (!res.nouveauxBadges.isEmpty()) bonusBox.getChildren().add(makePill("+25×" + res.nouveauxBadges.size() + " Badge", "#FF8C00"));
+        xpTexts.getChildren().addAll(xpVal, bonusBox);
+        xpGagneBox.getChildren().addAll(xpIcon, xpTexts);
+
+        // ── Barre XP ──────────────────────────────────────────
+        GamificationService.Niveau n = res.niveauActuel;
+        int xpDansNiveau  = res.xpTotal - n.xpRequis;
+        int xpPourProchain = n.xpProchain - n.xpRequis;
+        double pct = Math.min(1.0, (double) xpDansNiveau / xpPourProchain);
+
+        Label niveauLbl = new Label(n.emoji + "  Niveau " + n.numero + " — " + n.titre);
+        niveauLbl.setStyle("-fx-text-fill: " + n.couleur + "; -fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Pane track = new Pane();
+        track.setPrefHeight(14); track.setMaxWidth(Double.MAX_VALUE);
+        track.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 7;");
+        Pane fill = new Pane();
+        fill.setPrefHeight(14);
+        fill.setStyle("-fx-background-color: " + n.couleur + "; -fx-background-radius: 7;");
+        fill.setPrefWidth(0);
+        track.getChildren().add(fill);
+        track.widthProperty().addListener((ob, ov, nv) -> {
+            if (nv.doubleValue() > 0) {
+                double target = pct * nv.doubleValue();
+                Timeline tl = new Timeline(
+                    new KeyFrame(Duration.ZERO,       new KeyValue(fill.prefWidthProperty(), 0)),
+                    new KeyFrame(Duration.millis(900), new KeyValue(fill.prefWidthProperty(), target, Interpolator.EASE_OUT))
+                );
+                // level-up: barre se remplit entièrement d'abord
+                if (res.levelUp) {
+                    tl = new Timeline(
+                        new KeyFrame(Duration.ZERO,        new KeyValue(fill.prefWidthProperty(), 0)),
+                        new KeyFrame(Duration.millis(600),  new KeyValue(fill.prefWidthProperty(), nv.doubleValue(), Interpolator.EASE_OUT)),
+                        new KeyFrame(Duration.millis(900),  new KeyValue(fill.prefWidthProperty(), 0)),
+                        new KeyFrame(Duration.millis(1500), new KeyValue(fill.prefWidthProperty(), target, Interpolator.EASE_OUT))
+                    );
+                }
+                tl.play();
+            }
+        });
+
+        Label xpProgressLbl = new Label(xpDansNiveau + " / " + xpPourProchain + " XP  →  Niveau " + (n.numero + 1));
+        xpProgressLbl.setStyle("-fx-text-fill: rgba(200,255,220,0.45); -fx-font-size: 11px;");
+
+        // ── Level Up banner ───────────────────────────────────
+        VBox levelUpBanner = null;
+        if (res.levelUp) {
+            levelUpBanner = new VBox(4);
+            levelUpBanner.setAlignment(Pos.CENTER);
+            levelUpBanner.setPadding(new Insets(12, 16, 12, 16));
+            levelUpBanner.setStyle(
+                "-fx-background-color: rgba(255,215,0,0.12);" +
+                "-fx-border-color: #FFD700; -fx-border-width: 2;" +
+                "-fx-border-radius: 16; -fx-background-radius: 16;"
+            );
+            Label lvlIcon = new Label("🎉");
+            lvlIcon.setStyle("-fx-font-size: 36px;");
+            Label lvlTxt = new Label("LEVEL UP ! " + res.ancienNiveau.emoji + " → " + n.emoji + " " + n.titre);
+            lvlTxt.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 16px; -fx-font-weight: bold;");
+            levelUpBanner.getChildren().addAll(lvlIcon, lvlTxt);
+            ScaleTransition sc = new ScaleTransition(Duration.millis(600), levelUpBanner);
+            sc.setFromX(0.8); sc.setToX(1.0);
+            sc.setFromY(0.8); sc.setToY(1.0);
+            sc.play();
+        }
+
+        // ── Streak ────────────────────────────────────────────
+        HBox streakBox = new HBox(10);
+        streakBox.setAlignment(Pos.CENTER_LEFT);
+        streakBox.setPadding(new Insets(10, 14, 10, 14));
+        streakBox.setStyle(
+            "-fx-background-color: rgba(255,140,0,0.10);" +
+            "-fx-border-color: rgba(255,140,0,0.30); -fx-border-width: 1;" +
+            "-fx-border-radius: 14; -fx-background-radius: 14;"
+        );
+        Label fireIcon = new Label("🔥");
+        fireIcon.setStyle("-fx-font-size: 24px;");
+        Label streakLbl = new Label("Streak : " + res.streak + " jour" + (res.streak > 1 ? "s" : "") + " consécutif" + (res.streak > 1 ? "s" : ""));
+        streakLbl.setStyle("-fx-text-fill: #FF8C00; -fx-font-size: 15px; -fx-font-weight: bold;");
+        streakBox.getChildren().addAll(fireIcon, streakLbl);
+
+        // ── Nouveaux badges ───────────────────────────────────
+        content.getChildren().addAll(titleLbl, makeSep(), xpGagneBox, makeSep(), niveauLbl, track, xpProgressLbl);
+        if (levelUpBanner != null) content.getChildren().add(levelUpBanner);
+        content.getChildren().addAll(makeSep(), streakBox);
+
+        if (!res.nouveauxBadges.isEmpty()) {
+            content.getChildren().add(makeSep());
+            Label badgeTitleLbl = new Label("🏅  Nouveau" + (res.nouveauxBadges.size() > 1 ? "x" : "") + " badge" + (res.nouveauxBadges.size() > 1 ? "s" : "") + " débloqué" + (res.nouveauxBadges.size() > 1 ? "s" : "") + " !");
+            badgeTitleLbl.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 15px; -fx-font-weight: bold;");
+            content.getChildren().add(badgeTitleLbl);
+
+            FlowPane badgesFlow = new FlowPane(10, 10);
+            for (Badge b : res.nouveauxBadges) {
+                VBox card = makeBadgeCard(b, true);
+                badgesFlow.getChildren().add(card);
+                FadeTransition ft = new FadeTransition(Duration.millis(500), card);
+                ft.setFromValue(0); ft.setToValue(1);
+                ft.setDelay(Duration.millis(300));
+                ft.play();
+            }
+            content.getChildren().add(badgesFlow);
+        }
+
+        // ── XP total ─────────────────────────────────────────
+        content.getChildren().add(makeSep());
+        Label totalLbl = new Label("XP total : " + res.xpTotal + " XP");
+        totalLbl.setStyle("-fx-text-fill: rgba(200,255,220,0.40); -fx-font-size: 11px;");
+        content.getChildren().add(totalLbl);
+
+        pane.setContent(content);
+        pane.lookupButton(pane.getButtonTypes().get(0)).setStyle(
+            "-fx-background-color: linear-gradient(to right,#00D9FF,#00FF88);" +
+            "-fx-text-fill: #050C07; -fx-font-weight: bold;" +
+            "-fx-padding: 10 32; -fx-background-radius: 20; -fx-cursor: hand;"
+        );
+
+        pane.setOpacity(0);
+        FadeTransition ft = new FadeTransition(Duration.millis(350), pane);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
+
+        dialog.showAndWait();
+    }
+
+    private Label makePill(String text, String color) {
+        Label l = new Label(text);
+        l.setStyle(
+            "-fx-text-fill: " + color + "; -fx-font-size: 10px; -fx-font-weight: bold;" +
+            "-fx-background-color: " + color + "22;" +
+            "-fx-border-color: " + color + "66; -fx-border-width: 1;" +
+            "-fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 2 8;"
+        );
+        return l;
+    }
+
+    private VBox makeBadgeCard(Badge b, boolean unlocked) {
+        VBox card = new VBox(6);
+        card.setAlignment(Pos.CENTER);
+        card.setPrefWidth(110);
+        card.setPadding(new Insets(12, 8, 12, 8));
+        String bg    = unlocked ? "rgba(255,215,0,0.10)" : "rgba(255,255,255,0.04)";
+        String border= unlocked ? "#FFD700" : "rgba(255,255,255,0.10)";
+        card.setStyle(
+            "-fx-background-color: " + bg + ";" +
+            "-fx-border-color: " + border + "; -fx-border-width: 1.5;" +
+            "-fx-border-radius: 14; -fx-background-radius: 14;"
+        );
+        Label emoji = new Label(unlocked ? b.emoji : "🔒");
+        emoji.setStyle("-fx-font-size: 28px;");
+        Label name  = new Label(b.nom);
+        name.setWrapText(true);
+        name.setStyle("-fx-text-fill: " + (unlocked ? "#FFD700" : "rgba(255,255,255,0.25)") + "; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-alignment: center;");
+        name.setMaxWidth(95);
+        Label cond = new Label(b.condition);
+        cond.setWrapText(true);
+        cond.setStyle("-fx-text-fill: rgba(200,255,220,0.35); -fx-font-size: 9px; -fx-text-alignment: center;");
+        cond.setMaxWidth(95);
+        card.getChildren().addAll(emoji, name, cond);
+        return card;
+    }
+
+    private Line makeSep() {
+        Line l = new Line(0, 0, 460, 0);
+        l.setStroke(Color.web("#00D9FF", 0.12));
+        return l;
+    }
+
     private void handleCancel() { clearForm(); clearErrors(); }
 
     private void clearForm() {
         typeTestField.setValue(null);
         scoreField.clear();
-        niveauField.setValue(null);
+        niveauDisplay.setText("— Saisissez un score —");
+        niveauDisplay.setStyle("-fx-text-fill: rgba(200,255,220,0.35); -fx-font-size: 13px; -fx-padding: 10 14;");
         dateField.setValue(null);
     }
 

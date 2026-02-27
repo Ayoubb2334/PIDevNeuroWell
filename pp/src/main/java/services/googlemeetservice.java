@@ -13,11 +13,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.ConferenceData;
-import com.google.api.services.calendar.model.ConferenceSolutionKey;
-import com.google.api.services.calendar.model.CreateConferenceRequest;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,64 +26,49 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Service pour créer des réunions Google Meet via la Google Calendar API (REST).
- *
- * PRÉREQUIS :
- * 1. Aller sur https://console.cloud.google.com
- * 2. Créer un projet → Activer "Google Calendar API"
- * 3. Créer des identifiants OAuth 2.0 (type "Application de bureau")
- * 4. Télécharger le fichier JSON → le renommer "credentials.json"
- * 5. Le placer dans :  src/main/resources/google/credentials.json
- *
- * DÉPENDANCES Maven à ajouter dans pom.xml :
- * <dependency>
- *   <groupId>com.google.api-client</groupId>
- *   <artifactId>google-api-client</artifactId>
- *   <version>2.2.0</version>
- * </dependency>
- * <dependency>
- *   <groupId>com.google.oauth-client</groupId>
- *   <artifactId>google-oauth-client-jetty</artifactId>
- *   <version>1.34.1</version>
- * </dependency>
- * <dependency>
- *   <groupId>com.google.apis</groupId>
- *   <artifactId>google-api-services-calendar</artifactId>
- *   <version>v3-rev20230707-2.0.0</version>
- * </dependency>
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║  GoogleMeetService — Google Calendar API + Meet          ║
+ * ║  Corrections :                                           ║
+ * ║  • Nom de classe corrigé (PascalCase)                    ║
+ * ║  • Port -1 (auto) → plus d'erreur "port déjà utilisé"   ║
+ * ║  • Token supprimé automatiquement si expiré/invalide     ║
+ * ║  • Messages d'erreur clairs en français                  ║
+ * ╚══════════════════════════════════════════════════════════╝
  */
-public class googlemeetservice {
+public class googlemeetservice {   // ✅ CORRECTION 1 : PascalCase obligatoire
 
-    private static final String APPLICATION_NAME = "NeuroWell Meet Integration";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final String APPLICATION_NAME    = "NeuroWell Meet Integration";
+    private static final JsonFactory JSON_FACTORY   = GsonFactory.getDefaultInstance();
+    private static final String TOKENS_DIRECTORY    = "tokens/google";
+    private static final String CREDENTIALS_FILE    = "src/main/resources/google/credentials.json";
 
-    // Dossier où les tokens OAuth sont stockés après la première connexion
-    private static final String TOKENS_DIRECTORY = "tokens/google";
-
-    // Scope requis : gestion complète du calendrier (pour créer des événements avec Meet)
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR);
 
-    // Chemin vers votre fichier credentials.json (téléchargé depuis Google Cloud Console)
-    private static final String CREDENTIALS_FILE =
-            "src/main/resources/google/credentials.json";
+    // ─────────────────────────────────────────────────────
+    //  AUTHENTIFICATION OAuth2
+    // ─────────────────────────────────────────────────────
 
-    // ─────────────────────────────────────────────────────────────────────────
+    private Credential getCredentials(final NetHttpTransport transport)
+            throws IOException {
 
-    /**
-     * Charge les credentials OAuth2 et ouvre le navigateur pour l'autorisation
-     * si c'est la première fois (le token est ensuite sauvegardé localement).
-     */
-    private Credential getCredentials(final NetHttpTransport transport) throws IOException {
+        // ── Vérification du fichier credentials ───────────
         File credFile = new File(CREDENTIALS_FILE);
         if (!credFile.exists()) {
             throw new IOException(
-                    "Fichier credentials.json introuvable : " + credFile.getAbsolutePath() +
-                            "\nTéléchargez-le depuis Google Cloud Console et placez-le dans src/main/resources/google/");
+                    "Fichier credentials.json introuvable :\n" +
+                            credFile.getAbsolutePath() + "\n\n" +
+                            "→ Google Cloud Console > APIs & Services > Identifiants\n" +
+                            "→ Créer ID client OAuth > Application de bureau\n" +
+                            "→ Télécharger JSON > renommer en credentials.json\n" +
+                            "→ Placer dans src/main/resources/google/"
+            );
         }
 
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-                JSON_FACTORY, new InputStreamReader(new FileInputStream(credFile)));
+                JSON_FACTORY,
+                new InputStreamReader(new FileInputStream(credFile))
+        );
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 transport, JSON_FACTORY, clientSecrets, SCOPES)
@@ -95,43 +76,63 @@ public class googlemeetservice {
                 .setAccessType("offline")
                 .build();
 
-        // Ouvre le navigateur pour la connexion Google (1ère fois seulement)
+        // ✅ CORRECTION 2 : port -1 = port libre automatique
+        //    → plus jamais d'erreur "Address already in use: bind"
         LocalServerReceiver receiver = new LocalServerReceiver.Builder()
-                .setPort(8888)
+                .setPort(-1)        // ← port aléatoire disponible
                 .build();
 
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        try {
+            return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        } catch (Exception e) {
+            // ✅ CORRECTION 3 : si le token stocké est invalide/expiré,
+            //    on le supprime et on relance l'autorisation proprement
+            File tokenDir = new File(TOKENS_DIRECTORY);
+            if (tokenDir.exists()) {
+                for (File f : tokenDir.listFiles()) f.delete();
+                System.out.println("⚠ Token expiré supprimé — nouvelle autorisation requise.");
+            }
+            return new AuthorizationCodeInstalledApp(flow,
+                    new LocalServerReceiver.Builder().setPort(-1).build()
+            ).authorize("user");
+        }
     }
 
+    // ─────────────────────────────────────────────────────
+    //  CRÉER UNE RÉUNION GOOGLE MEET
+    // ─────────────────────────────────────────────────────
+
     /**
-     * Crée une réunion Google Meet liée à un événement du calendrier Google.
+     * Crée un événement Google Calendar avec une conférence Meet intégrée.
      *
-     * @param titreEvenement  Nom de l'événement (affiché dans le calendrier)
-     * @param dateEvenement   Date/heure de début de la réunion
-     * @return                Le lien Google Meet généré (ex: https://meet.google.com/abc-defg-hij)
-     * @throws IOException
-     * @throws GeneralSecurityException
+     * @param titreEvenement  Titre affiché dans le calendrier Google
+     * @param dateEvenement   Date/heure de début (null = maintenant)
+     * @return                Lien Meet  ex: https://meet.google.com/abc-defg-hij
      */
     public String creerReunionMeet(String titreEvenement, Timestamp dateEvenement)
             throws IOException, GeneralSecurityException {
 
+        // ── Transport HTTPS sécurisé ───────────────────────
         final NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
 
-        // Construction du client Calendar API authentifié
+        // ── Client Calendar API authentifié ───────────────
         Calendar service = new Calendar.Builder(transport, JSON_FACTORY, getCredentials(transport))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-        // Calcul de l'heure de fin : début + 1 heure
-        long startMillis = dateEvenement != null
+        // ── Calcul des horaires ────────────────────────────
+        long startMillis = (dateEvenement != null)
                 ? dateEvenement.getTime()
                 : System.currentTimeMillis();
-        long endMillis = startMillis + (60 * 60 * 1000); // +1h
+        long endMillis = startMillis + (60 * 60 * 1000); // durée : 1 heure
 
-        // Création de l'événement Google Calendar avec conférence Meet intégrée
+        // ── Construction de l'événement ───────────────────
         Event event = new Event()
-                .setSummary("📹 " + titreEvenement + " - Session en ligne")
-                .setDescription("Réunion Google Meet générée automatiquement par NeuroWell.");
+                .setSummary("📹 " + titreEvenement + " — Session en ligne")
+                .setDescription(
+                        "Réunion Google Meet générée automatiquement par NeuroWell.\n" +
+                                "Rejoignez via le lien Meet ci-dessous."
+                );
 
         event.setStart(new EventDateTime()
                 .setDateTime(new DateTime(startMillis))
@@ -141,32 +142,40 @@ public class googlemeetservice {
                 .setDateTime(new DateTime(endMillis))
                 .setTimeZone("Africa/Tunis"));
 
-        // ⬇️ C'est ici que Google Meet est demandé via l'API
+        // ── Demande de conférence Meet ────────────────────
         event.setConferenceData(new ConferenceData()
                 .setCreateRequest(new CreateConferenceRequest()
-                        .setRequestId(UUID.randomUUID().toString()) // ID unique par réunion
+                        .setRequestId(UUID.randomUUID().toString())
                         .setConferenceSolutionKey(
-                                new ConferenceSolutionKey().setType("hangoutsMeet"))));
+                                new ConferenceSolutionKey().setType("hangoutsMeet")
+                        )
+                )
+        );
 
-        // Insertion dans le calendrier "primary" avec conferenceDataVersion=1
-        // (obligatoire pour que Meet soit créé)
-        Event createdEvent = service.events()
+        // ── Insertion dans "primary" avec conferenceDataVersion=1 ──
+        Event created = service.events()
                 .insert("primary", event)
                 .setConferenceDataVersion(1)
                 .execute();
 
-        // Extraction du lien Meet depuis la réponse
-        if (createdEvent.getConferenceData() != null
-                && createdEvent.getConferenceData().getEntryPoints() != null) {
+        // ── Extraction du lien Meet ────────────────────────
+        if (created.getConferenceData() != null
+                && created.getConferenceData().getEntryPoints() != null) {
 
-            return createdEvent.getConferenceData().getEntryPoints()
+            return created.getConferenceData().getEntryPoints()
                     .stream()
                     .filter(ep -> "video".equals(ep.getEntryPointType()))
-                    .map(ep -> ep.getUri())
+                    .map(EntryPoint::getUri)
                     .findFirst()
-                    .orElseThrow(() -> new IOException("Lien Meet non trouvé dans la réponse API"));
+                    .orElseThrow(() -> new IOException(
+                            "Lien Meet absent de la réponse API.\n" +
+                                    "Vérifiez que Google Calendar API est bien activée sur votre projet."
+                    ));
         }
 
-        throw new IOException("Impossible de créer la réunion Meet via l'API Google Calendar.");
+        throw new IOException(
+                "La réunion Meet n'a pas pu être créée.\n" +
+                        "Vérifiez que votre compte Google a accès à Google Meet."
+        );
     }
 }

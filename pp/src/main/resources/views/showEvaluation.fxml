@@ -122,6 +122,16 @@
                                        -fx-background-radius: 22;
                                        -fx-cursor: hand;
                                        -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.45), 14, 0.3, 0, 3);"/>
+                        <Button fx:id="btnBadges" text="🏅 Mes Badges"
+                                onAction="#handleVoirBadges"
+                                style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
+                                       -fx-text-fill: #050C07;
+                                       -fx-font-weight: bold;
+                                       -fx-font-size: 13px;
+                                       -fx-padding: 10 22;
+                                       -fx-background-radius: 22;
+                                       -fx-cursor: hand;
+                                       -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.45), 14, 0.3, 0, 3);"/>
                     </HBox>
 
                     <!-- Type filter -->

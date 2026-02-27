@@ -1,0 +1,87 @@
+/* ══════════════════════════════════════════════════════
+   table-dark.css
+   À placer dans : src/main/resources/styles/table-dark.css
+   (ou src/resources/styles/table-dark.css selon votre projet)
+   ══════════════════════════════════════════════════════ */
+
+/* ── En-tête du tableau ─────────────────────────────── */
+.table-view .column-header-background {
+    -fx-background-color: #071A10;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #071A10;
+    -fx-border-color: rgba(0, 217, 255, 0.18);
+    -fx-border-width: 0 1 1 0;
+    -fx-size: 36px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #00D9FF;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Courier New';
+    -fx-alignment: CENTER;
+}
+
+/* Flèche de tri */
+.table-view .column-header .arrow {
+    -fx-background-color: rgba(0, 217, 255, 0.55);
+}
+
+/* ── Cellules ────────────────────────────────────────── */
+.table-view .table-cell {
+    -fx-background-color: #071A10;
+    -fx-text-fill: #E8FFF0;
+    -fx-font-size: 13px;
+    -fx-font-family: 'Courier New';
+    -fx-border-color: rgba(0, 217, 255, 0.06);
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 6 8;
+}
+
+/* Lignes alternées — même couleur pour cohérence */
+.table-row-cell {
+    -fx-background-color: #071A10;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #050C07;
+}
+
+/* Survol */
+.table-row-cell:hover {
+    -fx-background-color: rgba(0, 217, 255, 0.06);
+}
+
+/* Sélection */
+.table-row-cell:selected {
+    -fx-background-color: rgba(0, 217, 255, 0.12);
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E8FFF0;
+}
+
+/* ── Barre de défilement ─────────────────────────────── */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-background-color: #050C07;
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: rgba(0, 217, 255, 0.25);
+    -fx-background-radius: 4;
+}
+
+.table-view .scroll-bar .track {
+    -fx-background-color: #071A10;
+}
+
+/* ── Coin inférieur droit ────────────────────────────── */
+.table-view .corner {
+    -fx-background-color: #050C07;
+}

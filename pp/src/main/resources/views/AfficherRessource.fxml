@@ -103,6 +103,15 @@
                        -fx-padding: 9 22; -fx-font-size: 13px;
                        -fx-font-family: 'Courier New'; -fx-cursor: hand;"/>
 
+        <!-- ★ Bouton Statistiques — visible dans la barre de recherche -->
+        <Button text="📊  Statistiques" onAction="#handleOpenStats"
+                style="-fx-background-color: rgba(0,255,136,0.15);
+                       -fx-text-fill: #00FF88;
+                       -fx-border-color: rgba(0,255,136,0.50); -fx-border-width: 1;
+                       -fx-border-radius: 22; -fx-background-radius: 22;
+                       -fx-padding: 9 20; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-font-family: 'Courier New'; -fx-cursor: hand;"/>
+
         <!-- Séparateur -->
         <Label text="|" style="-fx-text-fill: rgba(0,217,255,0.15); -fx-font-size: 18px;"/>
 
@@ -161,6 +170,7 @@
             <TableColumn fx:id="tailleCol"      text="Taille (Ko)" prefWidth="95"/>
             <TableColumn fx:id="statutCol"      text="Statut"      prefWidth="95"/>
             <TableColumn fx:id="dateCol"        text="Date"        prefWidth="105"/>
+            <TableColumn fx:id="vuesCol"        text="👁 Vues"    prefWidth="70"/>
             <TableColumn fx:id="actionCol"      text="Actions"     prefWidth="160"/>
         </columns>
 

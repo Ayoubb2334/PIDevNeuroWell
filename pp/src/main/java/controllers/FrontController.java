@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -254,11 +255,19 @@ public class FrontController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            double w = stage.getScene().getWidth();
+            double h = stage.getScene().getHeight();
 
             FadeTransition ft = new FadeTransition(Duration.millis(300), stage.getScene().getRoot());
             ft.setFromValue(1); ft.setToValue(0);
             ft.setOnFinished(e -> {
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root, w, h);
+                // Bind root size to scene so it fills the window
+                if (root instanceof Region r) {
+                    r.prefWidthProperty().bind(scene.widthProperty());
+                    r.prefHeightProperty().bind(scene.heightProperty());
+                }
+                stage.setScene(scene);
                 stage.show();
             });
             ft.play();

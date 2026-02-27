@@ -16,12 +16,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import services.ServiceEvaluation;
+import services.GamificationService;
+import services.GamificationService.Badge;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ╔══════════════════════════════════════════════════════════════╗
@@ -105,7 +108,8 @@ public class QuestionnaireController {
     private int[]    answers;
     private String[][] questions;
 
-    private final ServiceEvaluation serviceEvaluation = new ServiceEvaluation();
+    private final ServiceEvaluation  serviceEvaluation  = new ServiceEvaluation();
+    private final GamificationService gamificationService = new GamificationService();
 
     // ═══════════════════════════════════════════════════════
     //  INITIALIZE — Fullscreen + orb animations
@@ -481,6 +485,13 @@ public class QuestionnaireController {
             saved = true;
             // Vérifier alerte niveau élevé consécutif
             verifierAlerteConsecutive(selectedType);
+            // 🎮 Gamification
+            try {
+                List<Evaluation> toutesApres = serviceEvaluation.recuperer();
+                GamificationService.ResultatGamification res =
+                    gamificationService.calculer(toutesApres, ev);
+                javafx.application.Platform.runLater(() -> showGamificationDialog(res));
+            } catch (Exception ex) { ex.printStackTrace(); }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -715,6 +726,170 @@ public class QuestionnaireController {
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    // ═══════════════════════════════════════════════════════
+    //  🎮 DIALOG GAMIFICATION
+    // ═══════════════════════════════════════════════════════
+    private void showGamificationDialog(GamificationService.ResultatGamification res) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("🎮  Votre progression");
+        DialogPane pane = dialog.getDialogPane();
+        pane.setPrefWidth(520);
+        pane.setStyle(
+            "-fx-background-color: #071A10;" +
+            "-fx-border-color: #00D9FF; -fx-border-width: 2;" +
+            "-fx-border-radius: 20; -fx-background-radius: 20;"
+        );
+        pane.getButtonTypes().add(new ButtonType("🚀  Continuer", ButtonBar.ButtonData.OK_DONE));
+
+        VBox content = new VBox(16);
+        content.setPadding(new Insets(24));
+
+        Label titleLbl = new Label("🎮  Votre progression");
+        titleLbl.setStyle("-fx-text-fill: #00D9FF; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        // XP gagné
+        HBox xpGagneBox = new HBox(10);
+        xpGagneBox.setAlignment(Pos.CENTER_LEFT);
+        xpGagneBox.setPadding(new Insets(10, 14, 10, 14));
+        xpGagneBox.setStyle(
+            "-fx-background-color: rgba(0,217,255,0.08);" +
+            "-fx-border-color: rgba(0,217,255,0.25); -fx-border-width: 1;" +
+            "-fx-border-radius: 14; -fx-background-radius: 14;"
+        );
+        Label xpIcon = new Label("⚡");
+        xpIcon.setStyle("-fx-font-size: 22px;");
+        VBox xpTexts = new VBox(2);
+        Label xpVal = new Label("+" + res.xpGagne + " XP gagnés");
+        xpVal.setStyle("-fx-text-fill: #00D9FF; -fx-font-size: 17px; -fx-font-weight: bold;");
+        HBox bonusBox = new HBox(8);
+        if (res.xpBonus_faible)       bonusBox.getChildren().add(makePillG("+5 Faible","#00FF88"));
+        if (res.xpBonus_amelioration) bonusBox.getChildren().add(makePillG("+15 Amélioration","#00D9FF"));
+        if (res.xpBonus_streak)       bonusBox.getChildren().add(makePillG("+20 Streak","#FFD700"));
+        if (!res.nouveauxBadges.isEmpty()) bonusBox.getChildren().add(makePillG("+25×"+res.nouveauxBadges.size()+" Badge","#FF8C00"));
+        xpTexts.getChildren().addAll(xpVal, bonusBox);
+        xpGagneBox.getChildren().addAll(xpIcon, xpTexts);
+
+        // Niveau + barre XP
+        GamificationService.Niveau n = res.niveauActuel;
+        int xpDansNiveau   = res.xpTotal - n.xpRequis;
+        int xpPourProchain = n.xpProchain - n.xpRequis;
+        double pct = Math.min(1.0, (double) xpDansNiveau / xpPourProchain);
+        Label niveauLbl = new Label(n.emoji + "  Niveau " + n.numero + " — " + n.titre);
+        niveauLbl.setStyle("-fx-text-fill: " + n.couleur + "; -fx-font-size: 16px; -fx-font-weight: bold;");
+        Pane track = new Pane();
+        track.setPrefHeight(14); track.setMaxWidth(Double.MAX_VALUE);
+        track.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 7;");
+        Pane fill = new Pane();
+        fill.setPrefHeight(14);
+        fill.setStyle("-fx-background-color: " + n.couleur + "; -fx-background-radius: 7;");
+        fill.setPrefWidth(0);
+        track.getChildren().add(fill);
+        track.widthProperty().addListener((ob, ov, nv) -> {
+            if (nv.doubleValue() > 0) {
+                double target = pct * nv.doubleValue();
+                new Timeline(
+                    new KeyFrame(Duration.ZERO,        new KeyValue(fill.prefWidthProperty(), 0)),
+                    new KeyFrame(Duration.millis(900), new KeyValue(fill.prefWidthProperty(), target, Interpolator.EASE_OUT))
+                ).play();
+            }
+        });
+        Label xpProgressLbl = new Label(xpDansNiveau + " / " + xpPourProchain + " XP  →  Niveau " + (n.numero + 1));
+        xpProgressLbl.setStyle("-fx-text-fill: rgba(200,255,220,0.45); -fx-font-size: 11px;");
+
+        // Level up
+        VBox levelUpBanner = null;
+        if (res.levelUp) {
+            levelUpBanner = new VBox(4);
+            levelUpBanner.setAlignment(Pos.CENTER);
+            levelUpBanner.setPadding(new Insets(12, 16, 12, 16));
+            levelUpBanner.setStyle(
+                "-fx-background-color: rgba(255,215,0,0.12);" +
+                "-fx-border-color: #FFD700; -fx-border-width: 2;" +
+                "-fx-border-radius: 16; -fx-background-radius: 16;"
+            );
+            Label lvlIcon = new Label("🎉"); lvlIcon.setStyle("-fx-font-size: 36px;");
+            Label lvlTxt  = new Label("LEVEL UP ! " + res.ancienNiveau.emoji + " → " + n.emoji + " " + n.titre);
+            lvlTxt.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 16px; -fx-font-weight: bold;");
+            levelUpBanner.getChildren().addAll(lvlIcon, lvlTxt);
+            ScaleTransition sc = new ScaleTransition(Duration.millis(600), levelUpBanner);
+            sc.setFromX(0.8); sc.setToX(1.0); sc.setFromY(0.8); sc.setToY(1.0); sc.play();
+        }
+
+        // Streak
+        HBox streakBox = new HBox(10);
+        streakBox.setAlignment(Pos.CENTER_LEFT);
+        streakBox.setPadding(new Insets(10, 14, 10, 14));
+        streakBox.setStyle("-fx-background-color: rgba(255,140,0,0.10);-fx-border-color: rgba(255,140,0,0.30);-fx-border-width:1;-fx-border-radius:14;-fx-background-radius:14;");
+        Label fireIcon = new Label("🔥"); fireIcon.setStyle("-fx-font-size: 24px;");
+        Label streakLbl = new Label("Streak : " + res.streak + " jour" + (res.streak>1?"s":"") + " consécutif" + (res.streak>1?"s":""));
+        streakLbl.setStyle("-fx-text-fill: #FF8C00; -fx-font-size: 15px; -fx-font-weight: bold;");
+        streakBox.getChildren().addAll(fireIcon, streakLbl);
+
+        content.getChildren().addAll(titleLbl, makeSepG(), xpGagneBox, makeSepG(), niveauLbl, track, xpProgressLbl);
+        if (levelUpBanner != null) content.getChildren().add(levelUpBanner);
+        content.getChildren().addAll(makeSepG(), streakBox);
+
+        if (!res.nouveauxBadges.isEmpty()) {
+            content.getChildren().add(makeSepG());
+            Label badgeTitleLbl = new Label("🏅  Nouveau" + (res.nouveauxBadges.size()>1?"x":"") + " badge" + (res.nouveauxBadges.size()>1?"s":"") + " débloqué" + (res.nouveauxBadges.size()>1?"s":"") + " !");
+            badgeTitleLbl.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 15px; -fx-font-weight: bold;");
+            content.getChildren().add(badgeTitleLbl);
+            FlowPane badgesFlow = new FlowPane(10, 10);
+            for (Badge b : res.nouveauxBadges) {
+                VBox card = makeBadgeCardG(b, true);
+                badgesFlow.getChildren().add(card);
+                FadeTransition ft2 = new FadeTransition(Duration.millis(500), card);
+                ft2.setFromValue(0); ft2.setToValue(1); ft2.setDelay(Duration.millis(300)); ft2.play();
+            }
+            content.getChildren().add(badgesFlow);
+        }
+
+        content.getChildren().add(makeSepG());
+        Label totalLbl = new Label("XP total : " + res.xpTotal + " XP");
+        totalLbl.setStyle("-fx-text-fill: rgba(200,255,220,0.40); -fx-font-size: 11px;");
+        content.getChildren().add(totalLbl);
+
+        pane.setContent(content);
+        pane.lookupButton(pane.getButtonTypes().get(0)).setStyle(
+            "-fx-background-color: linear-gradient(to right,#00D9FF,#00FF88);" +
+            "-fx-text-fill: #050C07; -fx-font-weight: bold;" +
+            "-fx-padding: 10 32; -fx-background-radius: 20; -fx-cursor: hand;"
+        );
+        pane.setOpacity(0);
+        FadeTransition ft = new FadeTransition(Duration.millis(350), pane);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
+        dialog.showAndWait();
+    }
+
+    private Label makePillG(String text, String color) {
+        Label l = new Label(text);
+        l.setStyle("-fx-text-fill:"+color+";-fx-font-size:10px;-fx-font-weight:bold;-fx-background-color:"+color+"22;-fx-border-color:"+color+"66;-fx-border-width:1;-fx-border-radius:20;-fx-background-radius:20;-fx-padding:2 8;");
+        return l;
+    }
+
+    private javafx.scene.shape.Line makeSepG() {
+        javafx.scene.shape.Line l = new javafx.scene.shape.Line(0, 0, 460, 0);
+        l.setStroke(javafx.scene.paint.Color.web("#00D9FF", 0.12));
+        return l;
+    }
+
+    private VBox makeBadgeCardG(Badge b, boolean unlocked) {
+        VBox card = new VBox(6);
+        card.setAlignment(Pos.CENTER);
+        card.setPrefWidth(110); card.setPadding(new Insets(12, 8, 12, 8));
+        String bg = unlocked ? "rgba(255,215,0,0.10)" : "rgba(255,255,255,0.04)";
+        String border = unlocked ? "#FFD700" : "rgba(255,255,255,0.10)";
+        card.setStyle("-fx-background-color:"+bg+";-fx-border-color:"+border+";-fx-border-width:1.5;-fx-border-radius:14;-fx-background-radius:14;");
+        Label emoji = new Label(unlocked ? b.emoji : "🔒"); emoji.setStyle("-fx-font-size: 28px;");
+        Label name  = new Label(b.nom); name.setWrapText(true); name.setMaxWidth(95);
+        name.setStyle("-fx-text-fill:"+(unlocked?"#FFD700":"rgba(255,255,255,0.25)")+";-fx-font-size:11px;-fx-font-weight:bold;-fx-text-alignment:center;");
+        Label cond  = new Label(b.condition); cond.setWrapText(true); cond.setMaxWidth(95);
+        cond.setStyle("-fx-text-fill:rgba(200,255,220,0.35);-fx-font-size:9px;-fx-text-alignment:center;");
+        card.getChildren().addAll(emoji, name, cond);
+        return card;
     }
 
     private void showAlerteDialog(String typeTest, int nb) {

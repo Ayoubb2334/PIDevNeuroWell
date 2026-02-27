@@ -82,21 +82,22 @@
                 <!-- Row 2 : Niveau + Date -->
                 <HBox spacing="30">
 
-                    <!-- Niveau -->
+                    <!-- Niveau (lecture seule — auto-calculé) -->
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="📈  Niveau"
+                        <Label text="📈  Niveau (automatique)"
                                style="-fx-text-fill: rgba(0,217,255,0.80); -fx-font-size: 13px; -fx-font-weight: 600;"/>
-                        <ComboBox fx:id="niveauField"
-                                  promptText="Niveau (auto-calculé)"
-                                  maxWidth="Infinity"
-                                  style="-fx-background-color: #112016;
-                                         -fx-text-fill: #E8FFF0;
-                                         -fx-border-color: rgba(0,217,255,0.25);
-                                         -fx-border-width: 1;
-                                         -fx-border-radius: 10;
-                                         -fx-background-radius: 10;
-                                         -fx-padding: 10 14;
-                                         -fx-font-size: 13px;"/>
+                        <StackPane maxWidth="Infinity" prefHeight="40"
+                                   style="-fx-background-color: #0A1A0E;
+                                          -fx-border-color: rgba(0,217,255,0.15);
+                                          -fx-border-width: 1;
+                                          -fx-border-radius: 10;
+                                          -fx-background-radius: 10;
+                                          -fx-padding: 0;">
+                            <Label fx:id="niveauDisplay" text="— Saisissez un score —"
+                                   style="-fx-text-fill: rgba(200,255,220,0.35);
+                                          -fx-font-size: 13px; -fx-font-weight: 600;
+                                          -fx-padding: 10 14;"/>
+                        </StackPane>
                         <Label fx:id="niveauError"
                                style="-fx-text-fill: #FF4D6D; -fx-font-size: 11px;" text=""/>
                     </VBox>
@@ -129,7 +130,7 @@
                              -fx-background-radius: 10;
                              -fx-padding: 12 16;">
                     <Label text="💡"  style="-fx-font-size: 16px;"/>
-                    <Label text="Le niveau est calculé automatiquement selon le score : &lt;8 = Faible · 8–14 = Moyen · ≥15 = Élevé"
+                    <Label text="Le niveau est calculé automatiquement selon le score : 0–20 = Faible · 21–50 = Moyen · 51–100 = Élevé"
                            style="-fx-text-fill: rgba(0,217,255,0.65); -fx-font-size: 12px;"
                            wrapText="true"/>
                 </HBox>

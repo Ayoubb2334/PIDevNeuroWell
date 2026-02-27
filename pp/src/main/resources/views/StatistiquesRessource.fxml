@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.StatistiquesRessourceController"
+      spacing="0"
+      style="-fx-background-color: #050C07;">
+
+    <!-- ═══════════════════════════════════════════════════
+         HEADER
+    ═══════════════════════════════════════════════════ -->
+    <HBox alignment="CENTER_LEFT" spacing="16"
+          style="-fx-background-color: #071A10;
+                 -fx-border-color: rgba(0,217,255,0.15);
+                 -fx-border-width: 0 0 1 0;
+                 -fx-padding: 18 30;">
+
+        <StackPane style="-fx-background-color: rgba(0,217,255,0.10);
+                          -fx-border-color: rgba(0,217,255,0.30);
+                          -fx-border-width: 1;
+                          -fx-background-radius: 8; -fx-border-radius: 8;"
+                   prefWidth="44" prefHeight="44">
+            <Label text="📊" style="-fx-font-size: 20px;"/>
+        </StackPane>
+
+        <VBox spacing="3">
+            <Label text="Statistiques des Consultations"
+                   style="-fx-text-fill: #00D9FF;
+                          -fx-font-size: 22px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <Label text="Tracking · Analytics · Ressources"
+                   style="-fx-text-fill: rgba(0,217,255,0.40);
+                          -fx-font-size: 11px; -fx-font-family: 'Courier New';"/>
+        </VBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="🔄  Actualiser" onAction="#handleRefresh"
+                style="-fx-background-color: rgba(0,217,255,0.12);
+                       -fx-text-fill: #00D9FF;
+                       -fx-border-color: rgba(0,217,255,0.40); -fx-border-width: 1;
+                       -fx-border-radius: 22; -fx-background-radius: 22;
+                       -fx-padding: 9 22; -fx-font-weight: bold;
+                       -fx-font-size: 13px; -fx-font-family: 'Courier New'; -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- ═══════════════════════════════════════════════════
+         KPI ROW
+    ═══════════════════════════════════════════════════ -->
+    <HBox spacing="16" style="-fx-padding: 20 30 10 30; -fx-background-color: #050C07;">
+
+        <!-- KPI 1 : Total vues -->
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="4"
+              style="-fx-background-color: rgba(0,217,255,0.07);
+                     -fx-border-color: rgba(0,217,255,0.25); -fx-border-width: 1;
+                     -fx-background-radius: 12; -fx-border-radius: 12;
+                     -fx-padding: 16 20;">
+            <Label text="👁  TOTAL VUES"
+                   style="-fx-text-fill: rgba(0,217,255,0.55);
+                          -fx-font-size: 10px; -fx-font-family: 'Courier New';"/>
+            <Label fx:id="kpiTotalVues" text="…"
+                   style="-fx-text-fill: #00D9FF;
+                          -fx-font-size: 36px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <Label text="tous temps"
+                   style="-fx-text-fill: rgba(0,217,255,0.30);
+                          -fx-font-size: 9px; -fx-font-family: 'Courier New';"/>
+        </VBox>
+
+        <!-- KPI 2 : Vues 7 jours -->
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="4"
+              style="-fx-background-color: rgba(0,255,136,0.07);
+                     -fx-border-color: rgba(0,255,136,0.25); -fx-border-width: 1;
+                     -fx-background-radius: 12; -fx-border-radius: 12;
+                     -fx-padding: 16 20;">
+            <Label text="📅  VUES 7 JOURS"
+                   style="-fx-text-fill: rgba(0,255,136,0.55);
+                          -fx-font-size: 10px; -fx-font-family: 'Courier New';"/>
+            <Label fx:id="kpiVues7j" text="…"
+                   style="-fx-text-fill: #00FF88;
+                          -fx-font-size: 36px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <Label text="7 derniers jours"
+                   style="-fx-text-fill: rgba(0,255,136,0.30);
+                          -fx-font-size: 9px; -fx-font-family: 'Courier New';"/>
+        </VBox>
+
+        <!-- KPI 3 : Vues 30 jours -->
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="4"
+              style="-fx-background-color: rgba(255,215,0,0.07);
+                     -fx-border-color: rgba(255,215,0,0.25); -fx-border-width: 1;
+                     -fx-background-radius: 12; -fx-border-radius: 12;
+                     -fx-padding: 16 20;">
+            <Label text="📆  VUES 30 JOURS"
+                   style="-fx-text-fill: rgba(255,215,0,0.55);
+                          -fx-font-size: 10px; -fx-font-family: 'Courier New';"/>
+            <Label fx:id="kpiVues30j" text="…"
+                   style="-fx-text-fill: #FFD700;
+                          -fx-font-size: 36px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <Label text="30 derniers jours"
+                   style="-fx-text-fill: rgba(255,215,0,0.30);
+                          -fx-font-size: 9px; -fx-font-family: 'Courier New';"/>
+        </VBox>
+
+        <!-- KPI 4 : Top ressource -->
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="4"
+              style="-fx-background-color: rgba(255,77,109,0.07);
+                     -fx-border-color: rgba(255,77,109,0.25); -fx-border-width: 1;
+                     -fx-background-radius: 12; -fx-border-radius: 12;
+                     -fx-padding: 16 20;">
+            <Label text="🏆  TOP RESSOURCE"
+                   style="-fx-text-fill: rgba(255,77,109,0.55);
+                          -fx-font-size: 10px; -fx-font-family: 'Courier New';"/>
+            <Label fx:id="kpiTopRessource" text="…"
+                   wrapText="true"
+                   style="-fx-text-fill: #FF4D6D;
+                          -fx-font-size: 14px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New'; -fx-alignment: CENTER;"/>
+        </VBox>
+    </HBox>
+
+    <!-- ═══════════════════════════════════════════════════
+         GRAPHIQUES (ligne 1)
+    ═══════════════════════════════════════════════════ -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS"
+          style="-fx-padding: 10 30 10 30; -fx-background-color: #050C07;">
+
+        <!-- Vues par jour -->
+        <VBox HBox.hgrow="ALWAYS" spacing="6"
+              style="-fx-background-color: #071A10;
+                     -fx-border-color: rgba(0,217,255,0.15); -fx-border-width: 1;
+                     -fx-background-radius: 10; -fx-border-radius: 10;
+                     -fx-padding: 12 16;">
+            <Label text="📈  Consultations — 30 derniers jours"
+                   style="-fx-text-fill: rgba(0,217,255,0.70);
+                          -fx-font-size: 11px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <BarChart fx:id="chartParJour" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: transparent;"
+                      animated="false" legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Date"
+                                  style="-fx-tick-label-fill: rgba(0,217,255,0.45);"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Vues"
+                                style="-fx-tick-label-fill: rgba(0,217,255,0.45);"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+
+        <!-- Répartition par type -->
+        <VBox prefWidth="260" spacing="6"
+              style="-fx-background-color: #071A10;
+                     -fx-border-color: rgba(0,217,255,0.15); -fx-border-width: 1;
+                     -fx-background-radius: 10; -fx-border-radius: 10;
+                     -fx-padding: 12 16;">
+            <Label text="🧩  Répartition par type"
+                   style="-fx-text-fill: rgba(0,217,255,0.70);
+                          -fx-font-size: 11px; -fx-font-weight: bold;
+                          -fx-font-family: 'Courier New';"/>
+            <PieChart fx:id="chartParType" VBox.vgrow="ALWAYS"
+                      animated="false" labelsVisible="true"
+                      style="-fx-background-color: transparent;"/>
+        </VBox>
+    </HBox>
+
+    <!-- ═══════════════════════════════════════════════════
+         GRAPHIQUE ligne 2 : TOP ressources
+    ═══════════════════════════════════════════════════ -->
+    <VBox spacing="6" VBox.vgrow="ALWAYS"
+          style="-fx-background-color: #071A10;
+                 -fx-border-color: rgba(0,255,136,0.15); -fx-border-width: 1;
+                 -fx-background-radius: 10; -fx-border-radius: 10;
+                 -fx-padding: 12 16;
+                 -fx-margin: 0 30 20 30;">
+        <VBox.margin><Insets left="30" right="30" bottom="20"/></VBox.margin>
+        <Label text="🏅  Top 7 ressources les plus consultées"
+               style="-fx-text-fill: rgba(0,255,136,0.70);
+                      -fx-font-size: 11px; -fx-font-weight: bold;
+                      -fx-font-family: 'Courier New';"/>
+        <BarChart fx:id="chartTopRessources" VBox.vgrow="ALWAYS"
+                  animated="false" legendVisible="false"
+                  style="-fx-background-color: transparent;">
+            <xAxis>
+                <CategoryAxis style="-fx-tick-label-fill: rgba(0,217,255,0.45);"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis style="-fx-tick-label-fill: rgba(0,217,255,0.45);"/>
+            </yAxis>
+        </BarChart>
+    </VBox>
+
+    <!-- ═══════════════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════════════ -->
+    <HBox style="-fx-background-color: #071A10;
+                 -fx-border-color: rgba(0,217,255,0.12); -fx-border-width: 1 0 0 0;
+                 -fx-padding: 10 30;" alignment="CENTER_RIGHT">
+        <Label text="NEUROWELL · Analytics · Ressources"
+               style="-fx-text-fill: rgba(0,217,255,0.25);
+                      -fx-font-size: 10px; -fx-font-family: 'Courier New';"/>
+    </HBox>
+
+</VBox>

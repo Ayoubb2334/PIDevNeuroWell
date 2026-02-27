@@ -201,6 +201,21 @@ public class ShowEventController {
      * Return to front page with transition
      */
     @FXML
+    private void handleGoToEvaluations() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/showEvaluation.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) eventsContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, stage.getWidth(), stage.getHeight()));
+            stage.setTitle("NeuroWell - Évaluations");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showModernAlert("Erreur", "Impossible d'ouvrir la page des évaluations", Alert.AlertType.ERROR);
+        }
+    }
+    @FXML
     private void handleBackToFront() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front.fxml"));
@@ -246,70 +261,6 @@ public class ShowEventController {
         } catch (IOException e) {
             e.printStackTrace();
             showModernAlert("Erreur", "Impossible d'ouvrir la page de participation", Alert.AlertType.ERROR);
-        }
-    }
-
-    /**
-     * Navigate to Ressources front page
-     */
-    @FXML
-    private void handleGoToRessources() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/RessourcesFront.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) eventsContainer.getScene().getWindow();
-
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), eventsContainer.getScene().getRoot());
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(e -> {
-                stage.setTitle("NeuroWell - Ressources");
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                stage.setScene(scene);
-
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-                fadeIn.setFromValue(0.0);
-                fadeIn.setToValue(1.0);
-                fadeIn.play();
-            });
-            fadeOut.play();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showModernAlert("Erreur", "Impossible d'ouvrir la bibliothèque", Alert.AlertType.ERROR);
-        }
-    }
-
-    /**
-     * Navigate to Evaluations front page
-     */
-    @FXML
-    private void handleGoToEvaluations() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/showEvaluation.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) eventsContainer.getScene().getWindow();
-
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), eventsContainer.getScene().getRoot());
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(e -> {
-                stage.setTitle("NeuroWell - Évaluations");
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                stage.setScene(scene);
-
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-                fadeIn.setFromValue(0.0);
-                fadeIn.setToValue(1.0);
-                fadeIn.play();
-            });
-            fadeOut.play();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showModernAlert("Erreur", "Impossible d'ouvrir les évaluations", Alert.AlertType.ERROR);
         }
     }
 
@@ -605,7 +556,7 @@ public class ShowEventController {
             st.play();
         });
 
-        btnMaps.setOnAction(e -> openInGoogleMaps(event.getLocalisation_e()));
+        btnMaps.setOnAction(e -> openMapsPage(event.getLocalisation_e(), event.getTitre_e()));
         // ─────────────────────────────────────────────────────────
 
         rightBox.getChildren().addAll(prixLabel, btnParticiper, btnMaps);
@@ -939,4 +890,42 @@ public class ShowEventController {
 
         alert.showAndWait();
     }
+    private void openMapsPage(String localisation, String eventTitre) {
+        if (localisation == null || localisation.isBlank()) {
+            showModernAlert("Localisation manquante", "Aucune adresse disponible.", Alert.AlertType.WARNING);
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MapsView.fxml"));
+            Parent root = loader.load();
+
+            // Passer les donnees au controller Maps
+            MapsController mapsController = loader.getController();
+            mapsController.initMap(localisation, eventTitre);
+
+            Stage stage = (Stage) eventsContainer.getScene().getWindow();
+
+            // Transition fade out -> nouvelle page
+            FadeTransition fo = new FadeTransition(Duration.millis(300),
+                    eventsContainer.getScene().getRoot());
+            fo.setFromValue(1.0);
+            fo.setToValue(0.0);
+            fo.setOnFinished(ev -> {
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                stage.setScene(scene);
+                stage.setTitle("NeuroWell - Maps");
+
+                FadeTransition fi = new FadeTransition(Duration.millis(400), root);
+                fi.setFromValue(0.0);
+                fi.setToValue(1.0);
+                fi.play();
+            });
+            fo.play();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showModernAlert("Erreur", "Impossible d'ouvrir la carte.", Alert.AlertType.ERROR);
+        }
+    }
 }
+

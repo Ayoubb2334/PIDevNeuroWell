@@ -1,8 +1,10 @@
 package controllers;
 
 import entities.Ressource;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import services.ServiceRessource;
 
@@ -71,6 +73,24 @@ public class AjoutRessourceController {
 
         // Date par défaut
         dateField.setValue(LocalDate.now());
+
+        // ★ Fix fond blanc du TextArea — doit s'exécuter APRÈS que la scène soit rendue
+        // car le nœud interne .content n'existe qu'après le premier layout pass
+        Platform.runLater(this::fixTextAreaStyle);
+    }
+
+    /**
+     * Cible le nœud interne .content du TextArea qui hérite du fond blanc
+     * du thème Modena de JavaFX. Impossible à corriger en inline style.
+     */
+    private void fixTextAreaStyle() {
+        Region content = (Region) descriptionField.lookup(".content");
+        if (content != null) {
+            content.setStyle(
+                "-fx-background-color: rgba(0,217,255,0.04);" +
+                "-fx-background-radius: 8;"
+            );
+        }
     }
 
     @FXML
