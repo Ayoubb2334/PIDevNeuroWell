@@ -1,186 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.Circle?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:id="rootPane"
            fx:controller="controllers.MeetRoomController"
-           prefWidth="780" prefHeight="560"
+           fx:id="rootPane"
            style="-fx-background-color: #050C07;">
 
-    <!-- ANIMATED BACKGROUND ORBS -->
-    <Circle fx:id="orb1" radius="200"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(0,217,255,0.18), transparent);"
-            translateX="-260" translateY="-160"/>
-    <Circle fx:id="orb2" radius="160"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(0,255,136,0.14), transparent);"
-            translateX="280" translateY="160"/>
-    <Circle fx:id="orb3" radius="120"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(0,217,255,0.10), transparent);"
-            translateX="0" translateY="-200"/>
-    <Circle fx:id="orb4" radius="90"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(127,255,0,0.08), transparent);"
-            translateX="-280" translateY="200"/>
-
-    <!-- GRID LINES DECORATION -->
-    <Pane mouseTransparent="true" style="-fx-opacity: 0.04;">
-        <Region prefWidth="780" prefHeight="560"
-                style="-fx-background-color:
-                    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,217,255,0.5) 40px),
-                    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,217,255,0.5) 40px);"/>
+    <!-- Orbs décoratifs -->
+    <Pane mouseTransparent="true">
+        <Circle fx:id="orb1" radius="180" layoutX="80"  layoutY="120"
+                fill="rgba(0,217,255,0.06)" stroke="rgba(0,217,255,0.12)" strokeWidth="1"/>
+        <Circle fx:id="orb2" radius="150" layoutX="700" layoutY="80"
+                fill="rgba(0,255,136,0.05)" stroke="rgba(0,255,136,0.10)" strokeWidth="1"/>
+        <Circle fx:id="orb3" radius="200" layoutX="600" layoutY="500"
+                fill="rgba(0,217,255,0.04)" stroke="rgba(0,217,255,0.08)" strokeWidth="1"/>
+        <Circle fx:id="orb4" radius="120" layoutX="150" layoutY="450"
+                fill="rgba(0,255,136,0.04)" stroke="rgba(0,255,136,0.08)" strokeWidth="1"/>
     </Pane>
 
-    <!-- MAIN CARD -->
-    <VBox fx:id="mainCard" spacing="0" alignment="TOP_CENTER"
-          maxWidth="700" maxHeight="520"
+    <!-- Carte principale -->
+    <VBox fx:id="mainCard" spacing="0" alignment="TOP_CENTER" maxWidth="780" maxHeight="680"
           style="-fx-background-color: rgba(13,31,18,0.92);
-                 -fx-border-color: rgba(0,217,255,0.25);
-                 -fx-border-width: 1;
-                 -fx-border-radius: 28;
-                 -fx-background-radius: 28;">
+                 -fx-background-radius: 24;
+                 -fx-border-color: rgba(0,217,255,0.20);
+                 -fx-border-width: 1.5;
+                 -fx-border-radius: 24;
+                 -fx-effect: dropshadow(gaussian, rgba(0,217,255,0.25), 40, 0, 0, 0);">
 
-        <!-- TOP BANNER -->
-        <HBox alignment="CENTER_LEFT" spacing="12"
-              style="-fx-background-color: linear-gradient(to right, rgba(0,217,255,0.12), rgba(0,255,136,0.06));
-                     -fx-padding: 16 24;
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="14"
+              style="-fx-background-color: rgba(0,217,255,0.06);
+                     -fx-padding: 18 24;
                      -fx-border-color: transparent transparent rgba(0,217,255,0.15) transparent;
-                     -fx-border-width: 0 0 1 0;
-                     -fx-background-radius: 28 28 0 0;">
+                     -fx-border-width: 0 0 1 0;">
 
-            <StackPane>
-                <Circle radius="20"
-                        style="-fx-fill: rgba(0,217,255,0.12);
-                               -fx-stroke: rgba(0,217,255,0.50); -fx-stroke-width: 1.5;"/>
-                <Label text="&#128249;" style="-fx-font-size: 18px;"/>
-            </StackPane>
-
-            <VBox spacing="2">
-                <!-- fx:id="lblLiveIndicator" : utilise pour l'animation de clignotement -->
-                <Label fx:id="lblLiveIndicator" text="NEUROWELL MEET"
-                       style="-fx-text-fill: #00D9FF; -fx-font-size: 11px;
-                              -fx-font-weight: bold;"/>
-                <!-- fx:id="lblMode" : mis a jour par initMeet() -->
-                <Label fx:id="lblMode" text="Session en ligne"
-                       style="-fx-text-fill: #00D9FF; -fx-font-size: 11px; -fx-font-weight: bold;
-                              -fx-background-color: rgba(0,217,255,0.10); -fx-padding: 3 10;
-                              -fx-background-radius: 15; -fx-border-color: rgba(0,217,255,0.35);
-                              -fx-border-width: 1; -fx-border-radius: 15;"/>
-            </VBox>
-
+            <Circle radius="8" style="-fx-fill: #00D9FF; -fx-effect: dropshadow(gaussian,#00D9FF,10,0.5,0,0);"/>
+            <Label fx:id="lblLiveIndicator" text="● EN DIRECT"
+                   style="-fx-text-fill: #00FF88; -fx-font-size: 11px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- fx:id="lblDate" : mis a jour par initMeet() -->
-            <Label fx:id="lblDate" text="--"
-                   style="-fx-text-fill: rgba(200,255,220,0.50); -fx-font-size: 11px;"/>
+            <Label fx:id="lblEventTitle" text="Événement"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Label fx:id="lblMode" text="En ligne"
+                   style="-fx-text-fill: #00D9FF; -fx-font-size: 12px;"/>
         </HBox>
 
-        <!-- BODY -->
-        <VBox spacing="22" style="-fx-padding: 30 36;">
+        <!-- Scroll pour le contenu -->
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent;"
+                    VBox.vgrow="ALWAYS">
 
-            <!-- Event title -->
-            <VBox spacing="6">
-                <Label text="Vous etes invite a rejoindre"
-                       style="-fx-text-fill: rgba(200,255,220,0.45); -fx-font-size: 12px;"/>
-                <!-- fx:id="lblEventTitle" : mis a jour par initMeet() -->
-                <Label fx:id="lblEventTitle" text="Chargement..."
-                       style="-fx-text-fill: #E8FFF0; -fx-font-size: 22px;
-                              -fx-font-weight: bold;"
-                       wrapText="true" maxWidth="620"/>
+            <VBox spacing="18" style="-fx-padding: 22 28;">
+
+                <!-- Lien Meet -->
+                <VBox spacing="8">
+                    <Label text="🔗 Lien de la réunion"
+                           style="-fx-text-fill: rgba(0,217,255,0.80); -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label fx:id="lblMeetUrl" text="Génération en cours..."
+                               style="-fx-text-fill: rgba(255,255,255,0.55); -fx-font-size: 12px;"
+                               HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Button fx:id="btnCopyLink" text="📋 Copier"
+                                style="-fx-background-color: rgba(0,217,255,0.15);
+                                       -fx-text-fill: #00D9FF; -fx-font-size: 12px;
+                                       -fx-padding: 7 16; -fx-background-radius: 10; -fx-cursor: hand;
+                                       -fx-border-color: rgba(0,217,255,0.30); -fx-border-width: 1; -fx-border-radius: 10;"/>
+                    </HBox>
+                </VBox>
+
+                <Separator style="-fx-background-color: rgba(0,217,255,0.12);"/>
+
+                <!-- ══ HEURE DE DÉBUT ══════════════════════════════════════ -->
+                <VBox spacing="10">
+                    <Label text="🕐 Heure de début"
+                           style="-fx-text-fill: rgba(0,255,136,0.85); -fx-font-size: 13px; -fx-font-weight: bold;"/>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <VBox spacing="4" alignment="CENTER">
+                            <Label text="Heures" style="-fx-text-fill: rgba(255,255,255,0.50); -fx-font-size: 11px;"/>
+                            <Spinner fx:id="spinnerHours" prefWidth="75" prefHeight="36"/>
+                        </VBox>
+                        <Label text=":" style="-fx-text-fill: #00FF88; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                        <VBox spacing="4" alignment="CENTER">
+                            <Label text="Minutes" style="-fx-text-fill: rgba(255,255,255,0.50); -fx-font-size: 11px;"/>
+                            <Spinner fx:id="spinnerMinutes" prefWidth="75" prefHeight="36"/>
+                        </VBox>
+                        <Button fx:id="btnSetTime" text="✔ Définir l'heure"
+                                onAction="#handleSetTime"/>
+                    </HBox>
+
+                    <!-- Countdown -->
+                    <VBox spacing="4" alignment="CENTER"
+                          style="-fx-background-color: rgba(0,255,136,0.06);
+                                 -fx-padding: 14 20; -fx-background-radius: 14;
+                                 -fx-border-color: rgba(0,255,136,0.20); -fx-border-width: 1; -fx-border-radius: 14;">
+                        <Label fx:id="lblCountdown" text="--:--"
+                               style="-fx-text-fill: #00FF88; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblCountdownSub" text="Définissez une heure ci-dessus"
+                               style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <!-- Date affichée -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="📅" style="-fx-font-size: 13px;"/>
+                        <Label fx:id="lblDate" text="--"
+                               style="-fx-text-fill: rgba(255,255,255,0.60); -fx-font-size: 13px;"/>
+                    </HBox>
+                </VBox>
+
+                <Separator style="-fx-background-color: rgba(0,217,255,0.12);"/>
+
+                <!-- ══ PARTICIPANTS ════════════════════════════════════════ -->
+                <VBox spacing="12">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="✉ Inviter par email"
+                               style="-fx-text-fill: rgba(0,217,255,0.85); -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblParticipantCount" text="0 invite"
+                               style="-fx-text-fill: rgba(0,217,255,0.55); -fx-font-size: 11px;
+                                      -fx-background-color: rgba(0,217,255,0.10); -fx-padding: 3 10;
+                                      -fx-background-radius: 10;"/>
+                    </HBox>
+
+                    <!-- Champ email + bouton ajouter -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtParticipantName"
+                                   promptText="exemple@email.com"
+                                   HBox.hgrow="ALWAYS"
+                                   onAction="#handleAddParticipant"
+                                   style="-fx-background-color: rgba(0,217,255,0.07);
+                                          -fx-text-fill: white;
+                                          -fx-prompt-text-fill: rgba(255,255,255,0.30);
+                                          -fx-font-size: 13px; -fx-padding: 10 14;
+                                          -fx-background-radius: 12;
+                                          -fx-border-color: rgba(0,217,255,0.25);
+                                          -fx-border-width: 1.5; -fx-border-radius: 12;"/>
+                        <Button fx:id="btnAddParticipant" text="＋ Ajouter"
+                                onAction="#handleAddParticipant"/>
+                    </HBox>
+
+                    <!-- Liste des emails -->
+                    <VBox fx:id="participantsListBox" spacing="6"/>
+
+                    <!-- Bouton envoyer les invitations -->
+                    <Button fx:id="btnSendInvitations" text="📨 Envoyer les invitations"
+                            maxWidth="Infinity" onAction="#handleSendInvitations"
+                            style="-fx-background-color: linear-gradient(to right, #00FF88, #00D9FF);
+                                   -fx-text-fill: #050C07; -fx-font-weight: bold;
+                                   -fx-font-size: 13px; -fx-padding: 11 20;
+                                   -fx-background-radius: 12; -fx-cursor: hand;"/>
+                </VBox>
+
+                <Separator style="-fx-background-color: rgba(0,217,255,0.12);"/>
+
+                <!-- Statut -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Circle fx:id="statusDot" radius="6" fill="#00D9FF"/>
+                    <Label fx:id="lblStatus" text="En attente..."
+                           style="-fx-text-fill: #00D9FF; -fx-font-size: 11px;"/>
+                </HBox>
+
             </VBox>
+        </ScrollPane>
 
-            <!-- Countdown + Participants row -->
-            <HBox spacing="20" alignment="CENTER_LEFT">
-
-                <!-- Countdown block -->
-                <VBox spacing="4" alignment="CENTER"
-                      style="-fx-background-color: rgba(0,217,255,0.07);
-                             -fx-border-color: rgba(0,217,255,0.20); -fx-border-width: 1;
-                             -fx-border-radius: 16; -fx-background-radius: 16;
-                             -fx-padding: 16 24;" HBox.hgrow="ALWAYS">
-                    <Label text="COMMENCE DANS"
-                           style="-fx-text-fill: rgba(0,217,255,0.55);
-                                  -fx-font-size: 10px;"/>
-                    <!-- fx:id="lblCountdown" : mis a jour par startCountdown() -->
-                    <Label fx:id="lblCountdown" text="--:--"
-                           style="-fx-text-fill: #00D9FF; -fx-font-size: 36px;
-                                  -fx-font-weight: bold; -fx-font-family: 'Consolas', monospace;"/>
-                    <!-- fx:id="lblCountdownSub" : mis a jour par startCountdown() -->
-                    <Label fx:id="lblCountdownSub" text="Calcul en cours..."
-                           style="-fx-text-fill: rgba(200,255,220,0.40); -fx-font-size: 11px;"/>
-                </VBox>
-
-                <!-- Participants -->
-                <VBox spacing="10" alignment="CENTER"
-                      style="-fx-background-color: rgba(0,255,136,0.05);
-                             -fx-border-color: rgba(0,255,136,0.18); -fx-border-width: 1;
-                             -fx-border-radius: 16; -fx-background-radius: 16;
-                             -fx-padding: 16 20;">
-                    <Label text="PARTICIPANTS"
-                           style="-fx-text-fill: rgba(0,255,136,0.55); -fx-font-size: 10px;"/>
-                    <!-- fx:id="avatarsBox" : rempli dynamiquement par buildAvatars() -->
-                    <HBox fx:id="avatarsBox" spacing="0" alignment="CENTER"/>
-                    <!-- fx:id="lblParticipantCount" : mis a jour par buildAvatars() -->
-                    <Label fx:id="lblParticipantCount" text="+5 participants"
-                           style="-fx-text-fill: rgba(0,255,136,0.60); -fx-font-size: 11px;"/>
-                </VBox>
-            </HBox>
-
-            <!-- Meet URL row -->
-            <HBox spacing="10" alignment="CENTER_LEFT"
-                  style="-fx-background-color: rgba(0,0,0,0.35);
-                         -fx-border-color: rgba(0,217,255,0.15); -fx-border-width: 1;
-                         -fx-border-radius: 12; -fx-background-radius: 12;
-                         -fx-padding: 12 16;">
-                <Label text="&#128279;" style="-fx-font-size: 14px;"/>
-                <!-- fx:id="lblMeetUrl" : mis a jour par initMeet() -->
-                <Label fx:id="lblMeetUrl" text="Generation en cours..."
-                       style="-fx-text-fill: rgba(0,217,255,0.70); -fx-font-size: 12px;
-                              -fx-font-family: 'Consolas', monospace;"
-                       HBox.hgrow="ALWAYS" maxWidth="480"/>
-                <!-- fx:id="btnCopyLink" : gere par wireButtons() -->
-                <Button fx:id="btnCopyLink" text="Copier"
-                        style="-fx-background-color: rgba(0,217,255,0.12);
-                               -fx-text-fill: #00D9FF; -fx-font-size: 11px; -fx-font-weight: 600;
-                               -fx-padding: 6 14; -fx-border-color: rgba(0,217,255,0.35);
-                               -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;
-                               -fx-cursor: hand;"/>
-            </HBox>
-
-            <!-- Status row -->
-            <!-- fx:id="statusDot" et fx:id="lblStatus" : mis a jour par setStatus() -->
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <Circle fx:id="statusDot" radius="5" fill="#00FF88"/>
-                <Label fx:id="lblStatus" text="Initialisation..."
-                       style="-fx-text-fill: #00FF88; -fx-font-size: 11px;"/>
-            </HBox>
-
-        </VBox>
-
-        <!-- FOOTER ACTIONS -->
-        <HBox spacing="16" alignment="CENTER"
-              style="-fx-padding: 0 36 28 36;">
-
-            <!-- fx:id="btnCancel" : gere par wireButtons() -->
-            <Button fx:id="btnCancel" text="Retour"
+        <!-- Footer boutons -->
+        <HBox spacing="14" alignment="CENTER"
+              style="-fx-padding: 16 24;
+                     -fx-border-color: rgba(0,217,255,0.15) transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;">
+            <Button fx:id="btnCancel" text="✕ Fermer"
                     style="-fx-background-color: transparent;
-                           -fx-text-fill: rgba(200,255,220,0.50);
-                           -fx-font-size: 13px; -fx-padding: 14 28;
-                           -fx-border-color: rgba(200,255,220,0.18); -fx-border-width: 1;
-                           -fx-border-radius: 30; -fx-background-radius: 30; -fx-cursor: hand;"
-                    prefWidth="140"/>
-
-            <!-- fx:id="btnJoinNow" : gere par wireButtons() et styleJoinButton() -->
-            <Button fx:id="btnJoinNow" text="Rejoindre la reunion"
-                    HBox.hgrow="ALWAYS" maxWidth="320"
-                    style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
-                           -fx-text-fill: #050C07; -fx-font-size: 16px; -fx-font-weight: bold;
-                           -fx-padding: 16 48; -fx-background-radius: 40; -fx-cursor: hand;"/>
+                           -fx-border-color: #FF4D6D; -fx-border-width: 1.5;
+                           -fx-border-radius: 20; -fx-background-radius: 20;
+                           -fx-text-fill: #FF4D6D; -fx-font-weight: bold;
+                           -fx-padding: 10 24; -fx-cursor: hand;"/>
+            <Button fx:id="btnJoinNow" text="🚀 Rejoindre la réunion"/>
         </HBox>
 
     </VBox>
-
 </StackPane>

@@ -15,51 +15,83 @@
           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
         <!-- ══════════════════════════════════════════════
-             SIDEBAR
+             SIDEBAR — tous les boutons DANS ce VBox
              ══════════════════════════════════════════════ -->
         <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="258"
               alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
 
-            <!-- Logo block (populated dynamically by controller) -->
-            <!-- Nav section label -->
+            <!-- Logo block (peuple dynamiquement par le controller) -->
+
             <Label text="NAVIGATION" styleClass="nav-section-label">
                 <VBox.margin><Insets top="24" left="20" bottom="4"/></VBox.margin>
             </Label>
 
             <!-- Tableau de bord -->
-            <Button text="⚡   Tableau de bord" styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button fx:id="btnDashboard" text="Tableau de bord"
+                    styleClass="menu-btn" maxWidth="Infinity"/>
 
-            <!-- Événements -->
-            <Button fx:id="btnEvenements" text="🗓   Événements"
+            <!-- ══ EVENEMENTS ══ -->
+            <Button fx:id="btnEvenements" text="Evenements"
                     styleClass="menu-btn" maxWidth="Infinity"/>
             <VBox fx:id="evenementSubMenu" spacing="2" visible="false" managed="false"
                   styleClass="submenu-box">
-                <Button fx:id="btnAjouterEvenement"  text="     ➕  Ajouter"
+                <Button fx:id="btnAjouterEvenement"   text="     Ajouter"
                         maxWidth="Infinity" styleClass="sub-btn"/>
-                <Button fx:id="btnAfficherEvenements" text="     📋  Afficher"
+                <Button fx:id="btnAfficherEvenements" text="     Afficher"
                         maxWidth="Infinity" styleClass="sub-btn"/>
             </VBox>
 
-            <!-- Congés -->
-            <Button fx:id="btnConges" text="🏖   Consultation"
+            <!-- ══ EVALUATION ══ -->
+            <Button fx:id="btnEvaluation" text="Evaluation"
+                    styleClass="menu-btn" maxWidth="Infinity"/>
+            <VBox fx:id="evaluationSubMenu" spacing="2" visible="false" managed="false"
+                  styleClass="submenu-box">
+                <Button fx:id="btnAjouterEvaluation"  text="     Ajouter"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+                <Button fx:id="btnAfficherEvaluation" text="     Afficher"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+            </VBox>
+
+            <!-- ══ RESSOURCES ══ -->
+            <Button fx:id="btnRessources" text="Ressources"
+                    styleClass="menu-btn" maxWidth="Infinity"/>
+            <VBox fx:id="ressourceSubMenu" spacing="2" visible="false" managed="false"
+                  styleClass="submenu-box">
+                <Button fx:id="btnAjouterRessource"  text="     Ajouter"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+                <Button fx:id="btnAfficherRessource" text="     Afficher"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+            </VBox>
+
+            <!-- ══ CONGES ══ -->
+            <Button fx:id="btnConges" text="Conges"
                     styleClass="menu-btn" maxWidth="Infinity"/>
             <VBox fx:id="congeSubMenu" spacing="2" visible="false" managed="false"
                   styleClass="submenu-box">
-                <Button fx:id="btnAjouterConge"  text="     ➕  Ajouter"
+                <Button fx:id="btnAjouterConge"  text="     Ajouter"
                         maxWidth="Infinity" styleClass="sub-btn"/>
-                <Button fx:id="btnAfficherConge" text="     📋  Afficher"
+                <Button fx:id="btnAfficherConge" text="     Afficher"
                         maxWidth="Infinity" styleClass="sub-btn"/>
             </VBox>
 
-            <!-- Other nav items -->
+            <!-- ══ CONSULTATIONS (NOUVEAU) ══ -->
+            <Button fx:id="btnConsultations" text="Consultations"
+                    styleClass="menu-btn" maxWidth="Infinity"/>
+            <VBox fx:id="consultationSubMenu" spacing="2" visible="false" managed="false"
+                  styleClass="submenu-box">
+                <Button fx:id="btnAfficherConsultations" text="     Afficher"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+                <Button fx:id="btnComptesRendus"         text="     Comptes rendus"
+                        maxWidth="Infinity" styleClass="sub-btn"/>
+            </VBox>
+
+            <!-- ══ MODULES SECTION ══ -->
             <Label text="MODULES" styleClass="nav-section-label">
                 <VBox.margin><Insets top="16" left="20" bottom="4"/></VBox.margin>
             </Label>
 
-            <Button text="🧑   Consultation"  styleClass="menu-btn" maxWidth="Infinity"/>
-            <Button text="💡   Développement" styleClass="menu-btn" maxWidth="Infinity"/>
-            <Button text="🧠   Psychologue"   styleClass="menu-btn" maxWidth="Infinity"/>
-            <Button text="💳   Paiement"      styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button text="Developpement" styleClass="menu-btn" maxWidth="Infinity"/>
+            <Button text="Paiement"      styleClass="menu-btn" maxWidth="Infinity"/>
 
             <!-- Spacer -->
             <Region VBox.vgrow="ALWAYS"/>
@@ -67,13 +99,15 @@
             <!-- Divider -->
             <Line styleClass="sidebar-divider" endX="218"/>
 
-            <!-- Front Office at bottom -->
-            <Button fx:id="btnFront" text="🌐   Front Office"
+            <!-- Utilisateurs + Front at bottom -->
+            <Button fx:id="btnUsers" maxWidth="Infinity" styleClass="menu-btn"/>
+            <Button fx:id="btnFront" text="Front Office"
                     styleClass="menu-btn-front" maxWidth="Infinity">
                 <VBox.margin><Insets bottom="16" left="12" right="12"/></VBox.margin>
             </Button>
 
         </VBox>
+        <!-- FIN SIDEBAR -->
 
         <!-- ══════════════════════════════════════════════
              MAIN AREA
@@ -83,38 +117,27 @@
             <!-- TOP BAR -->
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
                 <padding><Insets top="0" right="24" bottom="0" left="24"/></padding>
-
-                <!-- Breadcrumb -->
-                <Label text="⚡" style="-fx-text-fill: #00D9FF; -fx-font-size: 14px;"/>
+                <Label text="&#9889;" style="-fx-text-fill: #00D9FF; -fx-font-size: 14px;"/>
                 <Label text="/" style="-fx-text-fill: rgba(0,217,255,0.25); -fx-font-size: 13px;"/>
                 <Label text="Dashboard" styleClass="breadcrumb-active"/>
-
                 <Region HBox.hgrow="ALWAYS"/>
-
-                <!-- Search -->
                 <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8">
-                    <Label text="⌕" style="-fx-text-fill: rgba(0,217,255,0.45); -fx-font-size: 15px;"/>
-                    <TextField promptText="Rechercher…" styleClass="search-field"/>
+                    <Label text="&#8981;" style="-fx-text-fill: rgba(0,217,255,0.45); -fx-font-size: 15px;"/>
+                    <TextField promptText="Rechercher..." styleClass="search-field"/>
                 </HBox>
-
-                <!-- Notif bell -->
                 <StackPane styleClass="notif-btn">
-                    <Label text="🔔" style="-fx-font-size: 16px;"/>
+                    <Label text="&#128276;" style="-fx-font-size: 16px;"/>
                     <Circle radius="5" fill="#FF4D6D"
                             StackPane.alignment="TOP_RIGHT"
                             translateX="2" translateY="-2"/>
                 </StackPane>
-
-                <!-- Avatar -->
                 <StackPane styleClass="avatar-circle">
                     <Label text="A" styleClass="avatar-label"/>
                 </StackPane>
             </HBox>
 
             <!-- CONTENT PANE -->
-            <StackPane fx:id="contentPane" styleClass="content-pane" VBox.vgrow="ALWAYS">
-                <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            </StackPane>
+            <StackPane fx:id="contentPane" styleClass="content-pane" VBox.vgrow="ALWAYS"/>
 
         </VBox>
     </HBox>

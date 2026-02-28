@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.GeminiPanelController"
+      fx:id="geminiPanel"
+      spacing="14"
+      style="-fx-background-color: rgba(13,31,18,0.60);
+             -fx-background-radius: 20;
+             -fx-border-color: rgba(176,102,255,0.30);
+             -fx-border-width: 1.5;
+             -fx-border-radius: 20;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <!-- Header IA -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="🤖" style="-fx-font-size: 22px;"/>
+        <VBox spacing="2">
+            <Label text="Assistant IA Gemini"
+                   style="-fx-text-fill: #B066FF; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <Circle fx:id="aiStatusDot" radius="5" fill="#00FF88"/>
+                <Label fx:id="lblAiStatus" text="IA Gemini prete"
+                       style="-fx-text-fill: #00FF88; -fx-font-size: 11px;"/>
+            </HBox>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ProgressIndicator fx:id="aiLoader" prefWidth="24" prefHeight="24"
+                           visible="false"
+                           style="-fx-accent: #B066FF;"/>
+    </HBox>
+
+    <Separator style="-fx-background-color: rgba(176,102,255,0.20);"/>
+
+    <!-- Boutons d'action IA -->
+    <VBox spacing="8">
+        <Button fx:id="btnAnalyseSentiment" onAction="#handleAnalyseSentiment"
+                maxWidth="Infinity"/>
+        <Button fx:id="btnRecommandations"  onAction="#handleRecommandations"
+                maxWidth="Infinity"/>
+        <Button fx:id="btnResume"           onAction="#handleResume"
+                maxWidth="Infinity"/>
+        <Button fx:id="btnRisqueAbandon"    onAction="#handleRisqueAbandon"
+                maxWidth="Infinity"/>
+    </VBox>
+
+    <Separator style="-fx-background-color: rgba(176,102,255,0.20);"/>
+
+    <!-- Zone de resultats scrollable -->
+    <Label text="Resultats" style="-fx-text-fill: rgba(255,255,255,0.40); -fx-font-size: 11px;"/>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                prefHeight="350"
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox fx:id="resultsBox" spacing="10">
+            <!-- resultats injectes dynamiquement -->
+        </VBox>
+    </ScrollPane>
+
+</VBox>

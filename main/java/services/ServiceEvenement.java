@@ -58,6 +58,31 @@ public class ServiceEvenement implements IService<Evenement> {
         ps.executeUpdate();
         System.out.println("Événement modifié");
     }
+    // Dans ServiceEvenement.java
+    // Dans ServiceEvenement.java
+    public Evenement recupererParId(int id) throws SQLException {
+        String sql = "SELECT * FROM evenements WHERE id_e = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Evenement e = new Evenement();
+                    e.setId_e(rs.getInt("id_e"));
+                    e.setTitre_e(rs.getString("titre_e"));
+                    e.setType_e(rs.getString("type_e"));
+                    e.setLocalisation_e(rs.getString("localisation_e"));
+                    e.setPrix_e(rs.getString("prix_e"));
+                    e.setDate_e(rs.getTimestamp("date_e"));
+                    e.setCapacitemax_e(rs.getInt("capacitemax_e"));
+                    e.setDescription_e(rs.getString("description_e"));
+                    e.setImage(rs.getString("image"));
+                    e.setStatut_e(rs.getString("statut_e"));
+                    return e;
+                }
+                return null;
+            }
+        }
+    }
 
     @Override
     public void supprimer(Evenement e) throws SQLException {
@@ -70,26 +95,28 @@ public class ServiceEvenement implements IService<Evenement> {
 
     @Override
     public List<Evenement> recuperer() throws SQLException {
-        List<Evenement> events = new ArrayList<>();
-        String req = "SELECT * FROM évenements";
-        Statement st = connection.createStatement();
-        ResultSet rs = st.executeQuery(req);
+        List<Evenement> list = new ArrayList<>();
+        String sql = "SELECT * FROM évenements";
+        try (Connection conn = MyDatabase.getInstance().getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
 
-        while (rs.next()) {
-            int id = rs.getInt("id_e");
-            String titre = rs.getString("titre_e");
-            String desc = rs.getString("description_e");
-            Timestamp date = rs.getTimestamp("date_e");
-            String localisation = rs.getString("localisation_e");
-            String type = rs.getString("type_e");
-            int capacite = rs.getInt("capacitemax_e");
-            String statut = rs.getString("statut_e");
-            String prix = rs.getString("prix_e");
-            String image = rs.getString("image");
+            while (rs.next()) {
+                int id = rs.getInt("id_e");
+                String titre = rs.getString("titre_e");
+                String desc = rs.getString("description_e");
+                Timestamp date = rs.getTimestamp("date_e");
+                String localisation = rs.getString("localisation_e");
+                String type = rs.getString("type_e");
+                int capacite = rs.getInt("capacitemax_e");
+                String statut = rs.getString("statut_e");
+                String prix = rs.getString("prix_e");
+                String image = rs.getString("image");
 
-            Evenement e = new Evenement(id, titre, desc, date, localisation, type, capacite, statut, prix, image);
-            events.add(e);
-        }
-        return events;
+                Evenement e = new Evenement(id, titre, desc, date, localisation, type, capacite, statut, prix, image);
+               list.add(e);
+            }
+
+        return list;
     }
-}
+}}

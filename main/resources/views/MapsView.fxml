@@ -1,244 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.web.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.web.WebView?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:id="rootPane"
            fx:controller="controllers.MapsController"
-           prefWidth="1100" prefHeight="700"
-           style="-fx-background-color: #050C07;">
+           fx:id="rootPane"
+           stylesheets="@../style/Maps.css"
+           styleClass="root-container">
 
-    <!-- BACKGROUND ORBS -->
-    <Circle fx:id="orb1" radius="300"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(0,217,255,0.10), transparent);"
-            translateX="-380" translateY="-220"/>
-    <Circle fx:id="orb2" radius="220"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(0,255,136,0.08), transparent);"
-            translateX="420" translateY="250"/>
-    <Circle fx:id="orb3" radius="160"
-            style="-fx-fill: radial-gradient(center 50% 50%, radius 60%, rgba(127,255,0,0.06), transparent);"
-            translateX="100" translateY="-280"/>
+    <Pane styleClass="background-layer">
+        <Circle fx:id="orb1" radius="250" styleClass="orb, orb-1"/>
+        <Circle fx:id="orb2" radius="200" styleClass="orb, orb-2"/>
+        <Circle fx:id="orb3" radius="220" styleClass="orb, orb-3"/>
+    </Pane>
 
-    <!-- MAIN LAYOUT -->
-    <HBox spacing="0" alignment="CENTER">
+    <BorderPane styleClass="main-layout">
+        <left>
+            <!-- ScrollPane wrapping the sidebar so all buttons are always accessible -->
+            <ScrollPane fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        prefWidth="300"
+                        styleClass="sidebar-scroll">
 
-        <!-- LEFT SIDEBAR -->
-        <VBox spacing="0" prefWidth="300" maxWidth="300" minWidth="300"
-              style="-fx-background-color: rgba(13,31,18,0.96);
-                     -fx-border-color: transparent rgba(0,217,255,0.18) transparent transparent;
-                     -fx-border-width: 0 1 0 0;">
+                <VBox styleClass="sidebar" spacing="12" prefWidth="280">
+                    <padding><Insets top="15" right="18" bottom="15" left="18"/></padding>
 
-            <!-- HEADER -->
-            <VBox spacing="6"
-                  style="-fx-padding: 28 24 20 24;
-                         -fx-background-color: linear-gradient(to bottom, rgba(0,217,255,0.08), transparent);
-                         -fx-border-color: transparent transparent rgba(0,217,255,0.12) transparent;
-                         -fx-border-width: 0 0 1 0;">
-
-                <HBox spacing="12" alignment="CENTER_LEFT">
-                    <StackPane>
-                        <Circle radius="22"
-                                style="-fx-fill: rgba(0,217,255,0.12);
-                                       -fx-stroke: rgba(0,217,255,0.45);
-                                       -fx-stroke-width: 1.5;"/>
-                        <Label text="&#127757;" style="-fx-font-size: 20px;"/>
-                    </StackPane>
-                    <VBox spacing="2">
-                        <Label text="NEUROWELL"
-                               style="-fx-text-fill: rgba(0,217,255,0.5);
-                                      -fx-font-size: 9px; -fx-font-weight: bold;"/>
-                        <Label text="Localisation"
-                               style="-fx-text-fill: #E8FFF0;
-                                      -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <!-- Header -->
+                    <VBox spacing="6" styleClass="header-section">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="🧠" styleClass="header-icon"/>
+                            <VBox spacing="1">
+                                <Label text="NEUROWELL" styleClass="header-title"/>
+                                <Label text="Localisation" styleClass="header-subtitle"/>
+                            </VBox>
+                        </HBox>
                     </VBox>
-                </HBox>
 
-                <Label fx:id="lblEventTitle" text="Evenement"
-                       wrapText="true" maxWidth="260"
-                       style="-fx-text-fill: rgba(200,255,220,0.60);
-                              -fx-font-size: 12px; -fx-padding: 6 0 0 0;"/>
-            </VBox>
+                    <Separator styleClass="section-separator"/>
 
-            <!-- ADRESSE -->
-            <VBox spacing="8"
-                  style="-fx-padding: 20 20 16 20;
-                         -fx-border-color: transparent transparent rgba(0,217,255,0.10) transparent;
-                         -fx-border-width: 0 0 1 0;">
-                <Label text="Adresse"
-                       style="-fx-text-fill: rgba(0,217,255,0.55);
-                              -fx-font-size: 10px; -fx-font-weight: bold;"/>
-                <HBox spacing="8" alignment="CENTER_LEFT"
-                      style="-fx-background-color: rgba(0,0,0,0.40);
-                             -fx-border-color: rgba(0,217,255,0.20); -fx-border-width: 1;
-                             -fx-border-radius: 12; -fx-background-radius: 12;
-                             -fx-padding: 10 14;">
-                    <Label text="&#128205;" style="-fx-font-size: 13px;"/>
-                    <Label fx:id="lblAddress" text="Chargement..."
-                           wrapText="true" maxWidth="220"
-                           style="-fx-text-fill: rgba(0,217,255,0.80); -fx-font-size: 12px;"/>
-                </HBox>
-            </VBox>
+                    <!-- Événement -->
+                    <VBox spacing="6" styleClass="info-section">
+                        <Label text="📍 Événement" styleClass="section-label"/>
+                        <TextField fx:id="lblEventTitle" editable="false" styleClass="info-field, info-field-title" promptText="Titre de l'événement"/>
+                    </VBox>
 
-            <!-- STATUT -->
-            <VBox spacing="12"
-                  style="-fx-padding: 18 20;
-                         -fx-border-color: transparent transparent rgba(0,217,255,0.10) transparent;
-                         -fx-border-width: 0 0 1 0;">
-                <Label text="Statut"
-                       style="-fx-text-fill: rgba(0,217,255,0.55);
-                              -fx-font-size: 10px; -fx-font-weight: bold;"/>
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Circle fx:id="statusDot" radius="6" fill="#00FF88"/>
-                    <Label fx:id="lblStatus" text="Initialisation..."
-                           style="-fx-text-fill: #00FF88;
-                                  -fx-font-size: 12px; -fx-font-weight: 600;"/>
-                </HBox>
+                    <Separator styleClass="section-separator"/>
 
-                <!-- Coordonnees -->
-                <VBox spacing="6"
-                      style="-fx-background-color: rgba(0,217,255,0.05);
-                             -fx-border-color: rgba(0,217,255,0.15); -fx-border-width: 1;
-                             -fx-border-radius: 10; -fx-background-radius: 10;
-                             -fx-padding: 10 14;">
-                    <HBox spacing="8">
-                        <Label text="LAT"
-                               style="-fx-text-fill: rgba(0,217,255,0.50);
-                                      -fx-font-size: 9px; -fx-font-weight: bold; -fx-min-width: 32;"/>
-                        <Label fx:id="lblLat" text="--"
-                               style="-fx-text-fill: #E8FFF0; -fx-font-size: 11px;"/>
-                    </HBox>
-                    <HBox spacing="8">
-                        <Label text="LON"
-                               style="-fx-text-fill: rgba(0,217,255,0.50);
-                                      -fx-font-size: 9px; -fx-font-weight: bold; -fx-min-width: 32;"/>
-                        <Label fx:id="lblLon" text="--"
-                               style="-fx-text-fill: #E8FFF0; -fx-font-size: 11px;"/>
-                    </HBox>
+                    <!-- Adresse -->
+                    <VBox spacing="6" styleClass="info-section">
+                        <Label text="📌 Adresse" styleClass="section-label"/>
+                        <TextArea fx:id="lblAddress" editable="false" wrapText="true" prefRowCount="2" styleClass="info-area" promptText="Adresse"/>
+                    </VBox>
+
+                    <Separator styleClass="section-separator"/>
+
+                    <!-- Statut -->
+                    <VBox spacing="6" styleClass="info-section">
+                        <Label text="⚡ Statut" styleClass="section-label"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="status-container">
+                            <Circle fx:id="statusDot" radius="7" styleClass="status-indicator"/>
+                            <Label fx:id="lblStatus" text="Initialisation..." styleClass="status-text"/>
+                        </HBox>
+                    </VBox>
+
+                    <Separator styleClass="section-separator"/>
+
+                    <!-- Coordonnées GPS -->
+                    <VBox spacing="8" styleClass="info-section">
+                        <Label text="🌐 Coordonnées GPS" styleClass="section-label"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Latitude" styleClass="coord-label"/>
+                                <TextField fx:id="lblLat" editable="false" styleClass="coord-field" promptText="0.000000"/>
+                            </VBox>
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Longitude" styleClass="coord-label"/>
+                                <TextField fx:id="lblLon" editable="false" styleClass="coord-field" promptText="0.000000"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <Separator styleClass="section-separator"/>
+
+                    <!-- Détails -->
+                    <VBox spacing="6" styleClass="info-section">
+                        <Label text="ℹ️ Détails" styleClass="section-label"/>
+                        <VBox spacing="5" styleClass="details-grid">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="🗺️" styleClass="detail-icon"/>
+                                <Label text="OpenStreetMap" styleClass="detail-text"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="🔍" styleClass="detail-icon"/>
+                                <Label text="Zoom niveau 15" styleClass="detail-text"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="📡" styleClass="detail-icon"/>
+                                <Label text="Carte interactive" styleClass="detail-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <Separator styleClass="section-separator"/>
+
+                    <!-- Boutons d'action — toujours visibles grâce au scroll -->
+                    <VBox spacing="8" styleClass="actions-section">
+                        <Button text="🌍 Ouvrir dans Google Maps" fx:id="btnOpenBrowser" maxWidth="Infinity" styleClass="btn-primary"/>
+                        <Button text="⬅️ Retour aux événements" fx:id="btnBack" maxWidth="Infinity" styleClass="btn-secondary"/>
+                    </VBox>
+
                 </VBox>
-            </VBox>
+            </ScrollPane>
+        </left>
 
-            <!-- INFO CARDS -->
-            <VBox spacing="10" style="-fx-padding: 18 20;">
-                <Label text="Details"
-                       style="-fx-text-fill: rgba(0,217,255,0.55);
-                              -fx-font-size: 10px; -fx-font-weight: bold;"/>
-                <HBox spacing="14" alignment="CENTER_LEFT"
-                      style="-fx-background-color: rgba(0,255,136,0.06);
-                             -fx-border-color: rgba(0,255,136,0.18); -fx-border-width: 1;
-                             -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 12 14;">
-                    <Label text="&#127759;" style="-fx-font-size: 22px;"/>
-                    <VBox spacing="2">
-                        <Label text="OpenStreetMap"
-                               style="-fx-text-fill: #00FF88; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Carte interactive libre"
-                               style="-fx-text-fill: rgba(200,255,220,0.50); -fx-font-size: 10px;"/>
+        <center>
+            <StackPane styleClass="map-container">
+                <HBox spacing="10" alignment="TOP_RIGHT" StackPane.alignment="TOP_RIGHT" styleClass="map-controls">
+                    <padding><Insets top="15" right="15"/></padding>
+                    <VBox spacing="6">
+                        <Button text="➕" fx:id="btnZoomIn" styleClass="map-control-btn"/>
+                        <Button text="➖" fx:id="btnZoomOut" styleClass="map-control-btn"/>
+                        <Button text="⊙" fx:id="btnCenter" styleClass="map-control-btn"/>
                     </VBox>
                 </HBox>
 
-                <HBox spacing="14" alignment="CENTER_LEFT"
-                      style="-fx-background-color: rgba(0,217,255,0.06);
-                             -fx-border-color: rgba(0,217,255,0.18); -fx-border-width: 1;
-                             -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 12 14;">
-                    <Label text="&#128269;" style="-fx-font-size: 22px;"/>
-                    <VBox spacing="2">
-                        <Label text="Zoom niveau 15"
-                               style="-fx-text-fill: #00D9FF; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Vue detaillee du quartier"
-                               style="-fx-text-fill: rgba(200,255,220,0.50); -fx-font-size: 10px;"/>
-                    </VBox>
+                <HBox spacing="10" alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT" styleClass="map-status-badge">
+                    <padding><Insets top="15" left="15"/></padding>
+                    <Label text="● CARTE EN DIRECT" styleClass="live-badge"/>
                 </HBox>
-            </VBox>
 
-            <Region VBox.vgrow="ALWAYS"/>
+                <WebView fx:id="mapView" styleClass="web-map" StackPane.alignment="CENTER"/>
 
-            <!-- FOOTER BUTTONS -->
-            <VBox spacing="10"
-                  style="-fx-padding: 16 20 24 20;
-                         -fx-border-color: rgba(0,217,255,0.12) transparent transparent transparent;
-                         -fx-border-width: 1 0 0 0;">
-                <Button fx:id="btnOpenBrowser" text="Ouvrir dans Google Maps"
-                        maxWidth="Infinity"
-                        style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
-                               -fx-text-fill: #050C07; -fx-font-size: 13px; -fx-font-weight: bold;
-                               -fx-padding: 13 0; -fx-background-radius: 14; -fx-cursor: hand;"/>
-                <Button fx:id="btnBack" text="Retour aux evenements"
-                        maxWidth="Infinity"
-                        style="-fx-background-color: transparent;
-                               -fx-border-color: rgba(0,217,255,0.30); -fx-border-width: 1;
-                               -fx-border-radius: 14; -fx-background-radius: 14;
-                               -fx-text-fill: rgba(0,217,255,0.70); -fx-font-size: 12px;
-                               -fx-padding: 11 0; -fx-cursor: hand;"/>
-                <Label text="Geodonnees: OpenStreetMap contributors"
-                       style="-fx-text-fill: rgba(200,255,220,0.20); -fx-font-size: 9px;"
-                       alignment="CENTER" maxWidth="Infinity"/>
-            </VBox>
-        </VBox>
-
-        <!-- MAP AREA — VBox pour empiler header + carte + overlay proprement -->
-        <VBox HBox.hgrow="ALWAYS">
-
-            <!-- Barre de controle carte -->
-            <HBox spacing="14" alignment="CENTER_LEFT"
-                  style="-fx-background-color: rgba(5,12,7,0.92);
-                         -fx-border-color: transparent transparent rgba(0,217,255,0.12) transparent;
-                         -fx-border-width: 0 0 1 0; -fx-padding: 14 20;">
-                <Circle radius="5"
-                        style="-fx-fill: #00FF88;
-                               -fx-effect: dropshadow(gaussian, rgba(0,255,136,0.9), 10, 0.6, 0, 0);"/>
-                <Label text="CARTE EN DIRECT"
-                       style="-fx-text-fill: rgba(0,217,255,0.60);
-                              -fx-font-size: 10px; -fx-font-weight: bold;"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <HBox spacing="6">
-                    <Button fx:id="btnZoomIn" text="+"
-                            style="-fx-background-color: rgba(0,217,255,0.12);
-                                   -fx-text-fill: #00D9FF; -fx-font-size: 16px; -fx-font-weight: bold;
-                                   -fx-padding: 4 14; -fx-background-radius: 8;
-                                   -fx-border-color: rgba(0,217,255,0.30); -fx-border-width: 1;
-                                   -fx-border-radius: 8; -fx-cursor: hand;"/>
-                    <Button fx:id="btnZoomOut" text="-"
-                            style="-fx-background-color: rgba(0,217,255,0.12);
-                                   -fx-text-fill: #00D9FF; -fx-font-size: 16px; -fx-font-weight: bold;
-                                   -fx-padding: 4 14; -fx-background-radius: 8;
-                                   -fx-border-color: rgba(0,217,255,0.30); -fx-border-width: 1;
-                                   -fx-border-radius: 8; -fx-cursor: hand;"/>
-                    <Button fx:id="btnCenter" text="&#9678;"
-                            style="-fx-background-color: rgba(0,255,136,0.12);
-                                   -fx-text-fill: #00FF88; -fx-font-size: 14px;
-                                   -fx-padding: 4 12; -fx-background-radius: 8;
-                                   -fx-border-color: rgba(0,255,136,0.30); -fx-border-width: 1;
-                                   -fx-border-radius: 8; -fx-cursor: hand;"/>
-                </HBox>
-            </HBox>
-
-            <!-- Zone carte : StackPane WebView + overlay par-dessus -->
-            <StackPane VBox.vgrow="ALWAYS">
-
-                <!-- ✅ WebView en premier = en bas de la pile -->
-                <WebView fx:id="mapView"/>
-
-                <!-- ✅ Loading overlay par-dessus -->
-                <VBox fx:id="loadingOverlay" alignment="CENTER" spacing="18"
-                      style="-fx-background-color: rgba(5,12,7,0.93);">
-                    <Label text="&#127757;" style="-fx-font-size: 64px;"/>
-                    <Label text="Localisation en cours..."
-                           style="-fx-text-fill: #00D9FF;
-                                  -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <ProgressBar fx:id="loadingBar" prefWidth="220"
-                                 style="-fx-accent: #00D9FF;
-                                        -fx-background-color: rgba(0,217,255,0.15);
-                                        -fx-background-radius: 10; -fx-pref-height: 6;"/>
-                    <Label text="Geocodage via Nominatim API..."
-                           style="-fx-text-fill: rgba(200,255,220,0.40); -fx-font-size: 11px;"/>
+                <VBox fx:id="loadingOverlay" spacing="15" alignment="CENTER" styleClass="loading-overlay">
+                    <Label text="⏳" styleClass="loading-icon"/>
+                    <Label text="Chargement de la carte..." styleClass="loading-text"/>
+                    <ProgressBar fx:id="loadingBar" prefWidth="260" styleClass="loading-progress"/>
                 </VBox>
-
             </StackPane>
-        </VBox>
-
-    </HBox>
-
+        </center>
+    </BorderPane>
 </StackPane>
