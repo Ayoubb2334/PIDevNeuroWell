@@ -37,7 +37,6 @@
                 <Button text="Accueil" styleClass="nav-btn" fx:id="btnBackToFront" onAction="#handleBackToFront"/>
                 <Button text="Services" styleClass="nav-btn"/>
                 <Button text="Événements" styleClass="nav-btn, nav-btn-active"/>
-                <Button text="Voir les évaluations" onAction="#handleGoToEvaluations"/>
                 <Button text="Blog" styleClass="nav-btn"/>
             </HBox>
 

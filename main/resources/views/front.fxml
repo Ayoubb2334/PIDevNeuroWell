@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.FrontController"
@@ -15,50 +16,31 @@
 
     <VBox spacing="0" styleClass="main-container">
 
+
+
         <!-- Modern Navbar -->
         <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30">
             <!-- Logo Section -->
             <HBox spacing="12" alignment="CENTER" styleClass="logo-container">
                 <ImageView fitWidth="50" fitHeight="50" preserveRatio="true">
-                    <image><Image url="@/images/logo.png"/></image>
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
                 </ImageView>
                 <Label text="neurowell" styleClass="logo-text"/>
             </HBox>
 
+            <!-- Spacer -->
             <Region HBox.hgrow="ALWAYS"/>
 
             <!-- Navigation Buttons -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button text="Accueil"      styleClass="nav-btn" fx:id="btnHome"/>
-                <Button text="Services"     styleClass="nav-btn" fx:id="btnServices"/>
-                <Button text="Methode"      styleClass="nav-btn" fx:id="btnMethode"/>
-                <Button text="Evenements"   styleClass="nav-btn" fx:id="btnEvents"       onAction="#handleEvents"/>
-                <Button text="Evaluations"  styleClass="nav-btn" fx:id="btnEvaluations"  onAction="#handleEvaluations"/>
-                <Button text="Ressources"   styleClass="nav-btn"                         onAction="#handleRessources"/>
-                <Button text="Blog"         styleClass="nav-btn" fx:id="btnBlog"/>
+            <HBox spacing="25" alignment="CENTER">
+                <Button text="Accueil" styleClass="nav-btn" fx:id="btnHome"/>
+                <Button text="Services" styleClass="nav-btn" fx:id="btnServices"/>
+                <Button text="Méthode" styleClass="nav-btn" fx:id="btnMethode"/>
+                <Button text="Événements" styleClass="nav-btn" fx:id="btnEvents" onAction="#handleEvents"/>
+                <Button text="Blog" styleClass="nav-btn" fx:id="btnBlog"/>
             </HBox>
-
-            <!-- ══ CONSULTATION BUTTONS (dans la navbar) ══ -->
-            <!-- Bouton user : visible par defaut, masque si psy/admin via controller -->
-            <Button fx:id="btnConsultation" text="Consulter un psy"
-                    onAction="#handleDemandeConsultation"
-                    style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
-                           -fx-text-fill: #050C07; -fx-font-size: 12px; -fx-font-weight: bold;
-                           -fx-padding: 9 18; -fx-background-radius: 20; -fx-cursor: hand;"/>
-            <!-- Bouton psy : masque par defaut, affiche si psy via controller -->
-            <Button fx:id="btnEspacePsy" text="Espace Psy"
-                    onAction="#handleEspacePsy"
-                    visible="false" managed="false"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #00D9FF; -fx-font-size: 12px; -fx-font-weight: bold;
-                           -fx-padding: 9 18; -fx-border-color: #00D9FF; -fx-border-width: 1.5;
-                           -fx-border-radius: 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
-
-            <!-- Admin Button -->
-            <Button text="Admin" styleClass="nav-cta-btn" fx:id="btnAdmin" onAction="#handleBackToAdmin"
-                    style="-fx-background-color: rgba(0,217,255,0.15); -fx-border-color: #00D9FF;
-                           -fx-border-width: 1; -fx-border-radius: 20; -fx-background-radius: 20;
-                           -fx-text-fill: #00D9FF; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20;"/>
 
             <!-- CTA Button -->
             <Button text="Contact" styleClass="nav-cta-btn" fx:id="btnContact" onAction="#handleContact"/>
@@ -66,182 +48,72 @@
 
         <!-- Hero Section -->
         <StackPane styleClass="hero-section" prefHeight="600">
+            <!-- Hero Background Image -->
             <ImageView fx:id="heroImage" fitWidth="1400" fitHeight="600" preserveRatio="false">
-                <image><Image url="@/images/1.jpg"/></image>
+                <image>
+                    <Image url="@/images/1.jpg"/>
+                </image>
             </ImageView>
+
+            <!-- Gradient Overlay -->
             <Rectangle width="1400" height="600" styleClass="hero-overlay"/>
+
+            <!-- Hero Content -->
             <VBox alignment="CENTER" spacing="25" styleClass="hero-content">
                 <Label fx:id="heroTitle" styleClass="hero-title"
                        text="Transformez votre mental en superpouvoir"/>
+
                 <Label fx:id="heroSubtitle" styleClass="hero-subtitle"
-                       text="Une approche innovante qui fusionne neurosciences, psychologie positive&#10;et technologies pour debloquer votre plein potentiel mental"
+                       text="Une approche innovante qui fusionne neurosciences, psychologie positive&#10;et technologies pour débloquer votre plein potentiel mental"
                        wrapText="true"/>
+
+                <!-- CTA Buttons -->
                 <HBox spacing="20" alignment="CENTER">
                     <Button text="Commencer maintenant" styleClass="hero-btn-primary" fx:id="btnGetStarted"/>
                     <Button text="Explorer" styleClass="hero-btn-secondary" fx:id="btnExplore"/>
                 </HBox>
+
+                <!-- Floating Cards -->
                 <HBox spacing="30" alignment="CENTER" styleClass="floating-cards-container">
                     <VBox spacing="12" styleClass="floating-card" alignment="CENTER_LEFT">
-                        <Label text="&#129504;" styleClass="card-emoji"/>
-                        <Label text="Neuroplasticite" styleClass="card-title"/>
+                        <Label text="🧠" styleClass="card-emoji"/>
+                        <Label text="Neuroplasticité" styleClass="card-title"/>
                         <Label text="Reprogrammez votre cerveau" styleClass="card-description"/>
                     </VBox>
+
                     <VBox spacing="12" styleClass="floating-card" alignment="CENTER_LEFT">
-                        <Label text="&#9889;" styleClass="card-emoji"/>
+                        <Label text="⚡" styleClass="card-emoji"/>
                         <Label text="Performance" styleClass="card-title"/>
                         <Label text="Atteignez vos objectifs" styleClass="card-description"/>
                     </VBox>
+
                     <VBox spacing="12" styleClass="floating-card" alignment="CENTER_LEFT">
-                        <Label text="&#10024;" styleClass="card-emoji"/>
-                        <Label text="Bien-etre" styleClass="card-title"/>
-                        <Label text="Equilibre et serenite" styleClass="card-description"/>
+                        <Label text="✨" styleClass="card-emoji"/>
+                        <Label text="Bien-être" styleClass="card-title"/>
+                        <Label text="Équilibre et sérénité" styleClass="card-description"/>
                     </VBox>
                 </HBox>
             </VBox>
         </StackPane>
 
-        <!-- ══ CONSULTATION TEASER SECTION ══ -->
-        <HBox spacing="0" styleClass="services-section" alignment="CENTER">
-            <VBox spacing="30" alignment="CENTER" HBox.hgrow="ALWAYS">
-                <Label text="CONSULTATIONS" styleClass="section-tag"/>
-                <Label text="Parlez a un psychologue qualifie" styleClass="section-title" wrapText="true"/>
-                <Label text="Choisissez parmi nos psychologues certifies et reservez&#10;une consultation en ligne ou en presentiel."
-                       styleClass="section-subtitle" wrapText="true"/>
-                <HBox spacing="20" alignment="CENTER">
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,217,255,0.20);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128100;" style="-fx-font-size: 28px;"/>
-                        <Label text="Psychologues" style="-fx-text-fill: #00D9FF; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,255,136,0.20);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128222;" style="-fx-font-size: 28px;"/>
-                        <Label text="En ligne" style="-fx-text-fill: #00FF88; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,217,255,0.20);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#127968;" style="-fx-font-size: 28px;"/>
-                        <Label text="Presentiel" style="-fx-text-fill: #00D9FF; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,255,136,0.20);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128203;" style="-fx-font-size: 28px;"/>
-                        <Label text="Suivi" style="-fx-text-fill: #00FF88; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                </HBox>
-                <Button text="Prendre rendez-vous" onAction="#handleDemandeConsultation"
-                        style="-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88);
-                               -fx-text-fill: #050C07; -fx-font-size: 14px; -fx-font-weight: bold;
-                               -fx-padding: 13 30; -fx-background-radius: 25; -fx-cursor: hand;"/>
-            </VBox>
-        </HBox>
-
-        <!-- EVALUATION TEASER SECTION -->
-        <HBox spacing="0" styleClass="services-section" alignment="CENTER">
-            <VBox spacing="30" alignment="CENTER" HBox.hgrow="ALWAYS">
-                <Label text="EVALUATIONS" styleClass="section-tag"/>
-                <Label text="Comprenez votre etat mental" styleClass="section-title" wrapText="true"/>
-                <Label text="Nos outils d'evaluation psychologique vous permettent de mesurer&#10;votre niveau de stress, d'anxiete et de bien-etre en quelques minutes."
-                       styleClass="section-subtitle" wrapText="true"/>
-                <HBox spacing="20" alignment="CENTER">
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,240,255,0.15);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#129472;" style="-fx-font-size: 28px;"/>
-                        <Label text="Stress" style="-fx-text-fill: #00F0FF; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,240,255,0.15);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128550;" style="-fx-font-size: 28px;"/>
-                        <Label text="Anxiete" style="-fx-text-fill: #00c853; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,240,255,0.15);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#9889;" style="-fx-font-size: 28px;"/>
-                        <Label text="Burnout" style="-fx-text-fill: #FFD700; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(0,240,255,0.15);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#127807;" style="-fx-font-size: 28px;"/>
-                        <Label text="Bien-etre" style="-fx-text-fill: #84CC16; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                </HBox>
-                <Button text="Voir toutes les evaluations" onAction="#handleEvaluations"
-                        styleClass="hero-btn-primary"/>
-            </VBox>
-        </HBox>
-
-        <!-- RESSOURCES TEASER SECTION -->
-        <HBox spacing="0" styleClass="services-section" alignment="CENTER">
-            <VBox spacing="30" alignment="CENTER" HBox.hgrow="ALWAYS">
-                <Label text="RESSOURCES" styleClass="section-tag"/>
-                <Label text="Votre bibliotheque de developpement" styleClass="section-title" wrapText="true"/>
-                <Label text="PDF, videos, articles et supports audio soigneusement selectionnes&#10;pour accompagner votre progression a votre rythme."
-                       styleClass="section-subtitle" wrapText="true"/>
-                <HBox spacing="20" alignment="CENTER">
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(245,158,11,0.25);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128213;" style="-fx-font-size: 28px;"/>
-                        <Label text="PDF" style="-fx-text-fill: #F59E0B; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(245,158,11,0.25);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#127909;" style="-fx-font-size: 28px;"/>
-                        <Label text="Videos" style="-fx-text-fill: #F59E0B; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(245,158,11,0.25);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#128221;" style="-fx-font-size: 28px;"/>
-                        <Label text="Articles" style="-fx-text-fill: #F59E0B; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                    <VBox spacing="8" alignment="CENTER"
-                          style="-fx-background-color: rgba(26,26,36,0.6); -fx-background-radius: 16;
-                                 -fx-padding: 20 30; -fx-border-color: rgba(245,158,11,0.25);
-                                 -fx-border-width: 1; -fx-border-radius: 16;">
-                        <Label text="&#127925;" style="-fx-font-size: 28px;"/>
-                        <Label text="Audio" style="-fx-text-fill: #F59E0B; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    </VBox>
-                </HBox>
-                <Button text="Acceder a la bibliotheque" onAction="#handleRessources"
-                        styleClass="hero-btn-primary"/>
-            </VBox>
-        </HBox>
-
         <!-- About Section -->
         <HBox spacing="50" styleClass="about-section" alignment="CENTER">
             <ImageView fx:id="aboutImage" fitWidth="500" fitHeight="400" preserveRatio="true" styleClass="about-image">
-                <image><Image url="@/images/2.jpeg"/></image>
+                <image>
+                    <Image url="@/images/2.jpeg"/>
+                </image>
             </ImageView>
+
             <VBox spacing="20" styleClass="about-content" prefWidth="550">
-                <Label text="A PROPOS" styleClass="section-tag"/>
+                <Label text="À PROPOS" styleClass="section-tag"/>
                 <Label text="Une approche humaniste&#10;et bienveillante" styleClass="section-title" wrapText="true"/>
+
                 <TabPane styleClass="about-tabs" prefWidth="550">
                     <tabs>
                         <Tab text="Mission" closable="false" styleClass="custom-tab">
                             <content>
                                 <VBox spacing="15" styleClass="tab-content">
-                                    <Label text="Notre pratique s'appuie sur des methodes eprouvees en psychologie et developpement personnel, dans le respect de votre rythme et de votre singularite."
+                                    <Label text="Notre pratique s'appuie sur des méthodes éprouvées en psychologie et développement personnel, dans le respect de votre rythme et de votre singularité."
                                            wrapText="true" styleClass="tab-text"/>
                                 </VBox>
                             </content>
@@ -249,7 +121,7 @@
                         <Tab text="Vision" closable="false" styleClass="custom-tab">
                             <content>
                                 <VBox spacing="15" styleClass="tab-content">
-                                    <Label text="Nous croyons en votre capacite de croissance et de transformation. Notre role est de vous accompagner avec empathie et professionnalisme."
+                                    <Label text="Nous croyons en votre capacité de croissance et de transformation. Notre rôle est de vous accompagner dans cette démarche avec empathie et professionnalisme."
                                            wrapText="true" styleClass="tab-text"/>
                                 </VBox>
                             </content>
@@ -257,39 +129,190 @@
                         <Tab text="Valeurs" closable="false" styleClass="custom-tab">
                             <content>
                                 <VBox spacing="15" styleClass="tab-content">
-                                    <Label text="Bienveillance, ecoute active, apprentissage continu et empowerment personnel sont au coeur de notre approche."
+                                    <Label text="Bienveillance, écoute active, apprentissage continu et empowerment personnel sont au cœur de notre approche."
                                            wrapText="true" styleClass="tab-text"/>
                                 </VBox>
                             </content>
                         </Tab>
                     </tabs>
                 </TabPane>
+
+                <!-- Stats -->
                 <HBox spacing="25" alignment="CENTER_LEFT" styleClass="stats-container">
                     <VBox alignment="CENTER" styleClass="stat-item">
                         <Label text="10+" styleClass="stat-number"/>
-                        <Label text="ANNEES" styleClass="stat-label"/>
+                        <Label text="ANNÉES" styleClass="stat-label"/>
                     </VBox>
                     <VBox alignment="CENTER" styleClass="stat-item">
                         <Label text="500+" styleClass="stat-number"/>
                         <Label text="CLIENTS" styleClass="stat-label"/>
                     </VBox>
+                    <VBox alignment="CENTER" styleClass="stat-item">
+                        <Label text="95%" styleClass="stat-number"/>
+                        <Label text="SATISFACTION" styleClass="stat-label"/>
+                    </VBox>
                 </HBox>
             </VBox>
         </HBox>
+
+        <!-- Services Section -->
+        <VBox spacing="50" styleClass="services-section" alignment="CENTER">
+            <!-- Section Header -->
+            <VBox spacing="15" alignment="CENTER" styleClass="section-header">
+                <Label text="NOS PROGRAMMES" styleClass="section-tag"/>
+                <Label text="Services transformationnels" styleClass="section-title"/>
+                <Label text="Des programmes sur-mesure conçus pour catalyser votre évolution"
+                       styleClass="section-subtitle"/>
+            </VBox>
+
+            <!-- Services Grid -->
+            <GridPane fx:id="servicesGrid" styleClass="services-grid" hgap="25" vgap="25" alignment="CENTER">
+                <!-- Service Card 1 -->
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
+                      spacing="15" styleClass="service-card">
+                    <Label text="01" styleClass="service-number"/>
+                    <Label text="🧘" styleClass="service-icon"/>
+                    <Label text="Coaching Mental" styleClass="service-title"/>
+                    <Label text="Programme intensif pour développer votre résilience mentale et optimiser vos performances cognitives."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+
+                <!-- Service Card 2 -->
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      spacing="15" styleClass="service-card">
+                    <Label text="02" styleClass="service-number"/>
+                    <Label text="💡" styleClass="service-icon"/>
+                    <Label text="Thérapie Innovante" styleClass="service-title"/>
+                    <Label text="Approche hybride combinant thérapie classique et outils digitaux pour un suivi personnalisé."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+
+                <!-- Service Card 3 -->
+                <VBox GridPane.columnIndex="2" GridPane.rowIndex="0"
+                      spacing="15" styleClass="service-card">
+                    <Label text="03" styleClass="service-number"/>
+                    <Label text="📖" styleClass="service-icon"/>
+                    <Label text="Mindfulness Tech" styleClass="service-title"/>
+                    <Label text="Méditation augmentée par la technologie pour une pratique immersive et efficace."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+
+                <!-- Service Card 4 -->
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1"
+                      spacing="15" styleClass="service-card">
+                    <Label text="04" styleClass="service-number"/>
+                    <Label text="🎯" styleClass="service-icon"/>
+                    <Label text="Peak Performance" styleClass="service-title"/>
+                    <Label text="Protocoles avancés pour entrepreneurs et cadres qui visent l'excellence."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+
+                <!-- Service Card 5 -->
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      spacing="15" styleClass="service-card">
+                    <Label text="05" styleClass="service-number"/>
+                    <Label text="🌟" styleClass="service-icon"/>
+                    <Label text="Transformation 360°" styleClass="service-title"/>
+                    <Label text="Programme holistique qui intègre mental, émotionnel et physique pour une métamorphose complète."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+
+                <!-- Service Card 6 -->
+                <VBox GridPane.columnIndex="2" GridPane.rowIndex="1"
+                      spacing="15" styleClass="service-card">
+                    <Label text="06" styleClass="service-number"/>
+                    <Label text="👥" styleClass="service-icon"/>
+                    <Label text="Workshops Collectifs" styleClass="service-title"/>
+                    <Label text="Sessions de groupe dynamiques pour créer une synergie et accélérer votre évolution."
+                           wrapText="true" styleClass="service-description"/>
+                    <Label text="Découvrir →" styleClass="service-link"/>
+                </VBox>
+            </GridPane>
+        </VBox>
+
+        <!-- Team Section -->
+        <VBox spacing="50" styleClass="team-section" alignment="CENTER">
+            <VBox spacing="15" alignment="CENTER" styleClass="section-header">
+                <Label text="NOTRE ÉQUIPE" styleClass="section-tag"/>
+                <Label text="Rencontrez nos experts" styleClass="section-title"/>
+                <Label text="Des professionnels qualifiés à votre service" styleClass="section-subtitle"/>
+            </VBox>
+
+            <HBox spacing="40" alignment="CENTER" styleClass="team-container">
+                <!-- Team Member 1 -->
+                <VBox spacing="15" alignment="CENTER" styleClass="team-card">
+                    <StackPane styleClass="team-image-container">
+                        <Circle radius="75" styleClass="team-image-border"/>
+                        <ImageView fx:id="team1Image" fitWidth="140" fitHeight="140" preserveRatio="true">
+                            <clip>
+                                <Circle radius="70" centerX="70" centerY="70"/>
+                            </clip>
+                            <image>
+                                <Image url="@/images/1.jpg"/>
+                            </image>
+                        </ImageView>
+                    </StackPane>
+                    <Label text="Dr. Sarah Martin" styleClass="team-name"/>
+                    <Label text="Psychologue Clinicienne" styleClass="team-role"/>
+                    <Label text="15 ans d'expérience" styleClass="team-experience"/>
+                </VBox>
+
+                <!-- Team Member 2 -->
+                <VBox spacing="15" alignment="CENTER" styleClass="team-card">
+                    <StackPane styleClass="team-image-container">
+                        <Circle radius="75" styleClass="team-image-border"/>
+                        <ImageView fx:id="team2Image" fitWidth="140" fitHeight="140" preserveRatio="true">
+                            <clip>
+                                <Circle radius="70" centerX="70" centerY="70"/>
+                            </clip>
+                            <image>
+                                <Image url="@/images/2.jpeg"/>
+                            </image>
+                        </ImageView>
+                    </StackPane>
+                    <Label text="Emma Dupont" styleClass="team-name"/>
+                    <Label text="Coach en Développement" styleClass="team-role"/>
+                    <Label text="10 ans d'expérience" styleClass="team-experience"/>
+                </VBox>
+
+                <!-- Team Member 3 -->
+                <VBox spacing="15" alignment="CENTER" styleClass="team-card">
+                    <StackPane styleClass="team-image-container">
+                        <Circle radius="75" styleClass="team-image-border"/>
+                        <ImageView fx:id="team3Image" fitWidth="140" fitHeight="140" preserveRatio="true">
+                            <clip>
+                                <Circle radius="70" centerX="70" centerY="70"/>
+                            </clip>
+                            <image>
+                                <Image url="@/images/3.jpg"/>
+                            </image>
+                        </ImageView>
+                    </StackPane>
+                    <Label text="Dr. Lisa Bernard" styleClass="team-name"/>
+                    <Label text="Consultante Psychologique" styleClass="team-role"/>
+                    <Label text="12 ans d'expérience" styleClass="team-experience"/>
+                </VBox>
+            </HBox>
+        </VBox>
 
         <!-- Global Stats Section -->
         <HBox spacing="50" styleClass="global-stats-section" alignment="CENTER">
             <VBox alignment="CENTER" styleClass="global-stat-card">
                 <Label text="2K+" styleClass="global-stat-number"/>
-                <Label text="CLIENTS TRANSFORMES" styleClass="global-stat-label"/>
+                <Label text="CLIENTS TRANSFORMÉS" styleClass="global-stat-label"/>
             </VBox>
             <VBox alignment="CENTER" styleClass="global-stat-card">
                 <Label text="94%" styleClass="global-stat-number"/>
-                <Label text="TAUX DE REUSSITE" styleClass="global-stat-label"/>
+                <Label text="TAUX DE RÉUSSITE" styleClass="global-stat-label"/>
             </VBox>
             <VBox alignment="CENTER" styleClass="global-stat-card">
                 <Label text="15+" styleClass="global-stat-number"/>
-                <Label text="ANNEES D'EXPERTISE" styleClass="global-stat-label"/>
+                <Label text="ANNÉES D'EXPERTISE" styleClass="global-stat-label"/>
             </VBox>
             <VBox alignment="CENTER" styleClass="global-stat-card">
                 <Label text="4.9/5" styleClass="global-stat-number"/>
@@ -297,35 +320,51 @@
             </VBox>
         </HBox>
 
-        <!-- Footer Section -->
+        <!-- Contact/Footer Section -->
         <HBox spacing="60" styleClass="footer-section" alignment="TOP_LEFT">
+            <!-- Company Info -->
             <VBox spacing="15" styleClass="footer-column">
                 <Label text="neurowell" styleClass="footer-brand"/>
                 <Label text="Pionnier de la transformation mentale." styleClass="footer-description" wrapText="true"/>
                 <VBox spacing="8">
                     <Label text="71 Rue Lafayette Decarlo" styleClass="footer-text"/>
-                    <Label text="Cite Chaker, Tunisie" styleClass="footer-text"/>
+                    <Label text="Cité Chaker, Tunisie" styleClass="footer-text"/>
                     <Label text="+216 27003897" styleClass="footer-text"/>
                     <Label text="contact@neurowell.tn" styleClass="footer-text"/>
                 </VBox>
             </VBox>
+
+            <!-- Quick Links -->
             <VBox spacing="15" styleClass="footer-column">
                 <Label text="Navigation" styleClass="footer-heading"/>
-                <Label text="Accueil"    styleClass="footer-link" fx:id="footerHome"/>
-                <Label text="Services"   styleClass="footer-link" fx:id="footerServices"/>
-                <Label text="Methode"    styleClass="footer-link" fx:id="footerMethode"/>
-                <Label text="Blog"       styleClass="footer-link" fx:id="footerBlog"/>
+                <Label text="Accueil" styleClass="footer-link" fx:id="footerHome"/>
+                <Label text="Services" styleClass="footer-link" fx:id="footerServices"/>
+                <Label text="Méthode" styleClass="footer-link" fx:id="footerMethode"/>
+                <Label text="Blog" styleClass="footer-link" fx:id="footerBlog"/>
             </VBox>
+
+            <!-- Services Links -->
             <VBox spacing="15" styleClass="footer-column">
                 <Label text="Services" styleClass="footer-heading"/>
-                <Label text="Coaching Mental"    styleClass="footer-link"/>
-                <Label text="Therapie Innovante" styleClass="footer-link"/>
-                <Label text="Peak Performance"   styleClass="footer-link"/>
-                <Label text="Evaluations"        styleClass="footer-link"/>
+                <Label text="Coaching Mental" styleClass="footer-link"/>
+                <Label text="Thérapie Innovante" styleClass="footer-link"/>
+                <Label text="Peak Performance" styleClass="footer-link"/>
+                <Label text="Workshops" styleClass="footer-link"/>
             </VBox>
+
+            <!-- Legal -->
+            <VBox spacing="15" styleClass="footer-column">
+                <Label text="Légal" styleClass="footer-heading"/>
+                <Label text="Mentions légales" styleClass="footer-link"/>
+                <Label text="Confidentialité" styleClass="footer-link"/>
+                <Label text="CGV" styleClass="footer-link"/>
+                <Label text="Cookies" styleClass="footer-link"/>
+            </VBox>
+
+            <!-- Newsletter -->
             <VBox spacing="15" styleClass="footer-column">
                 <Label text="Newsletter" styleClass="footer-heading"/>
-                <Label text="Restez informe de nos actualites" styleClass="footer-description" wrapText="true"/>
+                <Label text="Restez informé de nos actualités" styleClass="footer-description" wrapText="true"/>
                 <TextField fx:id="newsletterEmail" promptText="Votre email" styleClass="newsletter-input"/>
                 <Button text="S'abonner" styleClass="newsletter-btn" fx:id="btnNewsletter" onAction="#handleNewsletter"/>
             </VBox>
@@ -333,8 +372,7 @@
 
         <!-- Copyright Bar -->
         <HBox styleClass="copyright-bar" alignment="CENTER">
-            <Label text="© 2026 neurowell. Tous droits reserves." styleClass="copyright-text"/>
+            <Label text="© 2026 neurowell. Tous droits réservés. Designed with innovation." styleClass="copyright-text"/>
         </HBox>
-
     </VBox>
 </ScrollPane>
