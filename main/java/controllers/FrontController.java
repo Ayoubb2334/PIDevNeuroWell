@@ -13,10 +13,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import services.SessionManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,453 +25,298 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import java.io.IOException;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
-
-/**
- * Controller for the Front page of the Psychology & Personal Development App
- * Handles all UI interactions, animations, and event management
- */
 public class FrontController implements Initializable {
 
-    // ==================== FXML INJECTED ELEMENTS ====================
-
-    // Animated Background Orbs
+    // ── Background Orbs ──
     @FXML private Circle orb1;
     @FXML private Circle orb2;
     @FXML private Circle orb3;
 
-    // Navigation Buttons
+    // ── Navbar ──
     @FXML private Button btnHome;
     @FXML private Button btnServices;
     @FXML private Button btnMethode;
     @FXML private Button btnEvents;
     @FXML private Button btnBlog;
     @FXML private Button btnContact;
+    @FXML private Button btnAdmin;
+    @FXML private Button btnConsultation;       // ← NOUVEAU : demande consultation (user)
+    @FXML private Button btnEspacePsy;          // ← NOUVEAU : espace psychologue
 
-    // Hero Section
+    // ── Hero ──
     @FXML private ImageView heroImage;
-    @FXML private Label heroTitle;
-    @FXML private Label heroSubtitle;
-    @FXML private Button btnGetStarted;
-    @FXML private Button btnExplore;
+    @FXML private Label     heroTitle;
+    @FXML private Label     heroSubtitle;
+    @FXML private Button    btnGetStarted;
+    @FXML private Button    btnExplore;
 
-    // About Section
+    // ── About ──
     @FXML private ImageView aboutImage;
 
-    // Services Section
+    // ── Services ──
     @FXML private GridPane servicesGrid;
 
-    // Team Section
+    // ── Team ──
     @FXML private ImageView team1Image;
     @FXML private ImageView team2Image;
     @FXML private ImageView team3Image;
 
-    // Footer
-    @FXML private Label footerHome;
-    @FXML private Label footerServices;
-    @FXML private Label footerMethode;
-    @FXML private Label footerBlog;
+    // ── Footer ──
+    @FXML private Label     footerHome;
+    @FXML private Label     footerServices;
+    @FXML private Label     footerMethode;
+    @FXML private Label     footerBlog;
     @FXML private TextField newsletterEmail;
-    @FXML private Button btnNewsletter;
-
-    // ==================== INITIALIZATION ====================
+    @FXML private Button    btnNewsletter;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("FrontController initialized");
-
-        // Initialize animations
         initializeAnimations();
-
-        // Setup event handlers
         setupEventHandlers();
-
-        // Load images (with fallback handling)
         loadImages();
-
-        // Setup hover effects
         setupHoverEffects();
+        setupConsultationButtons(); // ← NOUVEAU
     }
 
-    // ==================== ANIMATION SETUP ====================
+    // ─── Consultation buttons setup ───────────────────────
+    private void setupConsultationButtons() {
+        // Bouton "Consulter un psy" — visible pour tous les users
+        if (btnConsultation != null) {
+            btnConsultation.setStyle(
+                    "-fx-background-color: linear-gradient(to right, #00D9FF, #00FF88); " +
+                            "-fx-text-fill: #050C07; -fx-font-size: 13px; -fx-font-weight: bold; " +
+                            "-fx-padding: 10 22; -fx-background-radius: 22; -fx-cursor: hand;"
+            );
+            btnConsultation.setOnAction(e -> handleDemandeConsultation(e));
 
-    /**
-     * Initialize all animations for the page
-     */
+            // Hover
+            btnConsultation.setOnMouseEntered(ev -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(150), btnConsultation);
+                st.setToX(1.05); st.setToY(1.05); st.play();
+            });
+            btnConsultation.setOnMouseExited(ev -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(150), btnConsultation);
+                st.setToX(1.0); st.setToY(1.0); st.play();
+            });
+
+            // Afficher seulement si rôle user ou non connecté
+            boolean isPsy   = SessionManager.getCurrentUser() != null && "psy".equals(SessionManager.getCurrentUser().getRole());
+            boolean isAdmin = SessionManager.getCurrentUser() != null && "admin".equals(SessionManager.getCurrentUser().getRole());
+            btnConsultation.setVisible(!isPsy && !isAdmin);
+            btnConsultation.setManaged(!isPsy && !isAdmin);
+        }
+
+        // Bouton "Espace Psy" — visible uniquement pour les psychologues
+        if (btnEspacePsy != null) {
+            btnEspacePsy.setStyle(
+                    "-fx-background-color: rgba(0,217,255,0.10); " +
+                            "-fx-text-fill: #00D9FF; -fx-font-size: 13px; -fx-font-weight: bold; " +
+                            "-fx-padding: 10 22; -fx-border-color: #00D9FF; -fx-border-width: 1.5; " +
+                            "-fx-border-radius: 22; -fx-background-radius: 22; -fx-cursor: hand;"
+            );
+            btnEspacePsy.setOnAction(e -> handleEspacePsy(e));
+
+            boolean isPsy = SessionManager.getCurrentUser() != null && "psy".equals(SessionManager.getCurrentUser().getRole());
+            btnEspacePsy.setVisible(isPsy);
+            btnEspacePsy.setManaged(isPsy);
+        }
+    }
+
+    // ─── Navigation vers consultation ─────────────────────
+    @FXML
+    private void handleDemandeConsultation(ActionEvent event) {
+        navigateTo(event, "/views/DemandeConsultation.fxml");
+    }
+
+    @FXML
+    private void handleEspacePsy(ActionEvent event) {
+        navigateTo(event, "/views/PsychologueConsultation.fxml");
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  ANIMATIONS
+    // ═══════════════════════════════════════════════════════
     private void initializeAnimations() {
-        // Animate background orbs if they exist
         if (orb1 != null && orb2 != null && orb3 != null) {
-            animateOrb(orb1, 30, -20, Duration.seconds(15));
-            animateOrb(orb2, -35, 25, Duration.seconds(18));
-            animateOrb(orb3, 20, -15, Duration.seconds(20));
+            animateOrb(orb1,  30, -20, Duration.seconds(15));
+            animateOrb(orb2, -35,  25, Duration.seconds(18));
+            animateOrb(orb3,  20, -15, Duration.seconds(20));
         }
-
-        // Animate hero title with fade-in effect
         if (heroTitle != null) {
-            FadeTransition fadeTitle = new FadeTransition(Duration.seconds(1.5), heroTitle);
-            fadeTitle.setFromValue(0);
-            fadeTitle.setToValue(1);
-            fadeTitle.setDelay(Duration.millis(300));
-            fadeTitle.play();
+            FadeTransition ft = new FadeTransition(Duration.seconds(1.5), heroTitle);
+            ft.setFromValue(0); ft.setToValue(1); ft.setDelay(Duration.millis(300)); ft.play();
         }
-
-        // Animate hero subtitle
         if (heroSubtitle != null) {
-            FadeTransition fadeSubtitle = new FadeTransition(Duration.seconds(1.5), heroSubtitle);
-            fadeSubtitle.setFromValue(0);
-            fadeSubtitle.setToValue(1);
-            fadeSubtitle.setDelay(Duration.millis(600));
-            fadeSubtitle.play();
+            FadeTransition ft = new FadeTransition(Duration.seconds(1.5), heroSubtitle);
+            ft.setFromValue(0); ft.setToValue(1); ft.setDelay(Duration.millis(600)); ft.play();
         }
-
-        // Animate service cards if grid exists
-        if (servicesGrid != null) {
-            animateServiceCards();
-        }
+        if (servicesGrid != null) animateServiceCards();
     }
 
-    /**
-     * Animate a background orb with floating effect
-     */
-    private void animateOrb(Circle orb, double deltaX, double deltaY, Duration duration) {
-        TranslateTransition transition = new TranslateTransition(duration, orb);
-        transition.setByX(deltaX);
-        transition.setByY(deltaY);
-        transition.setCycleCount(Animation.INDEFINITE);
-        transition.setAutoReverse(true);
-        transition.setInterpolator(Interpolator.EASE_BOTH);
-        transition.play();
+    private void animateOrb(Circle orb, double dx, double dy, Duration dur) {
+        TranslateTransition t = new TranslateTransition(dur, orb);
+        t.setByX(dx); t.setByY(dy); t.setCycleCount(Animation.INDEFINITE);
+        t.setAutoReverse(true); t.setInterpolator(Interpolator.EASE_BOTH); t.play();
     }
 
-    /**
-     * Animate service cards with staggered fade-in
-     */
     private void animateServiceCards() {
         servicesGrid.getChildren().forEach(node -> {
             if (node instanceof VBox) {
-                int index = servicesGrid.getChildren().indexOf(node);
-
-                // Fade in animation
+                int idx = servicesGrid.getChildren().indexOf(node);
                 FadeTransition fade = new FadeTransition(Duration.millis(800), node);
-                fade.setFromValue(0);
-                fade.setToValue(1);
-                fade.setDelay(Duration.millis(100 * index));
-
-                // Slide up animation
+                fade.setFromValue(0); fade.setToValue(1); fade.setDelay(Duration.millis(100L * idx));
                 TranslateTransition slide = new TranslateTransition(Duration.millis(800), node);
-                slide.setFromY(30);
-                slide.setToY(0);
-                slide.setDelay(Duration.millis(100 * index));
-
-                ParallelTransition parallel = new ParallelTransition(fade, slide);
-                parallel.play();
+                slide.setFromY(30); slide.setToY(0); slide.setDelay(Duration.millis(100L * idx));
+                new ParallelTransition(fade, slide).play();
             }
         });
     }
 
-    // ==================== EVENT HANDLERS SETUP ====================
-
-    /**
-     * Setup all event handlers for interactive elements
-     */
+    // ═══════════════════════════════════════════════════════
+    //  EVENT HANDLERS
+    // ═══════════════════════════════════════════════════════
     private void setupEventHandlers() {
-        // Navigation buttons
-        if (btnHome != null) btnHome.setOnAction(e -> handleNavigation("Home"));
+        if (btnHome     != null) btnHome.setOnAction(e -> handleNavigation("Home"));
         if (btnServices != null) btnServices.setOnAction(e -> handleNavigation("Services"));
-        if (btnMethode != null) btnMethode.setOnAction(e -> handleNavigation("Méthode"));
-        if (btnBlog != null) btnBlog.setOnAction(e -> handleNavigation("Blog"));
-
-        // Hero buttons
+        if (btnMethode  != null) btnMethode.setOnAction(e -> handleNavigation("Méthode"));
+        if (btnBlog     != null) btnBlog.setOnAction(e -> handleNavigation("Blog"));
         if (btnGetStarted != null) btnGetStarted.setOnAction(e -> handleGetStarted());
-        if (btnExplore != null) btnExplore.setOnAction(e -> handleExplore());
-
-        // Footer links
-        if (footerHome != null) footerHome.setOnMouseClicked(e -> handleNavigation("Home"));
+        if (btnExplore    != null) btnExplore.setOnAction(e -> handleExplore());
+        if (footerHome     != null) footerHome.setOnMouseClicked(e -> handleNavigation("Home"));
         if (footerServices != null) footerServices.setOnMouseClicked(e -> handleNavigation("Services"));
-        if (footerMethode != null) footerMethode.setOnMouseClicked(e -> handleNavigation("Méthode"));
-        if (footerBlog != null) footerBlog.setOnMouseClicked(e -> handleNavigation("Blog"));
+        if (footerMethode  != null) footerMethode.setOnMouseClicked(e -> handleNavigation("Méthode"));
+        if (footerBlog     != null) footerBlog.setOnMouseClicked(e -> handleNavigation("Blog"));
     }
 
-    /**
-     * Setup hover effects for interactive elements
-     */
     private void setupHoverEffects() {
-        // Add pulse effect to CTA buttons
-        if (btnGetStarted != null) {
-            addPulseEffect(btnGetStarted);
-        }
-
-        if (btnContact != null) {
-            addPulseEffect(btnContact);
-        }
+        if (btnGetStarted != null) addPulseEffect(btnGetStarted);
+        if (btnContact    != null) addPulseEffect(btnContact);
     }
 
-    /**
-     * Add subtle pulse animation on hover
-     */
     private void addPulseEffect(Button button) {
         button.setOnMouseEntered(e -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), button);
-            scale.setToX(1.05);
-            scale.setToY(1.05);
-            scale.play();
+            ScaleTransition s = new ScaleTransition(Duration.millis(200), button);
+            s.setToX(1.05); s.setToY(1.05); s.play();
         });
-
         button.setOnMouseExited(e -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), button);
-            scale.setToX(1.0);
-            scale.setToY(1.0);
-            scale.play();
+            ScaleTransition s = new ScaleTransition(Duration.millis(200), button);
+            s.setToX(1.0); s.setToY(1.0); s.play();
         });
     }
 
-    // ==================== IMAGE LOADING ====================
-
-    /**
-     * Load all images with error handling
-     */
+    // ═══════════════════════════════════════════════════════
+    //  IMAGE LOADING
+    // ═══════════════════════════════════════════════════════
     private void loadImages() {
         try {
-            // Hero image
-            if (heroImage != null) {
-                loadImageSafely(heroImage, "/images/1.jpg");
-            }
-
-            // About image
-            if (aboutImage != null) {
-                loadImageSafely(aboutImage, "/images/2.jpeg");
-            }
-
-            // Team images
-            if (team1Image != null) {
-                loadImageSafely(team1Image, "/images/team1.jpg");
-            }
-            if (team2Image != null) {
-                loadImageSafely(team2Image, "/images/team2.jpg");
-            }
-            if (team3Image != null) {
-                loadImageSafely(team3Image, "/images/team3.jpg");
-            }
+            if (heroImage   != null) loadImageSafely(heroImage,   "/images/1.jpg");
+            if (aboutImage  != null) loadImageSafely(aboutImage,  "/images/2.jpeg");
+            if (team1Image  != null) loadImageSafely(team1Image,  "/images/team1.jpg");
+            if (team2Image  != null) loadImageSafely(team2Image,  "/images/team2.jpg");
+            if (team3Image  != null) loadImageSafely(team3Image,  "/images/team3.jpg");
         } catch (Exception e) {
             System.err.println("Error loading images: " + e.getMessage());
         }
     }
 
-    /**
-     * Safely load an image with fallback
-     */
-    private void loadImageSafely(ImageView imageView, String path) {
+    private void loadImageSafely(ImageView iv, String path) {
         try {
-            Image image = new Image(getClass().getResourceAsStream(path));
-            if (!image.isError()) {
-                imageView.setImage(image);
-            } else {
-                System.err.println("Failed to load image: " + path);
-            }
+            Image img = new Image(getClass().getResourceAsStream(path));
+            if (!img.isError()) iv.setImage(img);
         } catch (Exception e) {
             System.err.println("Exception loading image " + path + ": " + e.getMessage());
         }
     }
 
-    // ==================== EVENT HANDLER METHODS ====================
-
-    /**
-     * Handle navigation to different sections
-     */
-    private void handleNavigation(String section) {
-        System.out.println("Navigating to: " + section);
-
-        // Add smooth scroll or page transition here
-        showNotification("Navigation", "Navigation vers " + section);
-
-        // TODO: Implement actual navigation logic
-        // This could involve changing scenes, scrolling to sections, etc.
+    // ═══════════════════════════════════════════════════════
+    //  FXML ACTIONS
+    // ═══════════════════════════════════════════════════════
+    @FXML
+    private void handleBackToAdmin(ActionEvent event) {
+        navigateTo(event, "/views/dashboard.fxml");
     }
 
-    /**
-     * Handle Events button click (from FXML)
-     */
     @FXML
     private void handleEvents(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/showEvent.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger la page des événements.", Alert.AlertType.ERROR);
-        }
+        navigateTo(event, "/views/showEvent.fxml");
     }
 
+    @FXML
+    private void handleEvaluations(ActionEvent event) {
+        navigateTo(event, "/views/showEvaluation.fxml");
+    }
 
-    /**
-     * Handle Contact button click (from FXML)
-     */
+    @FXML
+    private void handleRessources(ActionEvent event) {
+        navigateTo(event, "/views/RessourcesFront.fxml");
+    }
+
     @FXML
     private void handleContact() {
-        System.out.println("Contact button clicked");
         showNotification("Contact", "Formulaire de contact à venir");
-
-        // TODO: Show contact form or navigate to contact page
-        // Example: showContactDialog();
     }
 
-    /**
-     * Handle Get Started button
-     */
+    @FXML
+    private void handleNewsletter() {
+        if (newsletterEmail == null) return;
+        String email = newsletterEmail.getText().trim();
+        if (email.isEmpty()) { showAlert("Erreur", "Veuillez entrer votre adresse email", Alert.AlertType.WARNING); return; }
+        if (!isValidEmail(email)) { showAlert("Erreur", "Adresse email invalide", Alert.AlertType.WARNING); return; }
+        if (btnNewsletter != null) animateButtonClick(btnNewsletter);
+        showAlert("Succès", "Merci ! Vous êtes maintenant abonné à notre newsletter.", Alert.AlertType.INFORMATION);
+        newsletterEmail.clear();
+    }
+
+    // ─── Private helpers ─────────────────────────────────
+    private void handleNavigation(String section) {
+        showNotification("Navigation", "Navigation vers " + section);
+    }
     private void handleGetStarted() {
-        System.out.println("Get Started clicked");
-
-        // Animate button
-        if (btnGetStarted != null) {
-            animateButtonClick(btnGetStarted);
-        }
-
+        if (btnGetStarted != null) animateButtonClick(btnGetStarted);
         showNotification("Bienvenue", "Commençons votre transformation mentale !");
-
-        // TODO: Navigate to onboarding or registration
     }
-
-    /**
-     * Handle Explore button
-     */
     private void handleExplore() {
-        System.out.println("Explore clicked");
-
-        if (btnExplore != null) {
-            animateButtonClick(btnExplore);
-        }
-
-        // TODO: Scroll to services section or show more info
+        if (btnExplore != null) animateButtonClick(btnExplore);
         showNotification("Explorer", "Découvrez nos services");
     }
 
-    /**
-     * Handle Newsletter subscription (from FXML)
-     */
-    @FXML
-    private void handleNewsletter() {
-        if (newsletterEmail != null) {
-            String email = newsletterEmail.getText().trim();
-
-            if (email.isEmpty()) {
-                showAlert("Erreur", "Veuillez entrer votre adresse email", Alert.AlertType.WARNING);
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showAlert("Erreur", "Adresse email invalide", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Animate success
-            if (btnNewsletter != null) {
-                animateButtonClick(btnNewsletter);
-            }
-
-            // TODO: Send email to backend
-            showAlert("Succès", "Merci ! Vous êtes maintenant abonné à notre newsletter.", Alert.AlertType.INFORMATION);
-
-            // Clear field
-            newsletterEmail.clear();
+    private void navigateTo(ActionEvent event, String fxmlPath) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FadeTransition ft = new FadeTransition(Duration.millis(300), stage.getScene().getRoot());
+            ft.setFromValue(1); ft.setToValue(0);
+            ft.setOnFinished(e -> { stage.setScene(new Scene(root)); stage.show(); });
+            ft.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger la page.", Alert.AlertType.ERROR);
         }
     }
 
-    // ==================== UTILITY METHODS ====================
-
-    /**
-     * Animate button click with scale effect
-     */
     private void animateButtonClick(Button button) {
-        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), button);
-        scaleDown.setToX(0.95);
-        scaleDown.setToY(0.95);
-
-        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), button);
-        scaleUp.setToX(1.0);
-        scaleUp.setToY(1.0);
-
-        SequentialTransition sequence = new SequentialTransition(scaleDown, scaleUp);
-        sequence.play();
+        ScaleTransition down = new ScaleTransition(Duration.millis(100), button);
+        down.setToX(0.95); down.setToY(0.95);
+        ScaleTransition up = new ScaleTransition(Duration.millis(100), button);
+        up.setToX(1.0); up.setToY(1.0);
+        new SequentialTransition(down, up).play();
     }
 
-    /**
-     * Validate email format
-     */
     private boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        return email.matches(emailRegex);
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
-
-    /**
-     * Show notification dialog
-     */
     private void showNotification(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        // Style the dialog
-        alert.getDialogPane().setStyle(
-                "-fx-background-color: #1A1A24; " +
-                        "-fx-text-fill: white;"
-        );
-
-        alert.showAndWait();
+        alert.setTitle(title); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait();
     }
-
-    /**
-     * Show alert dialog
-     */
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        // Style the dialog
-        alert.getDialogPane().setStyle(
-                "-fx-background-color: #1A1A24; " +
-                        "-fx-text-fill: white;"
-        );
-
-        alert.showAndWait();
+        alert.setTitle(title); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait();
     }
 
-    // ==================== PUBLIC METHODS FOR EXTERNAL ACCESS ====================
-
-    /**
-     * Refresh the page content
-     */
-    public void refresh() {
-        System.out.println("Refreshing front page");
-        loadImages();
-        initializeAnimations();
-    }
-
-    /**
-     * Scroll to a specific section (to be implemented)
-     */
-    public void scrollToSection(String sectionId) {
-        System.out.println("Scrolling to section: " + sectionId);
-        // TODO: Implement smooth scrolling to section
-    }
-
-    /**
-     * Update hero content dynamically
-     */
+    public void refresh() { loadImages(); initializeAnimations(); }
     public void updateHeroContent(String title, String subtitle) {
-        if (heroTitle != null) {
-            heroTitle.setText(title);
-        }
-        if (heroSubtitle != null) {
-            heroSubtitle.setText(subtitle);
-        }
+        if (heroTitle    != null) heroTitle.setText(title);
+        if (heroSubtitle != null) heroSubtitle.setText(subtitle);
     }
 }
