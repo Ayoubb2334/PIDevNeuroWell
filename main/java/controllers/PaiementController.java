@@ -1,184 +1,169 @@
 package controllers;
 
 import entities.Paiement;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import services.PaiementService;
+import javafx.fxml.FXML;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 public class PaiementController {
 
     @FXML private TextField montantField;
-    @FXML private TextField modeField;
-    @FXML private TextField statutField;
-    @FXML private TextField userField;
-    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<String> modeCombo;
+    @FXML private ComboBox<String> statutCombo;
+    @FXML private TextField searchField;
+    @FXML private VBox cardContainer;
+    @FXML private Label totalRevenueLabel;
+    @FXML private BarChart<String, Number> revenueChart;
+    @FXML private Button addBtn;
 
-    @FXML private TableView<Paiement> tablePaiement;
-    @FXML private TableColumn<Paiement, Integer> colId;
-    @FXML private TableColumn<Paiement, Double> colMontant;
-    @FXML private TableColumn<Paiement, String> colMode;
-    @FXML private TableColumn<Paiement, String> colStatut;
-    @FXML private TableColumn<Paiement, Date> colDate;
-    @FXML private TableColumn<Paiement, Integer> colUser;
-
-    private final PaiementService service = new PaiementService();
-    private final ObservableList<Paiement> list = FXCollections.observableArrayList();
+    private PaiementService service = new PaiementService();
 
     @FXML
     public void initialize() {
 
-        colId.setCellValueFactory(data ->
-                new SimpleIntegerProperty(data.getValue().getId()).asObject());
+        modeCombo.getItems().addAll("Stripe", "PayPal", "Paymee", "Flouci");
+        statutCombo.getItems().addAll("REUSSI", "ECHOUE", "EN_ATTENTE");
 
-        colMontant.setCellValueFactory(data ->
-                new SimpleDoubleProperty(data.getValue().getMontant()).asObject());
+        refreshCards();
+        loadRevenue();
+        loadChart();
 
-        colMode.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getModePaiement()));
+        addBtn.setOnAction(e -> addPaiement());
 
-        colStatut.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getStatut()));
-
-        colDate.setCellValueFactory(data ->
-                new SimpleObjectProperty<>(data.getValue().getDatePaiement()));
-
-        colUser.setCellValueFactory(data ->
-                new SimpleIntegerProperty(data.getValue().getIdUser()).asObject());
-
-        loadPaiements();
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                displayCards(service.search(newVal));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
-    @FXML
-    public void ajouterPaiement() {
+    private void addPaiement() {
 
-        if (!valider()) return;
+        if (!validateInput()) return;
+
+        String reference = "PAY-" + UUID.randomUUID().toString().substring(0,8);
+
+        Paiement p = new Paiement(
+                Double.parseDouble(montantField.getText()),
+                LocalDate.now(),
+                modeCombo.getValue(),
+                statutCombo.getValue(),
+                reference,
+                1   // user connecté
+        );
 
         try {
-            Paiement p = new Paiement(
-                    Double.parseDouble(montantField.getText()),
-                    modeField.getText(),
-                    statutField.getText(),
-                    Date.valueOf(datePicker.getValue()),
-                    Integer.parseInt(userField.getText())
-            );
-
-            service.ajouter(p);
-            showAlert("Paiement ajouté !");
-            clearFields();
-            loadPaiements();
-
-        } catch (SQLException e) {
-            showAlert("Erreur base de données !");
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void loadPaiements() {
-        try {
-            list.setAll(service.afficher());
-            tablePaiement.setItems(list);
-        } catch (SQLException e) {
-            showAlert("Erreur chargement données !");
+            service.add(p);
+            clearForm();
+            refreshCards();
+            loadRevenue();
+            loadChart();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
-    @FXML
-    public void supprimerPaiement() {
+    private boolean validateInput() {
 
-        Paiement selected = tablePaiement.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            showAlert("Sélectionnez un paiement !");
-            return;
-        }
+        if (montantField.getText().isEmpty()) return false;
+        if (modeCombo.getValue() == null) return false;
+        if (statutCombo.getValue() == null) return false;
 
         try {
-            service.supprimer(selected.getId());
-            showAlert("Paiement supprimé !");
-            loadPaiements();
-        } catch (SQLException e) {
-            showAlert("Erreur suppression !");
-        }
-    }
-
-    @FXML
-    public void modifierPaiement() {
-
-        Paiement selected = tablePaiement.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            showAlert("Sélectionnez un paiement !");
-            return;
-        }
-
-        if (!valider()) return;
-
-        try {
-            selected.setMontant(Double.parseDouble(montantField.getText()));
-            selected.setModePaiement(modeField.getText());
-            selected.setStatut(statutField.getText());
-            selected.setDatePaiement(Date.valueOf(datePicker.getValue()));
-            selected.setIdUser(Integer.parseInt(userField.getText()));
-
-            service.modifier(selected);
-            showAlert("Paiement modifié !");
-            clearFields();
-            loadPaiements();
-
-        } catch (SQLException e) {
-            showAlert("Erreur modification !");
-        }
-    }
-
-    private boolean valider() {
-
-        if (montantField.getText().isEmpty()
-                || modeField.getText().isEmpty()
-                || statutField.getText().isEmpty()
-                || userField.getText().isEmpty()
-                || datePicker.getValue() == null) {
-
-            showAlert("Tous les champs sont obligatoires !");
-            return false;
-        }
-
-        try {
-            Double.parseDouble(montantField.getText());
-        } catch (NumberFormatException e) {
-            showAlert("Montant doit être un nombre !");
-            return false;
-        }
-
-        try {
-            Integer.parseInt(userField.getText());
-        } catch (NumberFormatException e) {
-            showAlert("ID User doit être un entier !");
+            double m = Double.parseDouble(montantField.getText());
+            if (m <= 0) return false;
+        } catch (Exception e) {
             return false;
         }
 
         return true;
     }
 
-    private void clearFields() {
-        montantField.clear();
-        modeField.clear();
-        statutField.clear();
-        userField.clear();
-        datePicker.setValue(null);
+    private void refreshCards() {
+        try {
+            displayCards(service.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    private void displayCards(List<Paiement> list) {
+
+        cardContainer.getChildren().clear();
+
+        for (Paiement p : list) {
+
+            VBox card = new VBox(6);
+            card.setStyle("-fx-background-color:#1e293b; -fx-padding:15; -fx-background-radius:10;");
+
+            Label ref = new Label("Référence : " + p.getReference());
+            ref.setStyle("-fx-text-fill:white;");
+
+            Label user = new Label("Utilisateur : " + p.getUserName());
+            user.setStyle("-fx-text-fill:#38bdf8;");
+
+            Label montant = new Label("Montant : " + p.getMontant() + " DT");
+            montant.setStyle("-fx-text-fill:#22c55e;");
+
+            Label statut = new Label("Statut : " + p.getStatut());
+
+            Button delete = new Button("Supprimer");
+
+            delete.setOnAction(e -> {
+                try {
+                    service.delete(p.getId());
+                    refreshCards();
+                    loadRevenue();
+                    loadChart();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            card.getChildren().addAll(ref, user, montant, statut, delete);
+            cardContainer.getChildren().add(card);
+        }
+    }
+
+    private void loadRevenue() {
+        try {
+            totalRevenueLabel.setText(service.getTotalRevenue() + " DT");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadChart() {
+
+        revenueChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        try {
+            for (int i = 1; i <= 12; i++) {
+                series.getData().add(
+                        new XYChart.Data<>("M" + i, service.getMonthlyRevenue(i))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        revenueChart.getData().add(series);
+    }
+
+
+    private void clearForm() {
+        montantField.clear();
+        modeCombo.setValue(null);
+        statutCombo.setValue(null);
     }
 }

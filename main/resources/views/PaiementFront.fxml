@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.PaiementFrontController"
+            stylesheets="@/style/paiement_front.css"
+            styleClass="pf-scroll">
+
+    <content>
+        <VBox styleClass="pf-root" spacing="0">
+
+            <!-- ══════════ HEADER ══════════ -->
+            <HBox styleClass="pf-header" alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="18" right="30" bottom="18" left="30"/></padding>
+                <Label text="⚡" styleClass="pf-logo-icon"/>
+                <Label text="NeuroWell" styleClass="pf-logo-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="🔒 Paiement Sécurisé" styleClass="pf-secure-badge"/>
+                <Button text="← Retour" styleClass="pf-back-btn" onAction="#handleBack"/>
+            </HBox>
+
+            <!-- ══════════ HERO STRIP ══════════ -->
+            <VBox styleClass="pf-hero" alignment="CENTER" spacing="8">
+                <padding><Insets top="30" bottom="30"/></padding>
+                <Label text="Finaliser votre consultation" styleClass="pf-hero-title"/>
+                <Label text="Paiement 100% sécurisé · Facture instantanée · Confirmation par email" styleClass="pf-hero-sub"/>
+                <HBox spacing="20" alignment="CENTER">
+                    <Label text="🛡️ SSL 256-bit"       styleClass="pf-trust-chip"/>
+                    <Label text="🏦 Banque Sécurisée"  styleClass="pf-trust-chip"/>
+                    <Label text="✅ Certifié PCI"       styleClass="pf-trust-chip"/>
+                    <Label text="📧 Confirmation Email" styleClass="pf-trust-chip"/>
+                </HBox>
+            </VBox>
+
+            <!-- ══════════ MAIN CONTENT ══════════ -->
+            <HBox styleClass="pf-content" spacing="24" alignment="TOP_CENTER">
+                <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+                <!-- ────────────────────────────────────────
+                     LEFT : FORMULAIRE DE PAIEMENT
+                ──────────────────────────────────────── -->
+                <VBox styleClass="pf-form-panel" spacing="0" HBox.hgrow="ALWAYS" maxWidth="560">
+
+                    <!-- Indicateur d'étapes 1 → 2 → 3 -->
+                    <HBox styleClass="pf-steps" spacing="0" alignment="CENTER">
+                        <VBox alignment="CENTER" spacing="4" styleClass="pf-step pf-step-active">
+                            <Label text="1" styleClass="pf-step-num"/>
+                            <Label text="Méthode" styleClass="pf-step-label"/>
+                        </VBox>
+                        <Region styleClass="pf-step-line" HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="CENTER" spacing="4" styleClass="pf-step" fx:id="step2">
+                            <Label text="2" styleClass="pf-step-num"/>
+                            <Label text="Détails" styleClass="pf-step-label"/>
+                        </VBox>
+                        <Region styleClass="pf-step-line" HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="CENTER" spacing="4" styleClass="pf-step" fx:id="step3">
+                            <Label text="3" styleClass="pf-step-num"/>
+                            <Label text="Confirmation" styleClass="pf-step-label"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- ── Choix de la méthode de paiement ── -->
+                    <VBox styleClass="pf-section" spacing="14">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <Label text="Choisir votre méthode de paiement" styleClass="pf-section-title"/>
+
+                        <HBox spacing="12" alignment="CENTER">
+                            <VBox styleClass="pf-method-card pf-method-selected" fx:id="cardStripe"
+                                  alignment="CENTER" spacing="6" onMouseClicked="#selectStripe">
+                                <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                                <Label text="💳" styleClass="pf-method-icon"/>
+                                <Label text="Stripe" styleClass="pf-method-name"/>
+                                <Label text="Visa / Mastercard" styleClass="pf-method-sub"/>
+                            </VBox>
+                            <VBox styleClass="pf-method-card" fx:id="cardPaypal"
+                                  alignment="CENTER" spacing="6" onMouseClicked="#selectPayPal">
+                                <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                                <Label text="🅿️" styleClass="pf-method-icon"/>
+                                <Label text="PayPal" styleClass="pf-method-name"/>
+                                <Label text="Compte PayPal" styleClass="pf-method-sub"/>
+                            </VBox>
+                            <VBox styleClass="pf-method-card" fx:id="cardFlouci"
+                                  alignment="CENTER" spacing="6" onMouseClicked="#selectFlouci">
+                                <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                                <Label text="🇹🇳" styleClass="pf-method-icon"/>
+                                <Label text="Flouci" styleClass="pf-method-name"/>
+                                <Label text="Paiement Tunisie" styleClass="pf-method-sub"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ── Formulaire Stripe ── -->
+                    <VBox fx:id="stripeSection" styleClass="pf-section" spacing="14"
+                          visible="true" managed="true">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <Label text="💳  Informations de carte" styleClass="pf-section-title"/>
+
+                        <VBox spacing="6">
+                            <Label text="Numéro de carte" styleClass="pf-label"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <TextField fx:id="cardNumber"
+                                           promptText="1234 5678 9012 3456"
+                                           HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: #0A1A0D;
+                                                  -fx-text-fill: #E8FFF0;
+                                                  -fx-border-color: rgba(0,217,255,0.22);
+                                                  -fx-border-width: 1;
+                                                  -fx-border-radius: 10;
+                                                  -fx-background-radius: 10;
+                                                  -fx-padding: 11 14;
+                                                  -fx-font-size: 14px;
+                                                  -fx-font-family: 'Consolas';
+                                                  -fx-focus-color: transparent;
+                                                  -fx-faint-focus-color: transparent;"/>
+                                <Button text="📷"
+                                        onAction="#handleScanCard"
+                                        focusTraversable="false"
+                                        style="-fx-background-color: rgba(0,217,255,0.12);
+                                               -fx-text-fill: #00D9FF;
+                                               -fx-border-color: rgba(0,217,255,0.30);
+                                               -fx-border-width: 1;
+                                               -fx-border-radius: 10;
+                                               -fx-background-radius: 10;
+                                               -fx-font-size: 18px;
+                                               -fx-padding: 9 13;
+                                               -fx-cursor: hand;">
+                                    <tooltip>
+                                        <Tooltip text="📷  Scanner votre carte avec la caméra (IA)"
+                                                 style="-fx-background-color: #0A1A0D;
+                                                        -fx-text-fill: #00D9FF;
+                                                        -fx-border-color: rgba(0,217,255,0.30);
+                                                        -fx-border-width: 1;
+                                                        -fx-border-radius: 6;
+                                                        -fx-background-radius: 6;
+                                                        -fx-font-size: 11px;
+                                                        -fx-padding: 6 10;"/>
+                                    </tooltip>
+                                </Button>
+                            </HBox>
+                        </VBox>
+
+                        <HBox spacing="12">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Date d'expiration" styleClass="pf-label"/>
+                                <TextField fx:id="cardExpiry" styleClass="pf-input" promptText="MM/AA"/>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="CVV" styleClass="pf-label"/>
+                                <TextField fx:id="cardCvv" styleClass="pf-input" promptText="123"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox spacing="6">
+                            <Label text="Titulaire de la carte" styleClass="pf-label"/>
+                            <TextField fx:id="cardName" styleClass="pf-input" promptText="John Doe"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- ── Formulaire PayPal ── -->
+                    <VBox fx:id="paypalSection" styleClass="pf-section" spacing="14"
+                          visible="false" managed="false">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <Label text="🅿️  Connexion PayPal" styleClass="pf-section-title"/>
+                        <Label text="Vous serez redirigé vers PayPal pour finaliser votre paiement de manière sécurisée."
+                               styleClass="pf-info-text" wrapText="true"/>
+                        <VBox spacing="6">
+                            <Label text="Email PayPal" styleClass="pf-label"/>
+                            <TextField fx:id="paypalEmail" styleClass="pf-input" promptText="votre@paypal.com"/>
+                        </VBox>
+                        <HBox styleClass="pf-paypal-banner" alignment="CENTER" spacing="12">
+                            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                            <Label text="🔒" style="-fx-font-size: 20;"/>
+                            <Label text="Protégé par PayPal Buyer Protection" styleClass="pf-paypal-text"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ── Formulaire Flouci ── -->
+                    <VBox fx:id="flouciSection" styleClass="pf-section" spacing="14"
+                          visible="false" managed="false">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <Label text="🇹🇳  Paiement Flouci" styleClass="pf-section-title"/>
+                        <Label text="Flouci est le système de paiement tunisien. Entrez votre numéro de téléphone pour recevoir le lien de paiement."
+                               styleClass="pf-info-text" wrapText="true"/>
+                        <VBox spacing="6">
+                            <Label text="Numéro de téléphone" styleClass="pf-label"/>
+                            <TextField fx:id="flouciPhone" styleClass="pf-input" promptText="+216 XX XXX XXX"/>
+                        </VBox>
+                        <HBox styleClass="pf-flouci-banner" alignment="CENTER" spacing="12">
+                            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                            <Label text="📱" style="-fx-font-size: 20;"/>
+                            <Label text="Paiement mobile sécurisé via Flouci" styleClass="pf-flouci-text"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ── Informations de facturation ── -->
+                    <VBox styleClass="pf-section" spacing="14">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <Label text="📋  Informations de facturation" styleClass="pf-section-title"/>
+                        <HBox spacing="12">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Prénom" styleClass="pf-label"/>
+                                <TextField fx:id="billingPrenom" styleClass="pf-input" promptText="Prénom"/>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Nom" styleClass="pf-label"/>
+                                <TextField fx:id="billingNom" styleClass="pf-input" promptText="Nom"/>
+                            </VBox>
+                        </HBox>
+                        <VBox spacing="6">
+                            <Label text="Email (pour la facture)" styleClass="pf-label"/>
+                            <TextField fx:id="billingEmail" styleClass="pf-input" promptText="email@exemple.com"/>
+                        </VBox>
+                        <VBox spacing="6">
+                            <Label text="Téléphone" styleClass="pf-label"/>
+                            <TextField fx:id="billingPhone" styleClass="pf-input" promptText="+216 XX XXX XXX"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- ── Barre de progression ── -->
+                    <VBox fx:id="progressSection" styleClass="pf-progress-section" spacing="12"
+                          visible="false" managed="false">
+                        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                        <Label fx:id="progressLabel" text="Traitement en cours..."
+                               styleClass="pf-progress-label" alignment="CENTER"/>
+                        <ProgressBar fx:id="progressBar" styleClass="pf-progress-bar"
+                                     progress="0" maxWidth="Infinity"/>
+                        <Label fx:id="progressStep" text="Connexion sécurisée..."
+                               styleClass="pf-progress-step" alignment="CENTER"/>
+                    </VBox>
+
+                    <!-- ── Bouton Payer ── -->
+                    <VBox styleClass="pf-pay-section" spacing="12" alignment="CENTER">
+                        <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
+                        <Button fx:id="payButton" text="🔒  Payer Maintenant"
+                                styleClass="pf-pay-btn" maxWidth="Infinity" onAction="#handlePay"/>
+                        <Label text="🔐 Paiement crypté SSL 256-bit · Vos données sont protégées"
+                               styleClass="pf-security-note"/>
+                    </VBox>
+
+                </VBox>
+
+                <!-- ────────────────────────────────────────
+                     RIGHT : RÉCAPITULATIF — Prix DYNAMIQUES
+                ──────────────────────────────────────── -->
+                <VBox styleClass="pf-summary-panel" spacing="0" minWidth="300" maxWidth="340">
+
+                    <VBox styleClass="pf-summary-header" spacing="4">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                        <Label text="📄  Récapitulatif" styleClass="pf-summary-title"/>
+                        <Label text="Consultation NeuroWell" styleClass="pf-summary-sub"/>
+                    </VBox>
+
+                    <VBox styleClass="pf-summary-body" spacing="14">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🧠" style="-fx-font-size: 28;"/>
+                            <VBox spacing="2">
+                                <Label text="Consultation Psychologique" styleClass="pf-item-name"/>
+                                <Label text="Séance individuelle · 50 min" styleClass="pf-item-desc"/>
+                            </VBox>
+                        </HBox>
+
+                        <Separator styleClass="pf-separator"/>
+
+                        <!-- ✅ fx:id ajoutés pour mise à jour dynamique depuis le contrôleur -->
+                        <VBox spacing="10">
+                            <HBox>
+                                <Label text="Consultation" styleClass="pf-price-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblConsultation" text="0,00 DT" styleClass="pf-price-value"/>
+                            </HBox>
+                            <HBox>
+                                <Label text="Frais de plateforme (0%)" styleClass="pf-price-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblFrais" text="0,00 DT" styleClass="pf-price-value"/>
+                            </HBox>
+                            <HBox>
+                                <Label text="TVA (0%)" styleClass="pf-price-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblTva" text="0,00 DT" styleClass="pf-price-value"/>
+                            </HBox>
+                        </VBox>
+
+                        <Separator styleClass="pf-separator"/>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Total TTC" styleClass="pf-total-label"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <!-- ✅ Ce label sera mis à jour dans initialize() -->
+                            <Label fx:id="lblTotal" text="0,00 DT" styleClass="pf-total-value"/>
+                        </HBox>
+
+                        <VBox styleClass="pf-method-badge" spacing="4" alignment="CENTER">
+                            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                            <Label fx:id="selectedMethodLabel" text="💳  Stripe sélectionné"
+                                   styleClass="pf-method-badge-text"/>
+                        </VBox>
+
+                        <Separator styleClass="pf-separator"/>
+
+                        <VBox spacing="8">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="✅" style="-fx-font-size: 12;"/>
+                                <Label text="Facture PDF générée automatiquement" styleClass="pf-feature-text"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="✅" style="-fx-font-size: 12;"/>
+                                <Label text="Email de confirmation envoyé" styleClass="pf-feature-text"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="✅" style="-fx-font-size: 12;"/>
+                                <Label text="Historique accessible en ligne" styleClass="pf-feature-text"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="✅" style="-fx-font-size: 12;"/>
+                                <Label text="Remboursement sous 48h si annulation" styleClass="pf-feature-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Code promo -->
+                    <VBox styleClass="pf-promo-section" spacing="8">
+                        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                        <Label text="Code promo" styleClass="pf-promo-label"/>
+                        <HBox spacing="8">
+                            <TextField fx:id="promoCode" styleClass="pf-promo-input"
+                                       promptText="NEUROWELL10" HBox.hgrow="ALWAYS"/>
+                            <Button text="Appliquer" styleClass="pf-promo-btn" onAction="#handlePromo"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+
+            </HBox>
+
+            <!-- ══════════ RÉSULTAT ══════════ -->
+            <VBox fx:id="resultSection" styleClass="pf-result-section" alignment="CENTER" spacing="20"
+                  visible="false" managed="false">
+                <padding><Insets top="60" right="40" bottom="60" left="40"/></padding>
+
+                <VBox fx:id="successView" alignment="CENTER" spacing="16"
+                      visible="false" managed="false">
+                    <Label text="✅" styleClass="pf-result-icon-success"/>
+                    <Label text="Paiement Réussi !" styleClass="pf-result-title-success"/>
+                    <Label fx:id="successRef"    text="Référence: PAY-XXXXXXXX" styleClass="pf-result-ref"/>
+                    <Label fx:id="successAmount" text="Montant: 0,00 DT"        styleClass="pf-result-amount"/>
+                    <HBox spacing="16" alignment="CENTER">
+                        <Button fx:id="downloadBtn" text="⬇  Télécharger Facture PDF"
+                                styleClass="pf-download-btn" onAction="#handleDownloadPDF"/>
+                        <Button text="🏠  Retour Accueil" styleClass="pf-home-btn" onAction="#handleBack"/>
+                    </HBox>
+                    <Label text="📧 Un email de confirmation avec votre facture a été envoyé."
+                           styleClass="pf-email-note"/>
+                </VBox>
+
+                <VBox fx:id="failureView" alignment="CENTER" spacing="16"
+                      visible="false" managed="false">
+                    <Label text="❌" styleClass="pf-result-icon-fail"/>
+                    <Label text="Paiement Échoué" styleClass="pf-result-title-fail"/>
+                    <Label fx:id="failureMessage"
+                           text="Une erreur est survenue lors du traitement."
+                           styleClass="pf-result-ref" wrapText="true"/>
+                    <HBox spacing="16" alignment="CENTER">
+                        <Button text="🔄  Réessayer" styleClass="pf-retry-btn" onAction="#handleRetry"/>
+                        <Button text="🏠  Retour"    styleClass="pf-home-btn"  onAction="#handleBack"/>
+                    </HBox>
+                </VBox>
+
+            </VBox>
+
+            <!-- ══════════ FOOTER ══════════ -->
+            <HBox styleClass="pf-footer" alignment="CENTER" spacing="40">
+                <padding><Insets top="20" bottom="20"/></padding>
+                <Label text="© 2026 NeuroWell · Tous droits réservés" styleClass="pf-footer-text"/>
+                <Label text="🔒 SSL Sécurisé"                         styleClass="pf-footer-text"/>
+                <Label text="📞 Support: +216 71 000 000"             styleClass="pf-footer-text"/>
+            </HBox>
+
+        </VBox>
+    </content>
+</ScrollPane>
